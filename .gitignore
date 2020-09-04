@@ -1,0 +1,5 @@
+# Project exclude paths
+/etl-app/target/
+/etl-common/target/
+/etl-core/target/
+/etl-function/target/

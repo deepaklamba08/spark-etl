@@ -1,0 +1,11 @@
+[
+  {
+    "dataNode": {
+      "objectName": "executorConf",
+      "sparkConfig": {
+        "spark.master": "local[2]",
+        "spark.testing.memory": "471859200"
+      }
+    }
+  }
+]

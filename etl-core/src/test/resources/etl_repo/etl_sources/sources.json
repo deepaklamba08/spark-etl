@@ -1,0 +1,22 @@
+[
+  {
+    "type": "csvFileEtlSource",
+    "name": "users_data",
+    "alias": "users",
+    "fileName": "users.csv",
+    "dataSourceName": "ds1",
+    "config": {
+      "header": "true"
+    }
+  },
+  {
+    "type": "jsonFileEtlSource",
+    "name": "address_detail",
+    "alias": "address",
+    "fileName": "address.json",
+    "dataSourceName": "ds1",
+    "config": {
+      "multiline": "true"
+    }
+  }
+]

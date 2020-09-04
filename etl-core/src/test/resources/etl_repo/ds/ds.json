@@ -1,0 +1,12 @@
+[
+  {
+    "type": "localFileSystemDs",
+    "baseDirectory": "src/test/resources/test_data",
+    "name": "ds1"
+  },
+  {
+    "type": "localFileSystemDs",
+    "baseDirectory": "target/",
+    "name": "ds2"
+  }
+]

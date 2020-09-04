@@ -1,0 +1,151 @@
+[
+  {
+    "jobName": "single-dataset-job",
+    "jobDescription": "job with single step and single dataset",
+    "targetName": "target-1",
+    "enabled": true,
+    "steps": [
+      {
+        "stepName": "step-1",
+        "stepIndex": 0,
+        "inputSourceName": "users_data",
+        "outputSourceName": "users_data_op",
+        "outputSourceAlias": "users_data_updated",
+        "sources": [
+          "users_data"
+        ],
+        "etlFunctions": [
+          {
+            "type": "renameColumnFunction",
+            "name": "rename column",
+            "description": "rename dataset column",
+            "oldName": "address",
+            "newName": "user_address"
+          },
+          {
+            "type": "addConstantValueFunction",
+            "name": "add column",
+            "description": "add column column to dataset",
+            "columnName": "rnid",
+            "value": "xyz"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "jobName": "multiple-dataset-job",
+    "jobDescription": "job with multiple datasets in a single step",
+    "targetName": "csvUserTarget-2",
+    "enabled": true,
+    "steps": [
+      {
+        "stepName": "step-1",
+        "stepIndex": 0,
+        "inputSourceName": "users_data",
+        "outputSourceName": "users_data_op",
+        "outputSourceAlias": "users_data_updated",
+        "sources": [
+          "users_data",
+          "address_detail"
+        ],
+        "etlFunctions": [
+          {
+            "type": "innerJoinDatasetFunction",
+            "name": "inner join datasets",
+            "description": "inner join datasets",
+            "leftDatasetName": "users_data",
+            "rightDatasetName": "address_detail",
+            "leftDatasetColumn": "id",
+            "rightDatasetColumn": "user_id"
+          },
+          {
+            "type": "dropColumnColumnFunction",
+            "name": "drop address column",
+            "description": "drop address column",
+            "columnName": "address"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "jobName": "multiple-steps-job",
+    "jobDescription": "job with multiple steps",
+    "targetName": "csvUserTarget",
+    "enabled": true,
+    "steps": [
+      {
+        "stepName": "step-1",
+        "stepIndex": 0,
+        "inputSourceName": "users_data",
+        "outputSourceName": "users_data_op",
+        "outputSourceAlias": "users_data_updated",
+        "sources": [
+          "users_data"
+        ],
+        "etlFunctions": [
+          {
+            "type": "addConstantValueFunction",
+            "name": "add column",
+            "description": "add column column to dataset",
+            "columnName": "rnid",
+            "value": "xyz"
+          }
+        ]
+      },
+      {
+        "stepName": "step-2",
+        "stepIndex": 1,
+        "inputSourceName": "address_detail",
+        "outputSourceName": "address_detail_op",
+        "outputSourceAlias": "address_detail_updated",
+        "sources": [
+          "address_detail"
+        ],
+        "etlFunctions": [
+          {
+            "type": "addConstantValueFunction",
+            "name": "add column",
+            "description": "add column column to dataset",
+            "columnName": "rnid",
+            "value": "xyz"
+          }
+        ]
+      },
+      {
+        "stepName": "step-3",
+        "stepIndex": 2,
+        "inputSourceName": "users_data_op",
+        "outputSourceName": "step_3_op",
+        "outputSourceAlias": "step_3",
+        "sources": [
+          "users_data_op"
+        ],
+        "etlFunctions": [
+          {
+            "type": "innerJoinDatasetFunction",
+            "name": "inner join datasets",
+            "description": "inner join datasets",
+            "leftDatasetName": "users_data_op",
+            "rightDatasetName": "address_detail_op",
+            "leftDatasetColumn": "rnid",
+            "rightDatasetColumn": "rnid"
+          },
+          {
+            "type": "dropColumnColumnFunction",
+            "name": "drop rnid column",
+            "description": "drop rnid column",
+            "columnName": "rnid"
+          },
+          {
+            "type": "dropColumnColumnFunction",
+            "name": "drop address column",
+            "description": "drop address column",
+            "columnName": "address"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,29 @@
+[
+  {
+    "type": "csvFileEtlTarget",
+    "name": "target-1",
+    "fileName": "users_1",
+    "dataSourceName": "ds2",
+    "config": {
+      "header": "true"
+    }
+  },
+  {
+    "type": "csvFileEtlTarget",
+    "name": "csvUserTarget-2",
+    "fileName": "users_2",
+    "dataSourceName": "ds2",
+    "config": {
+      "header": "true"
+    }
+  },
+  {
+    "type": "csvFileEtlTarget",
+    "name": "csvUserTarget",
+    "fileName": "users",
+    "dataSourceName": "ds2",
+    "config": {
+      "header": "true"
+    }
+  }
+]
