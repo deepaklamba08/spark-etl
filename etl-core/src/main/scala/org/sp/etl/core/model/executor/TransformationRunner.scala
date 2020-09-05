@@ -1,11 +1,38 @@
 package org.sp.etl.core.model.executor
 
+import java.util.Date
+
+import org.slf4j.LoggerFactory
 import org.sp.etl.core.metrics.FunctionMetrics
-import org.sp.etl.core.model.{DataBag, Transformation}
+import org.sp.etl.core.model._
+import org.sp.etl.function.EtlFunction
+import org.sp.etl.core.model.SuccessStatus
+
+import scala.collection.mutable.ListBuffer
 
 trait TransformationRunner {
 
-  def runTransformation(transformation: Transformation): TransformationResult
+  private val logger = LoggerFactory.getLogger(this.getClass)
+
+  def runTransformation(transformation: Transformation): TransformationResult = {
+    logger.debug("executing - TransformationRunner.runTransformation()")
+    val metrics = ListBuffer[FunctionMetrics]()
+    val rDatabag = transformation.functions.foldLeft(transformation.primary)((databag, trFunction) => {
+      val functionMetrics = new FunctionMetrics.FunctionMetricsBuilder(trFunction.name(), new Date())
+      logger.debug(s"executing function - ${trFunction.name()}")
+      val result = this.executeFunction(trFunction, databag, transformation.secondary)
+      metrics.+=(functionMetrics.withEndTime(new Date()).build())
+      result.status match {
+        case SuccessStatus => result.dataBag
+        case FailedStatus => return TransformationResult(null, metrics, result.executionMessage, result.status)
+      }
+    })
+    TransformationResult(rDatabag, metrics)
+  }
+
+  def executeFunction(etlFunction: EtlFunction, primary: DataBag, secondary: Databags): FunctionExecutionResult
 }
 
-case class TransformationResult(dataBag: DataBag, functionMetrics: Seq[FunctionMetrics])
+case class TransformationResult(dataBag: DataBag, functionMetrics: Seq[FunctionMetrics], executionMessage: String = null, status: Status = SuccessStatus)
+
+case class FunctionExecutionResult(dataBag: DataBag, executionMessage: String = null, status: Status = SuccessStatus)

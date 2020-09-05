@@ -9,11 +9,18 @@ import org.sp.etl.function.EtlFunction
 
 case class DataBag(name: String, alias: String, dataset: DataFrame)
 
-class Databags(databags: Seq[DataBag]) {
+class Databags(databags: List[DataBag]) {
 
   def getDatabags = databags
 
   def getDatabag(name: String): DataBag = databags.find(_.name.equals(name)).fold(throw new ObjectNotFoundException(s"daaset does not exist - ${name}"))(d => d)
+
+}
+
+object Databags {
+  def apply(databags: List[DataBag]): Databags = new Databags(databags)
+
+  def emptyDatabag = new Databags(List.empty)
 
 }
 
@@ -71,3 +78,9 @@ object DataSourceRegistry {
   def lookupDataSource(dataSourceName: String): DataSource = this.registry.lookup(dataSourceName)
 
 }
+
+sealed trait Status
+
+case object SuccessStatus extends Status
+
+case object FailedStatus extends Status

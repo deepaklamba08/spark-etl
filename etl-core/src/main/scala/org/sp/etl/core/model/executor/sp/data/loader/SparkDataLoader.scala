@@ -2,8 +2,9 @@ package org.sp.etl.core.model.executor.sp.data.loader
 
 import java.util
 
-import org.apache.spark.sql.{DataFrameReader, SparkSession}
+import org.apache.spark.sql.{AnalysisException, DataFrameReader, SparkSession}
 import org.sp.etl.common.ds.{DataSource, FileSystemDataSource}
+import org.sp.etl.common.exception.EtlExceptions.SystemFailureException
 import org.sp.etl.common.io.source.EtlSource
 import org.sp.etl.common.io.source.impl.FileEtlSource
 import org.sp.etl.core.model.DataBag
@@ -13,11 +14,16 @@ import scala.collection.JavaConverters._
 
 class SparkDataLoader(sparkSession: SparkSession) extends DataLoader {
   override def loadData(source: EtlSource, dataSource: DataSource): DataBag = {
-    val dataset = source match {
-      case fileSource: FileEtlSource if (dataSource.isInstanceOf[FileSystemDataSource]) => this.loadFileDataset(fileSource, dataSource.asInstanceOf[FileSystemDataSource])
-      case other => throw new UnsupportedOperationException(s"source not supported - ${other.getClass}")
+    try {
+      val dataset = source match {
+        case fileSource: FileEtlSource if (dataSource.isInstanceOf[FileSystemDataSource]) => this.loadFileDataset(fileSource, dataSource.asInstanceOf[FileSystemDataSource])
+        case other => throw new UnsupportedOperationException(s"source not supported - ${other.getClass}")
+      }
+      DataBag(source.sourceName(), source.sourceAlias(), dataset)
+    } catch {
+      case an: AnalysisException => throw new SystemFailureException("Error occurred while loading dataset", an)
+      case other => throw other
     }
-    DataBag(source.sourceName(), source.sourceAlias(), dataset)
   }
 
   private def loadFileDataset(fileSource: FileEtlSource, dataSource: FileSystemDataSource) = {

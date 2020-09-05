@@ -2,9 +2,9 @@ package org.sp.etl.core.model.executor.sp.data.consumer
 
 import java.util
 
-import org.apache.spark.sql.{DataFrameWriter, Row}
+import org.apache.spark.sql.{AnalysisException, DataFrameWriter, Row}
 import org.sp.etl.common.ds.FileSystemDataSource
-import org.sp.etl.common.exception.EtlExceptions.InvalidConfigurationException
+import org.sp.etl.common.exception.EtlExceptions.{InvalidConfigurationException, SystemFailureException}
 import org.sp.etl.common.io.tr.EtlTarget
 import org.sp.etl.common.io.tr.impl.FileEtlTarget
 import org.sp.etl.core.model.executor.DataConsumer
@@ -16,9 +16,14 @@ import scala.collection.JavaConverters._
 class SparkDataConsumer extends DataConsumer {
 
   override def consume(databag: DataBag, target: EtlTarget): Unit = {
-    target match {
-      case fs: FileEtlTarget => this.storeFileSystemData(databag, fs)
-      case other => throw new UnsupportedOperationException(s"target not supported - ${other.getClass}")
+    try {
+      target match {
+        case fs: FileEtlTarget => this.storeFileSystemData(databag, fs)
+        case other => throw new UnsupportedOperationException(s"target not supported - ${other.getClass}")
+      }
+    } catch {
+      case an: AnalysisException => throw new SystemFailureException("Error occurred while storing dataset", an)
+      case other => throw other
     }
   }
 

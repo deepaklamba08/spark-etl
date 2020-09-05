@@ -33,4 +33,5 @@ class TestJobOrchestrator extends FunSuite {
 
     new JobOrchestrator(repository).executeJob("multiple-steps-job")
   }
+
 }

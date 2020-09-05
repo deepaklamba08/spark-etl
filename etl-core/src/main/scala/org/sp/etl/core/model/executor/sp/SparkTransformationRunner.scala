@@ -1,32 +1,28 @@
 package org.sp.etl.core.model.executor.sp
 
-import java.util.Date
-
 import org.apache.spark.sql.functions
-import org.sp.etl.core.metrics.FunctionMetrics
-import org.sp.etl.core.model.{DataBag, Databags, Transformation}
-import org.sp.etl.core.model.executor.{TransformationResult, TransformationRunner}
-import org.sp.etl.function.DatasetFunction
+import org.sp.etl.core.model.executor.{FunctionExecutionResult, TransformationRunner}
+import org.sp.etl.core.model.{DataBag, Databags, FailedStatus}
 import org.sp.etl.function.column.{AddConstantValueFunction, ColumnFunction, DropColumnColumnFunction, RenameColumnFunction}
 import org.sp.etl.function.dataset.InnerJoinDatasetFunction
+import org.sp.etl.function.{DatasetFunction, EtlFunction}
 
-import scala.collection.mutable.ListBuffer
+import scala.util.{Failure, Success, Try}
 
 class SparkTransformationRunner extends TransformationRunner {
 
-  override def runTransformation(transformation: Transformation): TransformationResult = {
-    val metrics = ListBuffer[FunctionMetrics]()
-    val rDatabag = transformation.functions.foldLeft(transformation.primary)((databag, trFunction) => {
-      val functionMetrics = new FunctionMetrics.FunctionMetricsBuilder(trFunction.name(), new Date())
-      val iDatabag = trFunction match {
-        case cFx: ColumnFunction => this.runColumnFunction(cFx, databag)
-        case dFx: DatasetFunction => this.runDatasetFunction(dFx, databag, transformation.secondary)
-      }
-      metrics.+=(functionMetrics.withEndTime(new Date()).build())
-      iDatabag
-    })
+  override def executeFunction(etlFunction: EtlFunction, primary: DataBag, secondary: Databags): FunctionExecutionResult = {
+    Try(runFunction(etlFunction, primary, secondary)) match {
+      case Success(databag) => FunctionExecutionResult(databag)
+      case Failure(cause) => FunctionExecutionResult(null, cause.getMessage, FailedStatus)
+    }
+  }
 
-    TransformationResult(rDatabag, metrics)
+  private def runFunction(etlFunction: EtlFunction, primary: DataBag, secondary: Databags) = {
+    etlFunction match {
+      case cFx: ColumnFunction => this.runColumnFunction(cFx, primary)
+      case dFx: DatasetFunction => this.runDatasetFunction(dFx, primary, secondary)
+    }
   }
 
   private def runColumnFunction(cFx: ColumnFunction, dataBag: DataBag) = {
@@ -49,6 +45,5 @@ class SparkTransformationRunner extends TransformationRunner {
     }
     DataBag(pDataBag.name, pDataBag.alias, opDataset)
   }
-
 
 }
