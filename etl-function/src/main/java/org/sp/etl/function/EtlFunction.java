@@ -7,6 +7,7 @@ import org.sp.etl.function.column.agg.GroupByDatasetFunction;
 import org.sp.etl.function.dataset.DatasetRegisterAsTableFunction;
 import org.sp.etl.function.dataset.DatasetUnionFunction;
 import org.sp.etl.function.dataset.InnerJoinDatasetFunction;
+import org.sp.etl.function.dataset.LeftJoinDatasetFunction;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
 
@@ -25,8 +26,8 @@ import org.sp.etl.function.dataset.InnerJoinDatasetFunction;
                 @JsonSubTypes.Type(value = DatasetUnionFunction.class, name = "datasetUnionFunction"),
                 @JsonSubTypes.Type(value = DatasetRegisterAsTableFunction.class, name = "datasetRegisterAsTableFunction"),
                 @JsonSubTypes.Type(value = FilterDatasetFunction.class, name = "filterDatasetFunction"),
-                @JsonSubTypes.Type(value = SortDatasetFunction.class, name = "sortDatasetFunction")
-        })
+                @JsonSubTypes.Type(value = SortDatasetFunction.class, name = "sortDatasetFunction"),
+                @JsonSubTypes.Type(value = LeftJoinDatasetFunction.class, name = "leftJoinDatasetFunction")})
 
 public interface EtlFunction {
 
