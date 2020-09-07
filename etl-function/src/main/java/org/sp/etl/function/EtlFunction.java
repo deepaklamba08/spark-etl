@@ -16,7 +16,8 @@ import org.sp.etl.function.dataset.InnerJoinDatasetFunction;
                 @JsonSubTypes.Type(value = DatasetFunction.class, name = "datasetFunction"),
                 @JsonSubTypes.Type(value = InnerJoinDatasetFunction.class, name = "innerJoinDatasetFunction"),
                 @JsonSubTypes.Type(value = RepartitionDatasetFunction.class, name = "repartitionDatasetFunction"),
-                @JsonSubTypes.Type(value = PersistDatasetFunction.class, name = "persistDatasetFunction")
+                @JsonSubTypes.Type(value = PersistDatasetFunction.class, name = "persistDatasetFunction"),
+                @JsonSubTypes.Type(value = UnPersistDatasetFunction.class, name = "unPersistDatasetFunction")
         })
 
 public interface EtlFunction {
