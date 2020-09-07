@@ -1,13 +1,13 @@
 package org.sp.etl.function.column;
 
-public class DropColumnColumnFunction extends ColumnFunction {
+public class DropColumnFunction extends ColumnFunction {
 
     private String columnName;
 
-    public DropColumnColumnFunction() {
+    public DropColumnFunction() {
     }
 
-    public DropColumnColumnFunction(String name, String description, String columnName) {
+    public DropColumnFunction(String name, String description, String columnName) {
         super(name, description);
         this.columnName = columnName;
     }

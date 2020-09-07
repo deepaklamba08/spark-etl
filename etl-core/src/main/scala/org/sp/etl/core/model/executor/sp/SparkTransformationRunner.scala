@@ -10,7 +10,8 @@ import org.sp.etl.core.model.{DataBag, Databags, FailedStatus}
 import org.sp.etl.function.column.DateAndTimeFunction.{CurrentDateFunction, CurrentTimestampFunction, ToDateFunction, ToTimestampFunction}
 import org.sp.etl.function.column.SortDatasetFunction.SortOrder
 import org.sp.etl.function.column.agg.GroupByDatasetFunction
-import org.sp.etl.function.column.{AddConstantValueFunction, ColumnFunction, DropColumnColumnFunction, FilterDatasetFunction, PersistDatasetFunction, RenameColumnFunction, RepartitionDatasetFunction, SortDatasetFunction, UnPersistDatasetFunction}
+import org.sp.etl.function.column.math.SumColumnFunction
+import org.sp.etl.function.column.{AddConstantValueFunction, ColumnFunction, DropColumnFunction, FilterDatasetFunction, PersistDatasetFunction, RenameColumnFunction, RepartitionDatasetFunction, SortDatasetFunction, UnPersistDatasetFunction}
 import org.sp.etl.function.dataset.{DatasetRegisterAsTableFunction, DatasetUnionFunction, InnerJoinDatasetFunction, LeftJoinDatasetFunction, RightJoinDatasetFunction}
 import org.sp.etl.function.{DatasetFunction, EtlFunction}
 
@@ -37,7 +38,7 @@ class SparkTransformationRunner extends TransformationRunner {
     val opDataset = cFx match {
       case rn: RenameColumnFunction => dataBag.dataset.withColumnRenamed(rn.getOldName, rn.getNewName)
       case ac: AddConstantValueFunction => dataBag.dataset.withColumn(ac.getColumnName, functions.lit(ac.getValue))
-      case dc: DropColumnColumnFunction => dataBag.dataset.drop(dc.getColumnName)
+      case dc: DropColumnFunction => dataBag.dataset.drop(dc.getColumnName)
       case rp: RepartitionDatasetFunction => dataBag.dataset.repartition(rp.getNumPartitons, rp.getPartitionColumns.asScala.map(functions.col): _*)
       case pr: PersistDatasetFunction => dataBag.dataset.persist(this.getStorageLevel(pr.getPersistLevel))
       case _: UnPersistDatasetFunction => dataBag.dataset.unpersist()
@@ -48,6 +49,7 @@ class SparkTransformationRunner extends TransformationRunner {
       case ct: CurrentTimestampFunction => dataBag.dataset.withColumn(ct.getColumnName, functions.current_timestamp())
       case td: ToDateFunction => dataBag.dataset.withColumn(td.getColumnName, functions.to_date(functions.col(td.getSourceColumn), td.getFormat))
       case tt: ToTimestampFunction => dataBag.dataset.withColumn(tt.getColumnName, functions.to_timestamp(functions.col(tt.getSourceColumn), tt.getFormat))
+      case sum: SumColumnFunction => dataBag.dataset.withColumn(sum.getResultColumnName, sum.getColumns.asScala.tail.foldLeft(functions.col(sum.getColumns.asScala.head))((a, b) => a + b))
       case other => throw new UnsupportedOperationException(s"unsupported dataset function - ${other}")
     }
     DataBag(dataBag.name, dataBag.alias, opDataset)

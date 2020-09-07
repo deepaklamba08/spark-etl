@@ -13,7 +13,8 @@ import org.sp.etl.function.column.agg.{GroupByDatasetFunction, SumValue}
 import org.sp.etl.common.model.job.Job
 import org.sp.etl.common.util.JsonDataObject
 import org.sp.etl.function.column.DateAndTimeFunction.CurrentDateFunction
-import org.sp.etl.function.column.RenameColumnFunction
+import org.sp.etl.function.column.math.SumColumnFunction
+import org.sp.etl.function.column.{AddConstantValueFunction, RenameColumnFunction}
 
 class TestJobExecutor extends FunSuite {
 
@@ -53,6 +54,8 @@ class TestJobExecutor extends FunSuite {
     val groupByFunction = new GroupByDatasetFunction("group_marks", "group_marks", util.Arrays.asList("student_id"), util.Arrays.asList(sumMarks))
     val renameColumnFunction = new RenameColumnFunction("rename column", "rename column", "total_marks", "total_marks_of_student")
     val calculationDateFunction = new CurrentDateFunction("calculation date", "calculation date", "calculation_date")
+    val constValue = new AddConstantValueFunction("add a constant value", "add a constant value", "constant_value", 10)
+    val addColumnValues = new SumColumnFunction("add column values", "add column values", "added_values", util.Arrays.asList("total_marks_of_student", "constant_value"))
 
     val step = new Step()
     step.setStepName("aggregate-marks")
@@ -61,7 +64,7 @@ class TestJobExecutor extends FunSuite {
     step.setOutputSourceName("marks_aggregated")
     step.setOutputSourceAlias("marks_aggregated")
     step.setInputSourceName("marks_data")
-    step.setEtlFunctions(util.Arrays.asList(groupByFunction, renameColumnFunction, calculationDateFunction))
+    step.setEtlFunctions(util.Arrays.asList(groupByFunction, renameColumnFunction, calculationDateFunction, constValue, addColumnValues))
 
     val etlJob = new Job()
     etlJob.setJobName("student_data_analysis")
