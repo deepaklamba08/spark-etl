@@ -1,9 +1,11 @@
 package org.sp.etl.core.model.executor.sp
 
 import org.apache.spark.sql.functions
+import org.apache.spark.storage.StorageLevel
+import org.sp.etl.common.exception.EtlExceptions.InvalidConfigurationException
 import org.sp.etl.core.model.executor.{FunctionExecutionResult, TransformationRunner}
 import org.sp.etl.core.model.{DataBag, Databags, FailedStatus}
-import org.sp.etl.function.column.{AddConstantValueFunction, ColumnFunction, DropColumnColumnFunction, RenameColumnFunction, RepartitionDatasetFunction}
+import org.sp.etl.function.column.{AddConstantValueFunction, ColumnFunction, DropColumnColumnFunction, PersistDatasetFunction, RenameColumnFunction, RepartitionDatasetFunction}
 import org.sp.etl.function.dataset.InnerJoinDatasetFunction
 import org.sp.etl.function.{DatasetFunction, EtlFunction}
 
@@ -32,6 +34,7 @@ class SparkTransformationRunner extends TransformationRunner {
       case ac: AddConstantValueFunction => dataBag.dataset.withColumn(ac.getColumnName, functions.lit(ac.getValue))
       case dc: DropColumnColumnFunction => dataBag.dataset.drop(dc.getColumnName)
       case rp: RepartitionDatasetFunction => dataBag.dataset.repartition(rp.getNumPartitons, rp.getPartitionColumns.asScala.map(functions.col): _*)
+      case pr: PersistDatasetFunction => dataBag.dataset.persist(this.getStorageLevel(pr.getPersistLevel))
       case other => throw new UnsupportedOperationException(s"unsupported dataset function - ${other}")
     }
     DataBag(dataBag.name, dataBag.alias, opDataset)
@@ -48,4 +51,19 @@ class SparkTransformationRunner extends TransformationRunner {
     DataBag(pDataBag.name, pDataBag.alias, opDataset)
   }
 
+  private def getStorageLevel(storaeLevel: String) = {
+    storaeLevel.toUpperCase match {
+      case "DISK_ONLY" => StorageLevel.DISK_ONLY
+      case "DISK_ONLY_2" => StorageLevel.DISK_ONLY_2
+      case "MEMORY_ONLY" => StorageLevel.MEMORY_ONLY
+      case "MEMORY_ONLY_2" => StorageLevel.MEMORY_ONLY_2
+      case "MEMORY_ONLY_SER" => StorageLevel.MEMORY_ONLY_SER
+      case "MEMORY_ONLY_SER_2" => StorageLevel.MEMORY_ONLY_SER_2
+      case "MEMORY_AND_DISK" => StorageLevel.MEMORY_AND_DISK
+      case "MEMORY_AND_DISK_2" => StorageLevel.MEMORY_AND_DISK_2
+      case "MEMORY_AND_DISK_SER" => StorageLevel.MEMORY_AND_DISK_SER
+      case "MEMORY_AND_DISK_SER_2" => StorageLevel.MEMORY_AND_DISK_SER_2
+      case other => throw new InvalidConfigurationException(s"invalid storage level -$other")
+    }
+  }
 }
