@@ -55,10 +55,15 @@ class SparkTransformationRunner extends TransformationRunner {
 
   private def runDatasetFunction(dFx: DatasetFunction, pDataBag: DataBag, databags: Databags) = {
     val opDataset = dFx match {
-      case ij: InnerJoinDatasetFunction | LeftJoinDatasetFunction | RightJoinDatasetFunction =>
+      case ij: InnerJoinDatasetFunction =>
         val rightDs = databags.getDatabag(ij.getRightDatasetName).dataset
-        val jc = pDataBag.dataset(ij.getLeftDatasetColumn) === rightDs(ij.getRightDatasetColumn)
-        pDataBag.dataset.join(rightDs, jc, ij.joinType())
+        this.joinDatasets(pDataBag.dataset, ij.getLeftDatasetColumn, rightDs, ij.getRightDatasetColumn, ij.joinType())
+      case lj: LeftJoinDatasetFunction =>
+        val rightDs = databags.getDatabag(lj.getRightDatasetName).dataset
+        this.joinDatasets(pDataBag.dataset, lj.getLeftDatasetColumn, rightDs, lj.getRightDatasetColumn, lj.joinType())
+      case rj: RightJoinDatasetFunction =>
+        val rightDs = databags.getDatabag(rj.getRightDatasetName).dataset
+        this.joinDatasets(pDataBag.dataset, rj.getLeftDatasetColumn, rightDs, rj.getRightDatasetColumn, rj.joinType())
       case un: DatasetUnionFunction =>
         val sDatabag = databags.getDatabag(un.getSecondDatasetName).dataset
         if (un.isUnionByName) {
@@ -101,4 +106,8 @@ class SparkTransformationRunner extends TransformationRunner {
     dataset.sort(sortSequence: _*)
   }
 
+  private def joinDatasets(leftDataset: DataFrame, leftDatasetColumn: String, rightDataset: DataFrame, rightDatasetColumn: String, joinType: String) = {
+    val jc = leftDataset(leftDatasetColumn) === rightDataset(rightDatasetColumn)
+    leftDataset.join(rightDataset, jc, joinType)
+  }
 }
