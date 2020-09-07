@@ -1,12 +1,15 @@
 package org.sp.etl.core.model.executor.sp
 
-import org.apache.spark.sql.functions
+import java.util
+
+import org.apache.spark.sql.{DataFrame, functions}
 import org.apache.spark.storage.StorageLevel
 import org.sp.etl.common.exception.EtlExceptions.InvalidConfigurationException
 import org.sp.etl.core.model.executor.{FunctionExecutionResult, TransformationRunner}
 import org.sp.etl.core.model.{DataBag, Databags, FailedStatus}
+import org.sp.etl.function.column.SortDatasetFunction.SortOrder
 import org.sp.etl.function.column.agg.GroupByDatasetFunction
-import org.sp.etl.function.column.{AddConstantValueFunction, ColumnFunction, DropColumnColumnFunction, FilterDatasetFunction, PersistDatasetFunction, RenameColumnFunction, RepartitionDatasetFunction, UnPersistDatasetFunction}
+import org.sp.etl.function.column.{AddConstantValueFunction, ColumnFunction, DropColumnColumnFunction, FilterDatasetFunction, PersistDatasetFunction, RenameColumnFunction, RepartitionDatasetFunction, SortDatasetFunction, UnPersistDatasetFunction}
 import org.sp.etl.function.dataset.{DatasetRegisterAsTableFunction, DatasetUnionFunction, InnerJoinDatasetFunction}
 import org.sp.etl.function.{DatasetFunction, EtlFunction}
 
@@ -39,6 +42,7 @@ class SparkTransformationRunner extends TransformationRunner {
       case _: UnPersistDatasetFunction => dataBag.dataset.unpersist()
       case gr: GroupByDatasetFunction => AggregationUtil.aggregateDatabag(dataBag, gr)
       case flt: FilterDatasetFunction => dataBag.dataset.filter(flt.getFilterCondition)
+      case so: SortDatasetFunction => this.sortDataset(dataBag.dataset, so.getSortColumns)
       case other => throw new UnsupportedOperationException(s"unsupported dataset function - ${other}")
     }
     DataBag(dataBag.name, dataBag.alias, opDataset)
@@ -79,4 +83,17 @@ class SparkTransformationRunner extends TransformationRunner {
       case other => throw new InvalidConfigurationException(s"invalid storage level -$other")
     }
   }
+
+  def sortDataset(dataset: DataFrame, sortColumns: util.Map[String, SortDatasetFunction.SortOrder]): DataFrame = {
+    val sortSequence = sortColumns.asScala.map(p => p._2 match {
+      case SortOrder.asc => functions.col(p._1).asc.alias(p._1)
+      case SortOrder.asc_null_first => functions.col(p._1).asc_nulls_first.alias(p._1)
+      case SortOrder.asc_null_last => functions.col(p._1).asc_nulls_last.alias(p._1)
+      case SortOrder.desc => functions.col(p._1).desc.alias(p._1)
+      case SortOrder.desc_null_first => functions.col(p._1).desc_nulls_first.alias(p._1)
+      case SortOrder.desc_null_last => functions.col(p._1).desc_nulls_last.alias(p._1)
+    }).toSeq
+    dataset.sort(sortSequence: _*)
+  }
+
 }

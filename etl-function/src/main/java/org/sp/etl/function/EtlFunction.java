@@ -24,7 +24,8 @@ import org.sp.etl.function.dataset.InnerJoinDatasetFunction;
                 @JsonSubTypes.Type(value = GroupByDatasetFunction.class, name = "groupByDatasetFunction"),
                 @JsonSubTypes.Type(value = DatasetUnionFunction.class, name = "datasetUnionFunction"),
                 @JsonSubTypes.Type(value = DatasetRegisterAsTableFunction.class, name = "datasetRegisterAsTableFunction"),
-                @JsonSubTypes.Type(value = FilterDatasetFunction.class, name = "filterDatasetFunction")
+                @JsonSubTypes.Type(value = FilterDatasetFunction.class, name = "filterDatasetFunction"),
+                @JsonSubTypes.Type(value = SortDatasetFunction.class, name = "sortDatasetFunction")
         })
 
 public interface EtlFunction {
