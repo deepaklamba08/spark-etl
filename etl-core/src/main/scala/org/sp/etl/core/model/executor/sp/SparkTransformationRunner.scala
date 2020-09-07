@@ -11,7 +11,7 @@ import org.sp.etl.function.column.DateAndTimeFunction.{CurrentDateFunction, Curr
 import org.sp.etl.function.column.SortDatasetFunction.SortOrder
 import org.sp.etl.function.column.agg.GroupByDatasetFunction
 import org.sp.etl.function.column.{AddConstantValueFunction, ColumnFunction, DropColumnColumnFunction, FilterDatasetFunction, PersistDatasetFunction, RenameColumnFunction, RepartitionDatasetFunction, SortDatasetFunction, UnPersistDatasetFunction}
-import org.sp.etl.function.dataset.{DatasetRegisterAsTableFunction, DatasetUnionFunction, InnerJoinDatasetFunction, LeftJoinDatasetFunction}
+import org.sp.etl.function.dataset.{DatasetRegisterAsTableFunction, DatasetUnionFunction, InnerJoinDatasetFunction, LeftJoinDatasetFunction, RightJoinDatasetFunction}
 import org.sp.etl.function.{DatasetFunction, EtlFunction}
 
 import scala.util.{Failure, Success, Try}
@@ -45,7 +45,7 @@ class SparkTransformationRunner extends TransformationRunner {
       case flt: FilterDatasetFunction => dataBag.dataset.filter(flt.getFilterCondition)
       case so: SortDatasetFunction => this.sortDataset(dataBag.dataset, so.getSortColumns)
       case cd: CurrentDateFunction => dataBag.dataset.withColumn(cd.getColumnName, functions.current_date())
-      case ct: CurrentTimestampFunction => dataBag.dataset.withColumn(ct.getColumnName, functions.current_date())
+      case ct: CurrentTimestampFunction => dataBag.dataset.withColumn(ct.getColumnName, functions.current_timestamp())
       case td: ToDateFunction => dataBag.dataset.withColumn(td.getColumnName, functions.to_date(functions.col(td.getSourceColumn), td.getFormat))
       case tt: ToTimestampFunction => dataBag.dataset.withColumn(tt.getColumnName, functions.to_timestamp(functions.col(tt.getSourceColumn), tt.getFormat))
       case other => throw new UnsupportedOperationException(s"unsupported dataset function - ${other}")
@@ -55,7 +55,7 @@ class SparkTransformationRunner extends TransformationRunner {
 
   private def runDatasetFunction(dFx: DatasetFunction, pDataBag: DataBag, databags: Databags) = {
     val opDataset = dFx match {
-      case ij: InnerJoinDatasetFunction | LeftJoinDatasetFunction =>
+      case ij: InnerJoinDatasetFunction | LeftJoinDatasetFunction | RightJoinDatasetFunction =>
         val rightDs = databags.getDatabag(ij.getRightDatasetName).dataset
         val jc = pDataBag.dataset(ij.getLeftDatasetColumn) === rightDs(ij.getRightDatasetColumn)
         pDataBag.dataset.join(rightDs, jc, ij.joinType())
