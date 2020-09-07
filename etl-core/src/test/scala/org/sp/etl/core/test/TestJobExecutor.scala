@@ -12,6 +12,8 @@ import org.sp.etl.core.model.executor.sp.SparkJobExecutor
 import org.sp.etl.function.column.agg.{GroupByDatasetFunction, SumValue}
 import org.sp.etl.common.model.job.Job
 import org.sp.etl.common.util.JsonDataObject
+import org.sp.etl.function.column.DateAndTimeFunction.CurrentDateFunction
+import org.sp.etl.function.column.RenameColumnFunction
 
 class TestJobExecutor extends FunSuite {
 
@@ -49,6 +51,8 @@ class TestJobExecutor extends FunSuite {
 
     val sumMarks = new SumValue("marks", "total_marks")
     val groupByFunction = new GroupByDatasetFunction("group_marks", "group_marks", util.Arrays.asList("student_id"), util.Arrays.asList(sumMarks))
+    val renameColumnFunction = new RenameColumnFunction("rename column", "rename column", "total_marks", "total_marks_of_student")
+    val calculationDateFunction = new CurrentDateFunction("calculation date", "calculation date", "calculation_date")
 
     val step = new Step()
     step.setStepName("aggregate-marks")
@@ -57,7 +61,7 @@ class TestJobExecutor extends FunSuite {
     step.setOutputSourceName("marks_aggregated")
     step.setOutputSourceAlias("marks_aggregated")
     step.setInputSourceName("marks_data")
-    step.setEtlFunctions(util.Arrays.asList(groupByFunction))
+    step.setEtlFunctions(util.Arrays.asList(groupByFunction, renameColumnFunction, calculationDateFunction))
 
     val etlJob = new Job()
     etlJob.setJobName("student_data_analysis")
