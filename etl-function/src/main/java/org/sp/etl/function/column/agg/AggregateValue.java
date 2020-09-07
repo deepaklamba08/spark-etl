@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonSubTypes(
         {
                 @JsonSubTypes.Type(value = MaxValue.class, name = "maxValue"),
+                @JsonSubTypes.Type(value = SumValue.class, name = "sumValue")
         })
 
 public abstract class AggregateValue {

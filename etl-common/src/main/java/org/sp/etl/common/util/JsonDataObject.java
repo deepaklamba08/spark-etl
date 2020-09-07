@@ -3,6 +3,7 @@ package org.sp.etl.common.util;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -15,6 +16,10 @@ public class JsonDataObject implements Serializable {
     protected transient JsonNode dataNode;
 
     public JsonDataObject() {
+    }
+
+    public static JsonDataObject fromString(String content) throws JsonProcessingException {
+        return new JsonDataObject(JsonDataUtils.getObjectMapper().readTree(content));
     }
 
     public static JsonDataObject emptyArray() {

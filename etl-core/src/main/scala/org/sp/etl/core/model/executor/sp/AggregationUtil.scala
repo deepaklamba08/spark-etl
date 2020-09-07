@@ -2,7 +2,7 @@ package org.sp.etl.core.model.executor.sp
 
 import org.apache.spark.sql.{Column, DataFrame, functions}
 import org.sp.etl.core.model.DataBag
-import org.sp.etl.function.column.agg.{AggregateValue, GroupByDatasetFunction, MaxValue}
+import org.sp.etl.function.column.agg.{AggregateValue, GroupByDatasetFunction, MaxValue, SumValue}
 
 import scala.collection.JavaConverters._
 
@@ -18,6 +18,7 @@ object AggregationUtil {
   def aggregateColumn(aggValue: AggregateValue): Column =
     aggValue match {
       case max: MaxValue => functions.max(functions.col(max.getColumnName)).alias(max.getResultAlias)
+      case sum: SumValue => functions.sum(functions.col(sum.getColumnName)).alias(sum.getResultAlias)
       case other => throw new UnsupportedOperationException(s"aggregate function - ${other} not supported")
     }
 }

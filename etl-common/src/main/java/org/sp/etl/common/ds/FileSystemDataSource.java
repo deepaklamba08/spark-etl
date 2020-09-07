@@ -7,6 +7,15 @@ public abstract class FileSystemDataSource implements DataSource {
     private String baseDirectory;
     private String name;
 
+    public FileSystemDataSource() {
+
+    }
+
+    public FileSystemDataSource(String baseDirectory, String name) {
+        this.baseDirectory = baseDirectory;
+        this.name = name;
+    }
+
     @JsonIgnore
     public abstract String getPath(String fileName);
 
