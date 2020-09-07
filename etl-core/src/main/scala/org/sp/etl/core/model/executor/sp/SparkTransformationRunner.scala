@@ -3,11 +3,12 @@ package org.sp.etl.core.model.executor.sp
 import org.apache.spark.sql.functions
 import org.sp.etl.core.model.executor.{FunctionExecutionResult, TransformationRunner}
 import org.sp.etl.core.model.{DataBag, Databags, FailedStatus}
-import org.sp.etl.function.column.{AddConstantValueFunction, ColumnFunction, DropColumnColumnFunction, RenameColumnFunction}
+import org.sp.etl.function.column.{AddConstantValueFunction, ColumnFunction, DropColumnColumnFunction, RenameColumnFunction, RepartitionDatasetFunction}
 import org.sp.etl.function.dataset.InnerJoinDatasetFunction
 import org.sp.etl.function.{DatasetFunction, EtlFunction}
 
 import scala.util.{Failure, Success, Try}
+import scala.collection.JavaConverters._
 
 class SparkTransformationRunner extends TransformationRunner {
 
@@ -30,6 +31,7 @@ class SparkTransformationRunner extends TransformationRunner {
       case rn: RenameColumnFunction => dataBag.dataset.withColumnRenamed(rn.getOldName, rn.getNewName)
       case ac: AddConstantValueFunction => dataBag.dataset.withColumn(ac.getColumnName, functions.lit(ac.getValue))
       case dc: DropColumnColumnFunction => dataBag.dataset.drop(dc.getColumnName)
+      case rp: RepartitionDatasetFunction => dataBag.dataset.repartition(rp.getNumPartitons, rp.getPartitionColumns.asScala.map(functions.col): _*)
       case other => throw new UnsupportedOperationException(s"unsupported dataset function - ${other}")
     }
     DataBag(dataBag.name, dataBag.alias, opDataset)
