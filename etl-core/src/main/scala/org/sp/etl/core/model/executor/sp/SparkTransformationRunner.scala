@@ -7,7 +7,7 @@ import org.sp.etl.core.model.executor.{FunctionExecutionResult, TransformationRu
 import org.sp.etl.core.model.{DataBag, Databags, FailedStatus}
 import org.sp.etl.function.column.agg.GroupByDatasetFunction
 import org.sp.etl.function.column.{AddConstantValueFunction, ColumnFunction, DropColumnColumnFunction, PersistDatasetFunction, RenameColumnFunction, RepartitionDatasetFunction, UnPersistDatasetFunction}
-import org.sp.etl.function.dataset.InnerJoinDatasetFunction
+import org.sp.etl.function.dataset.{DatasetUnionFunction, InnerJoinDatasetFunction}
 import org.sp.etl.function.{DatasetFunction, EtlFunction}
 
 import scala.util.{Failure, Success, Try}
@@ -49,6 +49,13 @@ class SparkTransformationRunner extends TransformationRunner {
         val rightDs = databags.getDatabag(ij.getRightDatasetName).dataset
         val jc = pDataBag.dataset(ij.getLeftDatasetColumn) === rightDs(ij.getRightDatasetColumn)
         pDataBag.dataset.join(rightDs, jc, ij.joinType())
+      case un: DatasetUnionFunction =>
+        val sDatabag = databags.getDatabag(un.getSecondDatasetName).dataset
+        if (un.isUnionByName) {
+          pDataBag.dataset.unionByName(sDatabag)
+        } else {
+          pDataBag.dataset.union(sDatabag)
+        }
       case other => throw new UnsupportedOperationException(s"unsupported dataset function - ${other}")
     }
     DataBag(pDataBag.name, pDataBag.alias, opDataset)
