@@ -32,7 +32,11 @@ class SparkJobExecutor(appName: String, sparkConfig: JsonDataObject) extends Job
 
     var jobMetricsBuilder = new JobMetricsBuilder(job.getJobName, new Date())
 
-    val finalResult = steps.tail.foldLeft(stepExecutor.executeStep(steps.head, Databags.emptyDatabag))((stepResult, aStep) => {
+    val finalResult = steps.tail.foldLeft({
+      val stepExeResult = stepExecutor.executeStep(steps.head, Databags.emptyDatabag)
+      jobMetricsBuilder = jobMetricsBuilder.withStepMetrics(stepExeResult.stepMetrics)
+      stepExeResult
+    })((stepResult, aStep) => {
       stepResult.status match {
         case SuccessStatus =>
           jobMetricsBuilder = jobMetricsBuilder.withStepMetrics(stepResult.stepMetrics)
