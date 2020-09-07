@@ -7,7 +7,7 @@ import org.sp.etl.core.model.executor.{FunctionExecutionResult, TransformationRu
 import org.sp.etl.core.model.{DataBag, Databags, FailedStatus}
 import org.sp.etl.function.column.agg.GroupByDatasetFunction
 import org.sp.etl.function.column.{AddConstantValueFunction, ColumnFunction, DropColumnColumnFunction, PersistDatasetFunction, RenameColumnFunction, RepartitionDatasetFunction, UnPersistDatasetFunction}
-import org.sp.etl.function.dataset.{DatasetUnionFunction, InnerJoinDatasetFunction}
+import org.sp.etl.function.dataset.{DatasetRegisterAsTableFunction, DatasetUnionFunction, InnerJoinDatasetFunction}
 import org.sp.etl.function.{DatasetFunction, EtlFunction}
 
 import scala.util.{Failure, Success, Try}
@@ -56,6 +56,8 @@ class SparkTransformationRunner extends TransformationRunner {
         } else {
           pDataBag.dataset.union(sDatabag)
         }
+      case rd: DatasetRegisterAsTableFunction => pDataBag.dataset.createTempView(rd.getDatasetName)
+        pDataBag.dataset
       case other => throw new UnsupportedOperationException(s"unsupported dataset function - ${other}")
     }
     DataBag(pDataBag.name, pDataBag.alias, opDataset)
