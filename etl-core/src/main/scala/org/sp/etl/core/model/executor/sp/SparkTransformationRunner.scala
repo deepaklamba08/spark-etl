@@ -6,7 +6,7 @@ import org.sp.etl.common.exception.EtlExceptions.InvalidConfigurationException
 import org.sp.etl.core.model.executor.{FunctionExecutionResult, TransformationRunner}
 import org.sp.etl.core.model.{DataBag, Databags, FailedStatus}
 import org.sp.etl.function.column.agg.GroupByDatasetFunction
-import org.sp.etl.function.column.{AddConstantValueFunction, ColumnFunction, DropColumnColumnFunction, PersistDatasetFunction, RenameColumnFunction, RepartitionDatasetFunction, UnPersistDatasetFunction}
+import org.sp.etl.function.column.{AddConstantValueFunction, ColumnFunction, DropColumnColumnFunction, FilterDatasetFunction, PersistDatasetFunction, RenameColumnFunction, RepartitionDatasetFunction, UnPersistDatasetFunction}
 import org.sp.etl.function.dataset.{DatasetRegisterAsTableFunction, DatasetUnionFunction, InnerJoinDatasetFunction}
 import org.sp.etl.function.{DatasetFunction, EtlFunction}
 
@@ -38,6 +38,7 @@ class SparkTransformationRunner extends TransformationRunner {
       case pr: PersistDatasetFunction => dataBag.dataset.persist(this.getStorageLevel(pr.getPersistLevel))
       case _: UnPersistDatasetFunction => dataBag.dataset.unpersist()
       case gr: GroupByDatasetFunction => AggregationUtil.aggregateDatabag(dataBag, gr)
+      case flt: FilterDatasetFunction => dataBag.dataset.filter(flt.getFilterCondition)
       case other => throw new UnsupportedOperationException(s"unsupported dataset function - ${other}")
     }
     DataBag(dataBag.name, dataBag.alias, opDataset)
