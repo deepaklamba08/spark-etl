@@ -10,7 +10,7 @@ import org.sp.etl.core.model.{DataBag, Databags, FailedStatus}
 import org.sp.etl.function.column.SortDatasetFunction.SortOrder
 import org.sp.etl.function.column.agg.GroupByDatasetFunction
 import org.sp.etl.function.column.{AddConstantValueFunction, ColumnFunction, DropColumnColumnFunction, FilterDatasetFunction, PersistDatasetFunction, RenameColumnFunction, RepartitionDatasetFunction, SortDatasetFunction, UnPersistDatasetFunction}
-import org.sp.etl.function.dataset.{DatasetRegisterAsTableFunction, DatasetUnionFunction, InnerJoinDatasetFunction}
+import org.sp.etl.function.dataset.{DatasetRegisterAsTableFunction, DatasetUnionFunction, InnerJoinDatasetFunction, LeftJoinDatasetFunction}
 import org.sp.etl.function.{DatasetFunction, EtlFunction}
 
 import scala.util.{Failure, Success, Try}
@@ -50,7 +50,7 @@ class SparkTransformationRunner extends TransformationRunner {
 
   private def runDatasetFunction(dFx: DatasetFunction, pDataBag: DataBag, databags: Databags) = {
     val opDataset = dFx match {
-      case ij: InnerJoinDatasetFunction =>
+      case ij: InnerJoinDatasetFunction | LeftJoinDatasetFunction =>
         val rightDs = databags.getDatabag(ij.getRightDatasetName).dataset
         val jc = pDataBag.dataset(ij.getLeftDatasetColumn) === rightDs(ij.getRightDatasetColumn)
         pDataBag.dataset.join(rightDs, jc, ij.joinType())
