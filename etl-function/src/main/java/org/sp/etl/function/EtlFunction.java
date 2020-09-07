@@ -31,7 +31,8 @@ import org.sp.etl.function.dataset.*;
                 @JsonSubTypes.Type(value = DateAndTimeFunction.CurrentTimestampFunction.class, name = "currentTimestampFunction"),
                 @JsonSubTypes.Type(value = DateAndTimeFunction.ToDateFunction.class, name = "toDateFunction"),
                 @JsonSubTypes.Type(value = DateAndTimeFunction.ToTimestampFunction.class, name = "toTimestampFunction"),
-                @JsonSubTypes.Type(value = SumColumnFunction.class, name = "sumColumnFunction")
+                @JsonSubTypes.Type(value = SumColumnFunction.class, name = "sumColumnFunction"),
+                @JsonSubTypes.Type(value = CastColumnFunction.class, name = "castColumnFunction")
         })
 
 public interface EtlFunction {

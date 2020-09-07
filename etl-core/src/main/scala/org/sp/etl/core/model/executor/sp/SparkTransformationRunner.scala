@@ -11,7 +11,7 @@ import org.sp.etl.function.column.DateAndTimeFunction.{CurrentDateFunction, Curr
 import org.sp.etl.function.column.SortDatasetFunction.SortOrder
 import org.sp.etl.function.column.agg.GroupByDatasetFunction
 import org.sp.etl.function.column.math.SumColumnFunction
-import org.sp.etl.function.column.{AddConstantValueFunction, ColumnFunction, DropColumnFunction, FilterDatasetFunction, PersistDatasetFunction, RenameColumnFunction, RepartitionDatasetFunction, SortDatasetFunction, UnPersistDatasetFunction}
+import org.sp.etl.function.column.{AddConstantValueFunction, CastColumnFunction, ColumnFunction, DropColumnFunction, FilterDatasetFunction, PersistDatasetFunction, RenameColumnFunction, RepartitionDatasetFunction, SortDatasetFunction, UnPersistDatasetFunction}
 import org.sp.etl.function.dataset.{DatasetRegisterAsTableFunction, DatasetUnionFunction, InnerJoinDatasetFunction, LeftJoinDatasetFunction, RightJoinDatasetFunction}
 import org.sp.etl.function.{DatasetFunction, EtlFunction}
 
@@ -49,7 +49,10 @@ class SparkTransformationRunner extends TransformationRunner {
       case ct: CurrentTimestampFunction => dataBag.dataset.withColumn(ct.getColumnName, functions.current_timestamp())
       case td: ToDateFunction => dataBag.dataset.withColumn(td.getColumnName, functions.to_date(functions.col(td.getSourceColumn), td.getFormat))
       case tt: ToTimestampFunction => dataBag.dataset.withColumn(tt.getColumnName, functions.to_timestamp(functions.col(tt.getSourceColumn), tt.getFormat))
-      case sum: SumColumnFunction => dataBag.dataset.withColumn(sum.getResultColumnName, sum.getColumns.asScala.tail.foldLeft(functions.col(sum.getColumns.asScala.head))((a, b) => a + b))
+      case sum: SumColumnFunction =>
+        val columnsToAdd = sum.getColumns.asScala
+        dataBag.dataset.withColumn(sum.getResultColumnName, columnsToAdd.tail.foldLeft(functions.col(columnsToAdd.head))((a, b) => a + b))
+      case cast: CastColumnFunction => dataBag.dataset.withColumn(cast.getResultColumnName, functions.col(cast.getSourceColumn).cast(cast.getToType).alias(cast.getResultColumnName))
       case other => throw new UnsupportedOperationException(s"unsupported dataset function - ${other}")
     }
     DataBag(dataBag.name, dataBag.alias, opDataset)
