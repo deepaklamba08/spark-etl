@@ -7,6 +7,7 @@ import org.apache.spark.storage.StorageLevel
 import org.sp.etl.common.exception.EtlExceptions.InvalidConfigurationException
 import org.sp.etl.core.model.executor.{FunctionExecutionResult, TransformationRunner}
 import org.sp.etl.core.model.{DataBag, Databags, FailedStatus}
+import org.sp.etl.function.column.DateAndTimeFunction.{CurrentDateFunction, CurrentTimestampFunction}
 import org.sp.etl.function.column.SortDatasetFunction.SortOrder
 import org.sp.etl.function.column.agg.GroupByDatasetFunction
 import org.sp.etl.function.column.{AddConstantValueFunction, ColumnFunction, DropColumnColumnFunction, FilterDatasetFunction, PersistDatasetFunction, RenameColumnFunction, RepartitionDatasetFunction, SortDatasetFunction, UnPersistDatasetFunction}
@@ -43,6 +44,8 @@ class SparkTransformationRunner extends TransformationRunner {
       case gr: GroupByDatasetFunction => AggregationUtil.aggregateDatabag(dataBag, gr)
       case flt: FilterDatasetFunction => dataBag.dataset.filter(flt.getFilterCondition)
       case so: SortDatasetFunction => this.sortDataset(dataBag.dataset, so.getSortColumns)
+      case cd: CurrentDateFunction => dataBag.dataset.withColumn(cd.getColumnName, functions.current_date())
+      case ct: CurrentTimestampFunction => dataBag.dataset.withColumn(ct.getColumnName, functions.current_date())
       case other => throw new UnsupportedOperationException(s"unsupported dataset function - ${other}")
     }
     DataBag(dataBag.name, dataBag.alias, opDataset)

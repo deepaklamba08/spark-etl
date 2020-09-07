@@ -25,7 +25,9 @@ import org.sp.etl.function.dataset.*;
                 @JsonSubTypes.Type(value = FilterDatasetFunction.class, name = "filterDatasetFunction"),
                 @JsonSubTypes.Type(value = SortDatasetFunction.class, name = "sortDatasetFunction"),
                 @JsonSubTypes.Type(value = LeftJoinDatasetFunction.class, name = "leftJoinDatasetFunction"),
-                @JsonSubTypes.Type(value = RightJoinDatasetFunction.class, name = "rightJoinDatasetFunction")
+                @JsonSubTypes.Type(value = RightJoinDatasetFunction.class, name = "rightJoinDatasetFunction"),
+                @JsonSubTypes.Type(value = DateAndTimeFunction.CurrentDateFunction.class, name = "currentDateFunction"),
+                @JsonSubTypes.Type(value = DateAndTimeFunction.CurrentTimestampFunction.class, name = "currentTimestampFunction")
         })
 
 public interface EtlFunction {
