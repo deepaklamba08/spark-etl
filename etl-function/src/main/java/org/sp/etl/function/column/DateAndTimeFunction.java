@@ -49,4 +49,45 @@ public abstract class DateAndTimeFunction extends ColumnFunction {
             super(name, description, columnName, null);
         }
     }
+
+    public static class ToDateFunction extends DateAndTimeFunction {
+        private String sourceColumn;
+
+        public ToDateFunction(String sourceColumn) {
+            this.sourceColumn = sourceColumn;
+        }
+
+        public ToDateFunction(String name, String description, String columnName, String sourceColumn, String format) {
+            super(name, description, columnName, format);
+            this.sourceColumn = sourceColumn;
+        }
+
+        public String getSourceColumn() {
+            return sourceColumn;
+        }
+
+        public void setSourceColumn(String sourceColumn) {
+            this.sourceColumn = sourceColumn;
+        }
+    }
+    public static class ToTimestampFunction extends DateAndTimeFunction {
+        private String sourceColumn;
+
+        public ToTimestampFunction(String sourceColumn) {
+            this.sourceColumn = sourceColumn;
+        }
+
+        public ToTimestampFunction(String name, String description, String columnName, String sourceColumn, String format) {
+            super(name, description, columnName, format);
+            this.sourceColumn = sourceColumn;
+        }
+
+        public String getSourceColumn() {
+            return sourceColumn;
+        }
+
+        public void setSourceColumn(String sourceColumn) {
+            this.sourceColumn = sourceColumn;
+        }
+    }
 }
