@@ -5,16 +5,15 @@ import java.util.Date
 import org.slf4j.LoggerFactory
 import org.sp.etl.core.metrics.FunctionMetrics
 import org.sp.etl.core.model.{SuccessStatus, _}
-import org.sp.etl.core.moniter.IJobStatusDAO
 import org.sp.etl.function.EtlFunction
 
 import scala.collection.mutable.ListBuffer
 
-abstract class TransformationRunner(statusDAO: IJobStatusDAO) {
+trait TransformationRunner {
 
   private val logger = LoggerFactory.getLogger(this.getClass)
 
-  def runTransformation(transformation: Transformation, stepExecutionId: String): TransformationResult = {
+  def runTransformation(transformation: Transformation): TransformationResult = {
     logger.debug("executing - TransformationRunner.runTransformation()")
 
     val functions = transformation.functions.iterator
@@ -25,9 +24,7 @@ abstract class TransformationRunner(statusDAO: IJobStatusDAO) {
       val trFunction = functions.next()
       val functionMetrics = new FunctionMetrics.FunctionMetricsBuilder(trFunction.name(), new Date())
       logger.debug(s"executing function - ${trFunction.name()}")
-      val funExeId = statusDAO.startFunctionExecution(trFunction.name(), stepExecutionId)
       val result = this.executeFunction(trFunction, databag, transformation.secondary)
-      statusDAO.endFunctionExecution(funExeId, result.status.toString, "")
       metrics.+=(functionMetrics.withEndTime(new Date()).build())
       databag = result.dataBag
       status = result.status

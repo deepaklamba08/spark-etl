@@ -6,14 +6,13 @@ import org.apache.log4j.{Level, Logger}
 import org.scalatest.FunSuite
 import org.sp.etl.common.ds.LocalFileSystemDataSource
 import org.sp.etl.common.io.source.impl.CsvFileEtlSource
-import org.sp.etl.common.model.step.Step
-import org.sp.etl.core.model.{DataSourceRegistry, EtlSourceRegistry, SuccessStatus}
-import org.sp.etl.core.model.executor.sp.SparkJobExecutor
-import org.sp.etl.function.column.agg.{GroupByDatasetFunction, SumValue}
 import org.sp.etl.common.model.job.Job
+import org.sp.etl.common.model.step.Step
 import org.sp.etl.common.util.JsonDataObject
-import org.sp.etl.core.moniter.InMemoryJobStatusDAO
+import org.sp.etl.core.model.executor.sp.SparkJobExecutor
+import org.sp.etl.core.model.{DataSourceRegistry, EtlSourceRegistry, SuccessStatus}
 import org.sp.etl.function.column.DateAndTimeFunction.CurrentDateFunction
+import org.sp.etl.function.column.agg.{GroupByDatasetFunction, SumValue}
 import org.sp.etl.function.column.math.SumColumnFunction
 import org.sp.etl.function.column.{AddConstantValueFunction, CastColumnFunction, RenameColumnFunction}
 
@@ -22,7 +21,6 @@ class TestJobExecutor extends FunSuite {
   Logger.getLogger("org").setLevel(Level.OFF)
   Logger.getLogger("akka").setLevel(Level.OFF)
   private val jobExecutor = this.createJobExecutor
-
 
   private def createJobExecutor = {
     val sparkConf = JsonDataObject.fromString(
@@ -33,8 +31,7 @@ class TestJobExecutor extends FunSuite {
         |    "spark.testing.memory": "471859200"
         |  }
         |}""".stripMargin)
-
-    new SparkJobExecutor("TestJobExecutor", sparkConf, new InMemoryJobStatusDAO)
+    new SparkJobExecutor("TestJobExecutor", sparkConf)
   }
 
   test("test group by function") {
@@ -74,7 +71,7 @@ class TestJobExecutor extends FunSuite {
     etlJob.setJobName("student_data_analysis")
     etlJob.setSteps(util.Arrays.asList(step))
 
-    val result = jobExecutor.executeJob(etlJob, "1")
+    val result = jobExecutor.executeJob(etlJob)
 
     assert(result.status == SuccessStatus)
     result.dataBag.dataset.printSchema()

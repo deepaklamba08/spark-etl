@@ -2,16 +2,15 @@ package org.sp.etl.core.model.executor
 
 import org.slf4j.LoggerFactory
 import org.sp.etl.common.exception.EtlExceptions
-import org.sp.etl.common.exception.EtlExceptions.{EtlAppException, ObjectNotFoundException, SystemFailureException}
-import org.sp.etl.common.repo.EtlRepositroty
-import org.sp.etl.core.model.{DataBag, DataSourceRegistry, EtlSourceRegistry, EtlTargetRegistry, FailedStatus, SuccessStatus}
-import org.sp.etl.core.util.Constants
+import org.sp.etl.common.exception.EtlExceptions.{EtlAppException, ObjectNotFoundException}
 import org.sp.etl.common.model.job.Job
-import org.sp.etl.core.moniter.IJobStatusDAO
+import org.sp.etl.common.repo.EtlRepositroty
+import org.sp.etl.core.model._
+import org.sp.etl.core.util.Constants
 
 import scala.collection.JavaConverters._
 
-class JobOrchestrator(etlRepositroty: EtlRepositroty, statusDAO: IJobStatusDAO) {
+class JobOrchestrator(etlRepositroty: EtlRepositroty) {
   private val logger = LoggerFactory.getLogger(this.getClass)
 
   def executeJob(jobName: String) = {
@@ -62,14 +61,12 @@ class JobOrchestrator(etlRepositroty: EtlRepositroty, statusDAO: IJobStatusDAO) 
   }
 
   private def executeJobInternal(job: Job) = {
-    val executor = JobExecutorFactory.createJobExecutor(job.getJobName, Constants.SPARK_JOB_EXECUTOR, this.etlRepositroty.lookupObject(Constants.EXECUTOR_CONF_NAME), statusDAO)
-    val jobExecutionId = statusDAO.startJobExecution(job.getJobName)
-    val jobExecutionResult = executor.executeJob(job, jobExecutionId)
+    val executor = JobExecutorFactory.createJobExecutor(job.getJobName, Constants.SPARK_JOB_EXECUTOR, this.etlRepositroty.lookupObject(Constants.EXECUTOR_CONF_NAME))
+    val jobExecutionResult = executor.executeJob(job)
     jobExecutionResult.status match {
       case SuccessStatus => this.storeResultDataset(job.getTargetName, jobExecutionResult.dataBag)
       case FailedStatus => logger.error(s"job execution failed, cause - ${jobExecutionResult.executionMessage}")
     }
-    statusDAO.endJobExecution(jobExecutionId, jobExecutionResult.status.toString, "")
   }
 
   private def storeResultDataset(targetName: String, dataset: DataBag) = {

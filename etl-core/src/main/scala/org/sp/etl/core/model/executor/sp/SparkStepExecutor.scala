@@ -7,22 +7,21 @@ import org.sp.etl.common.exception.EtlExceptions.ObjectNotFoundException
 import org.sp.etl.common.model.step.Step
 import org.sp.etl.core.metrics.StepMetrics
 import org.sp.etl.core.model._
-import org.sp.etl.core.model.executor.{DataLoader, StepExecutionResult, StepExecutor, TransformationRunner}
-import org.sp.etl.core.moniter.IJobStatusDAO
+import org.sp.etl.core.model.executor.{DataLoader, StepExecutionResult, StepExecutor}
 
 import scala.collection.JavaConverters._
 
-class SparkStepExecutor(dataLoader: DataLoader, statusDAO: IJobStatusDAO) extends StepExecutor {
+class SparkStepExecutor(dataLoader: DataLoader) extends StepExecutor {
 
   private val logger = LoggerFactory.getLogger(this.getClass)
-  private lazy val transformationRunner = new SparkTransformationRunner(statusDAO)
+  private lazy val transformationRunner = new SparkTransformationRunner()
 
-  override def executeStep(step: Step, otherDatabags: Databags, stepExecutionId: String): StepExecutionResult = {
+  override def executeStep(step: Step, otherDatabags: Databags): StepExecutionResult = {
     logger.debug(s"executing step - ${step.getStepName}")
 
     val transformation = this.createTransformation(step, otherDatabags)
 
-    val transformationResult = transformationRunner.runTransformation(transformation, stepExecutionId)
+    val transformationResult = transformationRunner.runTransformation(transformation)
     val stepMetrics = transformationResult.functionMetrics.foldLeft(new StepMetrics.StepMetricsBuilder(step.getStepName, step.getStepIndex, new Date()))((acc, metrics) => acc.withFunctionMetrics(metrics))
 
     transformationResult.status match {

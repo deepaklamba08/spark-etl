@@ -5,21 +5,20 @@ import java.util.Date
 import org.slf4j.LoggerFactory
 import org.sp.etl.common.exception.EtlExceptions.InvalidConfigurationException
 import org.sp.etl.common.model.job.Job
+import org.sp.etl.common.model.step.Step
 import org.sp.etl.common.util.JsonDataObject
 import org.sp.etl.core.metrics.JobMetrics.JobMetricsBuilder
-import org.sp.etl.core.model.{Databags, FailedStatus, SuccessStatus}
 import org.sp.etl.core.model.executor.sp.data.loader.SparkDataLoader
 import org.sp.etl.core.model.executor.{JobExecutionResult, JobExecutor}
-import org.sp.etl.common.model.step.Step
-import org.sp.etl.core.moniter.IJobStatusDAO
+import org.sp.etl.core.model.{Databags, FailedStatus, SuccessStatus}
 
 import scala.collection.JavaConverters._
 
-class SparkJobExecutor(appName: String, sparkConfig: JsonDataObject, statusDAO: IJobStatusDAO) extends JobExecutor(statusDAO) {
+class SparkJobExecutor(appName: String, sparkConfig: JsonDataObject) extends JobExecutor {
 
   private val logger = LoggerFactory.getLogger(this.getClass)
 
-  override def executeJob(job: Job, jobExecutionId: String): JobExecutionResult = {
+  override def executeJob(job: Job): JobExecutionResult = {
     logger.debug("executing - SparkJobExecutor.executeJob()")
     if (!this.validateJob(job)) {
       throw new InvalidConfigurationException("multiple steps can not have same output source name or same step name")
@@ -29,29 +28,30 @@ class SparkJobExecutor(appName: String, sparkConfig: JsonDataObject, statusDAO: 
     val steps = job.getSteps.asScala.sortWith((s1, s2) => s1.getStepIndex < s2.getStepIndex)
     logger.debug(s"number of steps - ${steps.size}")
 
-    val stepExecutor = new SparkStepExecutor(new SparkDataLoader(sparkSession), statusDAO)
+    val stepExecutor = new SparkStepExecutor(new SparkDataLoader(sparkSession))
 
     var jobMetricsBuilder = new JobMetricsBuilder(job.getJobName, new Date())
 
     val finalResult = steps.tail.foldLeft({
-      val stepExeId = statusDAO.startStepExecution(steps.head.getStepName, jobExecutionId)
-      val stepExeResult = stepExecutor.executeStep(steps.head, Databags.emptyDatabag, stepExeId)
+      val stepExeResult = this.executeStep(steps.head, stepExecutor, Databags.emptyDatabag)
       jobMetricsBuilder = jobMetricsBuilder.withStepMetrics(stepExeResult.stepMetrics)
-      statusDAO.endStepExecution(stepExeId, stepExeResult.status.toString, "")
       stepExeResult
     })((stepResult, aStep) => {
       stepResult.status match {
         case SuccessStatus =>
           jobMetricsBuilder = jobMetricsBuilder.withStepMetrics(stepResult.stepMetrics)
-          val stepExeId = statusDAO.startStepExecution(aStep.getStepName, jobExecutionId)
-          val stepExeResult = stepExecutor.executeStep(aStep, Databags(stepResult.otherDatabags.getDatabags), stepExeId)
-          statusDAO.endStepExecution(stepExeId, stepExeResult.status.toString, "")
+          val stepExeResult = this.executeStep(aStep, stepExecutor, Databags(stepResult.otherDatabags.getDatabags))
           stepExeResult
         case FailedStatus => stepResult
       }
     })
 
     JobExecutionResult(finalResult.primaryDatabag, jobMetricsBuilder.withEndTime(new Date()).build(), finalResult.executionMessage, finalResult.status)
+  }
+
+  private def executeStep(step: Step, stepExecutor: SparkStepExecutor, databags: Databags) = {
+    val stepExeResult = stepExecutor.executeStep(step, databags)
+    stepExeResult
   }
 
   private def validateJob(job: Job) = {

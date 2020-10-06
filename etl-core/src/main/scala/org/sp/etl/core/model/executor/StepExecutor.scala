@@ -6,7 +6,7 @@ import org.sp.etl.core.model.{DataBag, Databags, Status, SuccessStatus}
 
 trait StepExecutor {
 
-  def executeStep(step: Step, otherDatabags: Databags, stepExecutionId: String): StepExecutionResult
+  def executeStep(step: Step, otherDatabags: Databags): StepExecutionResult
 }
 
 case class StepExecutionResult(primaryDatabag: DataBag, otherDatabags: Databags, stepMetrics: StepMetrics, executionMessage: String = null, status: Status = SuccessStatus)

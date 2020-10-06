@@ -3,13 +3,12 @@ package org.sp.etl.core.model.executor.sp
 import org.sp.etl.core.model.executor.sp.function.{ColumnFunctionRunnerFactory, DatasetFunctionRunnerFactory}
 import org.sp.etl.core.model.executor.{FunctionExecutionResult, TransformationRunner}
 import org.sp.etl.core.model.{DataBag, Databags, FailedStatus}
-import org.sp.etl.core.moniter.IJobStatusDAO
 import org.sp.etl.function.column.ColumnFunction
 import org.sp.etl.function.{DatasetFunction, EtlFunction}
 
 import scala.util.{Failure, Success, Try}
 
-class SparkTransformationRunner(statusDAO: IJobStatusDAO) extends TransformationRunner(statusDAO) {
+class SparkTransformationRunner extends TransformationRunner {
 
   override protected def executeFunction(etlFunction: EtlFunction, primary: DataBag, secondary: Databags): FunctionExecutionResult = {
     Try(runFunction(etlFunction, primary, secondary)) match {

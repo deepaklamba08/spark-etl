@@ -1,13 +1,12 @@
 package org.sp.etl.core.model.executor
 
-import org.sp.etl.core.model.{DataBag, Status, SuccessStatus}
 import org.sp.etl.common.model.job.Job
 import org.sp.etl.core.metrics.JobMetrics
-import org.sp.etl.core.moniter.IJobStatusDAO
+import org.sp.etl.core.model.{DataBag, Status, SuccessStatus}
 
-abstract class JobExecutor(statusDAO: IJobStatusDAO) {
+trait JobExecutor {
 
-  def executeJob(job: Job, jobExecutionId: String): JobExecutionResult
+  def executeJob(job: Job): JobExecutionResult
 }
 
 
