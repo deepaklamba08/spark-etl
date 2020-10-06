@@ -35,7 +35,7 @@ class SparkStepExecutor(transformationRunner: TransformationRunner, dataLoader: 
   }
 
   private def createTransformation(step: Step, otherDatabags: Databags) = {
-    val databags = step.getSources.asScala.map(s => this.lookupDatabag(s, dataLoader, otherDatabags))
+    val databags = step.getSources.asScala.map(this.lookupDatabag(dataLoader, otherDatabags) _)
     logger.debug(s"number of  datasets in step - ${databags.size}")
 
     val primaryInput = databags.find(_.name.equals(step.getInputSourceName)).fold(throw new ObjectNotFoundException(s"could not find primary datasets - ${step.getInputSourceName}"))(c => c)
@@ -44,7 +44,7 @@ class SparkStepExecutor(transformationRunner: TransformationRunner, dataLoader: 
     Transformation(step.getEtlFunctions.asScala.toList, primaryInput, new Databags((secondaryInput ++ otherDatabags.getDatabags).toList))
   }
 
-  private def lookupDatabag(sourceName: String, dataLoader: DataLoader, otherDatabags: Databags) = {
+  private def lookupDatabag(dataLoader: DataLoader, otherDatabags: Databags)(sourceName: String) = {
     try {
       val etlSource = EtlSourceRegistry.lookupSource(sourceName)
       dataLoader.loadData(etlSource, DataSourceRegistry.lookupDataSource(etlSource.dataSourceName()))

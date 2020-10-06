@@ -26,6 +26,15 @@ public class FunctionMetrics implements Serializable {
         return endTime;
     }
 
+    @Override
+    public String toString() {
+        return "FunctionMetrics{" +
+                "functionName='" + functionName + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                '}';
+    }
+
     public static class FunctionMetricsBuilder {
         private String functionName;
         private Date startTime;

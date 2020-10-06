@@ -41,6 +41,16 @@ public class StepMetrics implements Serializable {
         return endTime;
     }
 
+    @Override
+    public String toString() {
+        return "StepMetrics{" +
+                "stepName='" + stepName + '\'' +
+                ", functionMetrics=" + (functionMetrics != null ? functionMetrics.size() : 0) +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                '}';
+    }
+
     public static class StepMetricsBuilder {
         private String stepName;
         private int stepIndex;

@@ -34,6 +34,16 @@ public class JobMetrics implements Serializable {
         return endTime;
     }
 
+    @Override
+    public String toString() {
+        return "JobMetrics{" +
+                "jobName='" + jobName + '\'' +
+                ", stepMetrics=" + (stepMetrics != null ? stepMetrics.size() : 0) +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                '}';
+    }
+
     public static class JobMetricsBuilder {
         private String jobName;
         private List<StepMetrics> stepMetrics;
