@@ -4,9 +4,8 @@ import java.util.Date
 
 import org.slf4j.LoggerFactory
 import org.sp.etl.core.metrics.FunctionMetrics
-import org.sp.etl.core.model._
+import org.sp.etl.core.model.{SuccessStatus, _}
 import org.sp.etl.function.EtlFunction
-import org.sp.etl.core.model.SuccessStatus
 
 import scala.collection.mutable.ListBuffer
 
@@ -16,18 +15,22 @@ trait TransformationRunner {
 
   def runTransformation(transformation: Transformation): TransformationResult = {
     logger.debug("executing - TransformationRunner.runTransformation()")
+
+    val functions = transformation.functions.iterator
+    var status: Status = SuccessStatus
+    var databag = transformation.primary
     val metrics = ListBuffer[FunctionMetrics]()
-    val rDatabag = transformation.functions.foldLeft(transformation.primary)((databag, trFunction) => {
+    while (functions.hasNext && status == SuccessStatus) {
+      val trFunction = functions.next()
       val functionMetrics = new FunctionMetrics.FunctionMetricsBuilder(trFunction.name(), new Date())
       logger.debug(s"executing function - ${trFunction.name()}")
       val result = this.executeFunction(trFunction, databag, transformation.secondary)
       metrics.+=(functionMetrics.withEndTime(new Date()).build())
-      result.status match {
-        case SuccessStatus => result.dataBag
-        case FailedStatus => return TransformationResult(null, metrics, result.executionMessage, result.status)
-      }
-    })
-    TransformationResult(rDatabag, metrics)
+      databag = result.dataBag
+      status = result.status
+    }
+    TransformationResult(databag, metrics)
+
   }
 
   protected def executeFunction(etlFunction: EtlFunction, primary: DataBag, secondary: Databags): FunctionExecutionResult
