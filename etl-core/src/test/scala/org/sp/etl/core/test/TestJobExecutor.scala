@@ -12,6 +12,7 @@ import org.sp.etl.core.model.executor.sp.SparkJobExecutor
 import org.sp.etl.function.column.agg.{GroupByDatasetFunction, SumValue}
 import org.sp.etl.common.model.job.Job
 import org.sp.etl.common.util.JsonDataObject
+import org.sp.etl.core.moniter.InMemoryJobStatusDAO
 import org.sp.etl.function.column.DateAndTimeFunction.CurrentDateFunction
 import org.sp.etl.function.column.math.SumColumnFunction
 import org.sp.etl.function.column.{AddConstantValueFunction, CastColumnFunction, RenameColumnFunction}
@@ -22,6 +23,7 @@ class TestJobExecutor extends FunSuite {
   Logger.getLogger("akka").setLevel(Level.OFF)
   private val jobExecutor = this.createJobExecutor
 
+
   private def createJobExecutor = {
     val sparkConf = JsonDataObject.fromString(
       """{
@@ -31,7 +33,8 @@ class TestJobExecutor extends FunSuite {
         |    "spark.testing.memory": "471859200"
         |  }
         |}""".stripMargin)
-    new SparkJobExecutor("TestJobExecutor", sparkConf)
+
+    new SparkJobExecutor("TestJobExecutor", sparkConf, new InMemoryJobStatusDAO)
   }
 
   test("test group by function") {
@@ -71,7 +74,7 @@ class TestJobExecutor extends FunSuite {
     etlJob.setJobName("student_data_analysis")
     etlJob.setSteps(util.Arrays.asList(step))
 
-    val result = jobExecutor.executeJob(etlJob)
+    val result = jobExecutor.executeJob(etlJob, "1")
 
     assert(result.status == SuccessStatus)
     result.dataBag.dataset.printSchema()

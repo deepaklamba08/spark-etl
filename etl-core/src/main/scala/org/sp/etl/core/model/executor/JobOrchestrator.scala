@@ -7,10 +7,11 @@ import org.sp.etl.common.repo.EtlRepositroty
 import org.sp.etl.core.model.{DataBag, DataSourceRegistry, EtlSourceRegistry, EtlTargetRegistry, FailedStatus, SuccessStatus}
 import org.sp.etl.core.util.Constants
 import org.sp.etl.common.model.job.Job
+import org.sp.etl.core.moniter.IJobStatusDAO
 
 import scala.collection.JavaConverters._
 
-class JobOrchestrator(etlRepositroty: EtlRepositroty) {
+class JobOrchestrator(etlRepositroty: EtlRepositroty, statusDAO: IJobStatusDAO) {
   private val logger = LoggerFactory.getLogger(this.getClass)
 
   def executeJob(jobName: String) = {
@@ -61,12 +62,14 @@ class JobOrchestrator(etlRepositroty: EtlRepositroty) {
   }
 
   private def executeJobInternal(job: Job) = {
-    val executor = JobExecutorFactory.createJobExecutor(job.getJobName, Constants.SPARK_JOB_EXECUTOR, this.etlRepositroty.lookupObject(Constants.EXECUTOR_CONF_NAME))
-    val jobExecutionResult = executor.executeJob(job)
+    val executor = JobExecutorFactory.createJobExecutor(job.getJobName, Constants.SPARK_JOB_EXECUTOR, this.etlRepositroty.lookupObject(Constants.EXECUTOR_CONF_NAME), statusDAO)
+    val jobExecutionId = statusDAO.startJobExecution(job.getJobName)
+    val jobExecutionResult = executor.executeJob(job, jobExecutionId)
     jobExecutionResult.status match {
       case SuccessStatus => this.storeResultDataset(job.getTargetName, jobExecutionResult.dataBag)
       case FailedStatus => logger.error(s"job execution failed, cause - ${jobExecutionResult.executionMessage}")
     }
+    statusDAO.endJobExecution(jobExecutionId, jobExecutionResult.status.toString, "")
   }
 
   private def storeResultDataset(targetName: String, dataset: DataBag) = {

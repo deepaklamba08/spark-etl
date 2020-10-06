@@ -3,6 +3,7 @@ package org.sp.etl.core.test
 import org.apache.log4j.{Level, Logger}
 import org.scalatest.FunSuite
 import org.sp.etl.core.model.executor.JobOrchestrator
+import org.sp.etl.core.moniter.InMemoryJobStatusDAO
 import org.sp.etl.core.repo.impl.LocalFsEtlRepositroty
 
 import scala.collection.JavaConverters._
@@ -11,6 +12,8 @@ class TestJobOrchestrator extends FunSuite {
 
   Logger.getLogger("org").setLevel(Level.OFF)
   Logger.getLogger("akka").setLevel(Level.OFF)
+  private val statusDAO = new InMemoryJobStatusDAO
+
   private val parameters = Map("jobConfigFile" -> "src/test/resources/etl_repo/job/job_config.json",
     "dbConfigFile" -> "src/test/resources/etl_repo/ds/ds.json",
     "sourceConfigFile" -> "src/test/resources/etl_repo/etl_sources/sources.json",
@@ -20,18 +23,18 @@ class TestJobOrchestrator extends FunSuite {
   test("run a job with single dataset from repository") {
     val repository = new LocalFsEtlRepositroty(parameters.asJava)
 
-    new JobOrchestrator(repository).executeJob("single-dataset-job")
+    new JobOrchestrator(repository, statusDAO).executeJob("single-dataset-job")
   }
 
   test("run a job with multiple dataset from repository") {
     val repository = new LocalFsEtlRepositroty(parameters.asJava)
 
-    new JobOrchestrator(repository).executeJob("multiple-dataset-job")
+    new JobOrchestrator(repository, statusDAO).executeJob("multiple-dataset-job")
   }
   test("run a job with multiple steps from repository") {
     val repository = new LocalFsEtlRepositroty(parameters.asJava)
 
-    new JobOrchestrator(repository).executeJob("multiple-steps-job")
+    new JobOrchestrator(repository, statusDAO).executeJob("multiple-steps-job")
   }
 
 }
