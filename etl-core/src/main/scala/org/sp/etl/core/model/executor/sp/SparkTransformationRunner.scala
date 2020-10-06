@@ -10,7 +10,7 @@ import scala.util.{Failure, Success, Try}
 
 class SparkTransformationRunner extends TransformationRunner {
 
-  override def executeFunction(etlFunction: EtlFunction, primary: DataBag, secondary: Databags): FunctionExecutionResult = {
+  override protected def executeFunction(etlFunction: EtlFunction, primary: DataBag, secondary: Databags): FunctionExecutionResult = {
     Try(runFunction(etlFunction, primary, secondary)) match {
       case Success(databag) => FunctionExecutionResult(databag)
       case Failure(cause) => FunctionExecutionResult(null, cause.getMessage, FailedStatus)

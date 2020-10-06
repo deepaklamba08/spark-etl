@@ -30,7 +30,7 @@ trait TransformationRunner {
     TransformationResult(rDatabag, metrics)
   }
 
-  def executeFunction(etlFunction: EtlFunction, primary: DataBag, secondary: Databags): FunctionExecutionResult
+  protected def executeFunction(etlFunction: EtlFunction, primary: DataBag, secondary: Databags): FunctionExecutionResult
 }
 
 case class TransformationResult(dataBag: DataBag, functionMetrics: Seq[FunctionMetrics], executionMessage: String = null, status: Status = SuccessStatus)
