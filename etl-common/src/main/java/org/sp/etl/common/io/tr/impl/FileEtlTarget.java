@@ -9,6 +9,7 @@ public abstract class FileEtlTarget implements EtlTarget {
     private String name;
     private String dataSourceName;
     private String fileName;
+    private String saveMode;
     private Map<String, String> config;
 
     @Override
@@ -58,5 +59,13 @@ public abstract class FileEtlTarget implements EtlTarget {
 
     public String getFileName() {
         return fileName;
+    }
+
+    public void setSaveMode(String saveMode) {
+        this.saveMode = saveMode;
+    }
+
+    public String getSaveMode() {
+        return saveMode;
     }
 }
