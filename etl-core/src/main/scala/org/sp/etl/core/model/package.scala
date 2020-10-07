@@ -13,7 +13,7 @@ class Databags(databags: List[DataBag]) {
 
   def getDatabags = databags
 
-  def getDatabag(name: String): DataBag = databags.find(_.name.equals(name)).fold(throw new ObjectNotFoundException(s"daaset does not exist - ${name}"))(d => d)
+  def getDatabag(name: String): DataBag = databags.find(_.name.equals(name)).fold(throw new ObjectNotFoundException(s"data set does not exist - ${name}"))(d => d)
 
 }
 
