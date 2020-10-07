@@ -66,11 +66,11 @@
                                     </excludes>
                                 </filter>
                             </filters>
-                            <artifactSet>
+<!--                            <artifactSet>
                                 <excludes>
                                     <exclude>org.apache.hadoop:*</exclude>
                                 </excludes>
-                            </artifactSet>
+                            </artifactSet>-->
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
