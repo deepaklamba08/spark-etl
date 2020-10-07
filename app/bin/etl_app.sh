@@ -4,7 +4,7 @@ source ./set_env.sh
 
 export ETL_APP_HOME_DIR="$(dirname "$PWD")"
 
-REPOSITORY_ARGS="repo-type localFs repo-jobConfigFile ${ETL_APP_HOME_DIR}/conf/etl_repo/job/job_config.json repo-dbConfigFile ${ETL_APP_HOME_DIR}/conf/etl_repo/db/db.json repo-sourceConfigFile ${ETL_APP_HOME_DIR}/conf/etl_repo/etl_sources/sources.json repo-targetConfigFile  ${ETL_APP_HOME_DIR}/conf/etl_repo/etl_targets/targets.json repo-objectConfigFile  ${ETL_APP_HOME_DIR}/conf/etl_repo/objects/object_config.json"
+REPOSITORY_ARGS="repo-type localFs repo-jobConfigFile ${ETL_APP_HOME_DIR}/conf/etl_repo/job/job_config.json repo-dbConfigFile ${ETL_APP_HOME_DIR}/conf/etl_repo/ds/ds.json repo-sourceConfigFile ${ETL_APP_HOME_DIR}/conf/etl_repo/etl_sources/sources.json repo-targetConfigFile  ${ETL_APP_HOME_DIR}/conf/etl_repo/etl_targets/targets.json repo-objectConfigFile  ${ETL_APP_HOME_DIR}/conf/etl_repo/objects/object_config.json"
 
 APP_JAR="${ETL_APP_HOME_DIR}/lib/etl-app-1.0-SNAPSHOT.jar"
 APP_ARGS="jobName $1 ${REPOSITORY_ARGS}"
