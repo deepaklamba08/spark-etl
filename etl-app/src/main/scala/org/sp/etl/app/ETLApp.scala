@@ -1,9 +1,10 @@
 package org.sp.etl.app
 
 import org.slf4j.LoggerFactory
-import org.sp.etl.common.exception.EtlExceptions
 import org.sp.etl.core.model.executor.JobOrchestrator
 import org.sp.etl.core.util.Constants
+
+import scala.util.{Try, Success, Failure}
 
 object ETLApp {
   private lazy val logger = LoggerFactory.getLogger(this.getClass)
@@ -13,7 +14,10 @@ object ETLApp {
     val etlArgs = this.parseArgs(args)
 
     val etlRepo = RepositoryProvider.createReposiroty(etlArgs.selectRepositoryParameters)
-    new JobOrchestrator(etlRepo).executeJob(etlArgs.jobName)
+    Try(new JobOrchestrator(etlRepo).executeJob(etlArgs.jobName)) match {
+      case Success(_) =>
+      case Failure(cause) => logger.error("error occurred while processing data", cause)
+    }
     logger.debug("exiting etl app")
   }
 
