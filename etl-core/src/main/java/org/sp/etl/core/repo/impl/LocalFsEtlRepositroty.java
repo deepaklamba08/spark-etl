@@ -7,8 +7,8 @@ import org.sp.etl.common.io.tr.EtlTarget;
 import org.sp.etl.common.model.job.Job;
 import org.sp.etl.common.repo.EtlRepositroty;
 import org.sp.etl.common.repo.RepositrotyType;
-import org.sp.etl.common.util.JsonDataObject;
-import org.sp.etl.common.util.JsonDataUtils;
+import org.sp.etl.common.model.JsonConfiguration;
+import org.sp.etl.common.util.DataUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class LocalFsEtlRepositroty implements EtlRepositroty {
     private static final String OBJECT_CONF_FILE_KEY = "objectConfigFile";
 
     private DataStore<Job> jobDataStore;
-    private DataStore<JsonDataObject> jsonDataObjectDataStore;
+    private DataStore<JsonConfiguration> jsonDataObjectDataStore;
     private DataStore<EtlSource> etlSourceDataStore;
     private DataStore<DataSource> dataSourceDataStore;
     private DataStore<EtlTarget> etlTargetDataStore;
@@ -35,7 +35,7 @@ public class LocalFsEtlRepositroty implements EtlRepositroty {
     public LocalFsEtlRepositroty(Map<String, String> parameters) {
         this.jobDataStore = new DataStore<>(new File(parameters.get(JOB_CONF_FILE_KEY)), new TypeReference<List<Job>>() {
         }, job -> job.getJobName());
-        this.jsonDataObjectDataStore = new DataStore<>(new File(parameters.get(OBJECT_CONF_FILE_KEY)), new TypeReference<List<JsonDataObject>>() {
+        this.jsonDataObjectDataStore = new DataStore<>(new File(parameters.get(OBJECT_CONF_FILE_KEY)), new TypeReference<List<JsonConfiguration>>() {
         }, jo -> jo.getStringValue(OBJECT_NAME_KEY));
         this.etlSourceDataStore = new DataStore<>(new File(parameters.get(SOURCE_CONF_FILE_KEY)), new TypeReference<List<EtlSource>>() {
         }, s -> s.sourceName());
@@ -47,7 +47,7 @@ public class LocalFsEtlRepositroty implements EtlRepositroty {
 
     @Override
     public RepositrotyType getType() {
-        return RepositrotyType.LocalFileSystem;
+        return RepositrotyType.       ;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class LocalFsEtlRepositroty implements EtlRepositroty {
     }
 
     @Override
-    public JsonDataObject lookupObject(String objectName) {
+    public JsonConfiguration lookupObject(String objectName) {
         return this.jsonDataObjectDataStore.lookupElement(objectName);
     }
 
@@ -98,7 +98,7 @@ public class LocalFsEtlRepositroty implements EtlRepositroty {
 
         private <T> T readDataFile(File fileName, TypeReference<T> typeReference) {
             try {
-                return JsonDataUtils.getObjectMapper().readValue(fileName, typeReference);
+                return DataUtils.getObjectMapper().readValue(fileName, typeReference);
             } catch (IOException e) {
                 throw new IllegalStateException("error occurred while reading data file", e);
             }

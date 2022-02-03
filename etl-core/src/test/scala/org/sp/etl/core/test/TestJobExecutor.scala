@@ -1,14 +1,13 @@
 package org.sp.etl.core.test
 
 import java.util
-
 import org.apache.log4j.{Level, Logger}
 import org.scalatest.FunSuite
 import org.sp.etl.common.ds.LocalFileSystemDataSource
 import org.sp.etl.common.io.source.impl.CsvFileEtlSource
+import org.sp.etl.common.model.JsonConfiguration
 import org.sp.etl.common.model.job.Job
 import org.sp.etl.common.model.step.Step
-import org.sp.etl.common.util.JsonDataObject
 import org.sp.etl.core.model.executor.sp.SparkJobExecutor
 import org.sp.etl.core.model.{DataSourceRegistry, EtlSourceRegistry, SuccessStatus}
 import org.sp.etl.function.column.DateAndTimeFunction.CurrentDateFunction
@@ -23,7 +22,7 @@ class TestJobExecutor extends FunSuite {
   private val jobExecutor = this.createJobExecutor
 
   private def createJobExecutor = {
-    val sparkConf = JsonDataObject.fromString(
+    val sparkConf = JsonConfiguration.fromString(
       """{
         |  "objectName": "executorConf",
         |  "sparkConfig": {

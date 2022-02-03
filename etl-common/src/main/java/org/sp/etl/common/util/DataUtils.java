@@ -3,7 +3,7 @@ package org.sp.etl.common.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-public class JsonDataUtils {
+public class DataUtils {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 

@@ -1,12 +1,11 @@
 package org.sp.etl.core.model.executor.sp
 
 import java.util.Date
-
 import org.slf4j.LoggerFactory
 import org.sp.etl.common.exception.EtlExceptions.InvalidConfigurationException
+import org.sp.etl.common.model.JsonConfiguration
 import org.sp.etl.common.model.job.Job
 import org.sp.etl.common.model.step.Step
-import org.sp.etl.common.util.JsonDataObject
 import org.sp.etl.core.metrics.JobMetrics.JobMetricsBuilder
 import org.sp.etl.core.model.executor.sp.data.loader.SparkDataLoader
 import org.sp.etl.core.model.executor.{JobExecutionResult, JobExecutor}
@@ -14,7 +13,7 @@ import org.sp.etl.core.model.{Databags, FailedStatus, SuccessStatus}
 
 import scala.collection.JavaConverters._
 
-class SparkJobExecutor(appName: String, sparkConfig: JsonDataObject) extends JobExecutor {
+class SparkJobExecutor(appName: String, sparkConfig: JsonConfiguration) extends JobExecutor {
 
   private val logger = LoggerFactory.getLogger(this.getClass)
 

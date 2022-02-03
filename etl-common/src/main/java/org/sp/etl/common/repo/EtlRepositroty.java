@@ -5,7 +5,7 @@ import org.sp.etl.common.ds.DataSource;
 import org.sp.etl.common.io.source.EtlSource;
 import org.sp.etl.common.io.tr.EtlTarget;
 import org.sp.etl.common.model.job.Job;
-import org.sp.etl.common.util.JsonDataObject;
+import org.sp.etl.common.model.JsonConfiguration;
 
 public interface EtlRepositroty {
 
@@ -19,5 +19,5 @@ public interface EtlRepositroty {
 
     public DataSource lookupDataSource(String dataSourceName);
 
-    public JsonDataObject lookupObject(String objectName);
+    public JsonConfiguration lookupObject(String objectName);
 }

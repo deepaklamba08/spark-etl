@@ -1,4 +1,4 @@
-package org.sp.etl.common.util;
+package org.sp.etl.common.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -7,84 +7,87 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.sp.etl.common.util.DataUtils;
 
 import java.io.*;
 import java.util.Iterator;
 import java.util.Map;
 
-public class JsonDataObject implements Serializable {
+public class JsonConfiguration implements Serializable, Configuration {
     protected transient JsonNode dataNode;
 
-    public JsonDataObject() {
+    public JsonConfiguration() {
     }
 
-    public static JsonDataObject fromString(String content) throws JsonProcessingException {
-        return new JsonDataObject(JsonDataUtils.getObjectMapper().readTree(content));
+    public static JsonConfiguration fromString(String content) throws JsonProcessingException {
+        return new JsonConfiguration(DataUtils.getObjectMapper().readTree(content));
     }
 
-    public static JsonDataObject emptyArray() {
-        return new JsonDataObject(JsonDataUtils.getObjectMapper().createArrayNode());
-    }
-
-    public static JsonDataObject emptyObject() {
-        return new JsonDataObject(JsonDataUtils.getObjectMapper().createObjectNode());
-    }
-
-    public JsonDataObject(JsonNode dataNode) {
+    public JsonConfiguration(JsonNode dataNode) {
         this.dataNode = dataNode;
     }
 
 
-    public void importFrom(JsonDataObject dataObject) {
-        this.dataNode = ((JsonDataObject) dataObject).dataNode;
+    @Override
+    public void importFrom(Configuration dataObject) {
+        this.dataNode = ((JsonConfiguration) dataObject).dataNode;
     }
 
 
+    @Override
     public String getStringValue(String fieldName) {
         return this.checkAndGet(fieldName, String.class);
     }
 
 
-    public JsonDataObject getAttribute(String fieldName) {
-        return this.checkAndGet(fieldName, JsonDataObject.class);
+    @Override
+    public JsonConfiguration getAttribute(String fieldName) {
+        return this.checkAndGet(fieldName, JsonConfiguration.class);
     }
 
     public JsonNode getDataNode() {
         return dataNode;
     }
 
+    @Override
     @JsonIgnore
     public Iterator<String> getFields() {
         return this.dataNode != null && !this.dataNode.isNull() ? this.dataNode.fieldNames() : null;
     }
 
 
+    @Override
     public Map<String, String> getValueMap(String fieldName) {
         JsonNode node = this.dataNode.get(fieldName);
-        return JsonDataUtils.getObjectMapper().convertValue(node, new TypeReference<Map<String, String>>() {
+        return DataUtils.getObjectMapper().convertValue(node, new TypeReference<Map<String, String>>() {
         });
     }
 
-    public void setAttribute(String fieldName, JsonDataObject attribute) {
+    @Override
+    public void setAttribute(String fieldName, Configuration attribute) {
         this.checkAndAdd(fieldName, attribute);
     }
 
 
+    @Override
     public void setAttribute(String fieldName, String attribute) {
         this.checkAndAdd(fieldName, attribute);
     }
 
 
+    @Override
     public void setAttribute(String fieldName, long attribute) {
         this.checkAndAdd(fieldName, attribute);
     }
 
+    @Override
     @JsonIgnore
 
     public boolean isArray() {
         return dataNode != null && dataNode.isArray();
     }
 
+    @Override
     @JsonIgnore
 
     public boolean isArray(String fieldName) {
@@ -92,12 +95,14 @@ public class JsonDataObject implements Serializable {
         return value != null && value.isArray();
     }
 
+    @Override
     @JsonIgnore
 
     public boolean isObject() {
         return dataNode != null && dataNode.isObject();
     }
 
+    @Override
     @JsonIgnore
 
     public boolean isObject(String fieldName) {
@@ -106,6 +111,7 @@ public class JsonDataObject implements Serializable {
 
     }
 
+    @Override
     @JsonIgnore
 
     public boolean isNull() {
@@ -121,7 +127,7 @@ public class JsonDataObject implements Serializable {
         in.defaultReadObject();
         if (in.readBoolean()) {
             InputStream inStream = new ObjectInputStream(in);
-            this.dataNode = JsonDataUtils.getObjectMapper().configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false).readValue(inStream,
+            this.dataNode = DataUtils.getObjectMapper().configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false).readValue(inStream,
                     JsonNode.class);
         }
     }
@@ -133,7 +139,7 @@ public class JsonDataObject implements Serializable {
         } else {
             out.writeBoolean(true);
             OutputStream outStream = new ObjectOutputStream(out);
-            JsonDataUtils.getObjectMapper().configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false).writeValue(outStream, this.dataNode);
+            DataUtils.getObjectMapper().configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false).writeValue(outStream, this.dataNode);
         }
     }
 
@@ -147,8 +153,8 @@ public class JsonDataObject implements Serializable {
         }
         if (String.class.equals(type)) {
             return (T) value.asText();
-        } else if (JsonDataObject.class.equals(type)) {
-            return (T) new JsonDataObject(value);
+        } else if (JsonConfiguration.class.equals(type)) {
+            return (T) new JsonConfiguration(value);
         }
 
         return null;
@@ -175,8 +181,8 @@ public class JsonDataObject implements Serializable {
             object.put(fieldName, value.toString());
         } else if (value instanceof Long) {
             object.put(fieldName, (long) value);
-        } else if (value instanceof JsonDataObject) {
-            JsonDataObject dataObject = (JsonDataObject) value;
+        } else if (value instanceof JsonConfiguration) {
+            JsonConfiguration dataObject = (JsonConfiguration) value;
             object.set(fieldName, dataObject.getDataNode());
         } else {
 

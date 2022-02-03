@@ -1,42 +1,58 @@
 package org.sp.etl.common.ds;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.sp.etl.common.model.Configuration;
+import org.sp.etl.common.model.Id;
+import org.sp.etl.common.model.Identifiable;
 
-public abstract class FileSystemDataSource implements DataSource {
+public class FileSystemDataSource extends Identifiable implements DataSource {
 
-    private String baseDirectory;
-    private String name;
-
-    public FileSystemDataSource() {
-
+    protected FileSystemDataSource(Id id, String name, String description, boolean isActive, Configuration configuration) {
+        super(id, name, description, isActive);
     }
 
-    public FileSystemDataSource(String baseDirectory, String name) {
-        this.baseDirectory = baseDirectory;
-        this.name = name;
+    public String getPathByName(String name) {
+        return null;
     }
 
-    @JsonIgnore
-    public abstract String getPath(String fileName);
+    public static class FileSystemDataSourceBuilder {
+        private Id id;
+        private String name;
+        private String description;
+        private boolean isActive;
+        private Configuration configuration;
 
-    @Override
-    public String dataSourceName() {
-        return name;
-    }
+        public FileSystemDataSourceBuilder withId(Id id) {
+            this.id = id;
+            return this;
+        }
 
-    public void setBaseDirectory(String baseDirectory) {
-        this.baseDirectory = baseDirectory;
-    }
+        public FileSystemDataSourceBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
 
-    public String getBaseDirectory() {
-        return baseDirectory;
-    }
+        public FileSystemDataSourceBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
 
-    public String getName() {
-        return name;
-    }
+        public FileSystemDataSourceBuilder makeActive() {
+            this.isActive = true;
+            return this;
+        }
 
-    public void setName(String name) {
-        this.name = name;
+        public FileSystemDataSourceBuilder makeInActive() {
+            this.isActive = false;
+            return this;
+        }
+
+        public FileSystemDataSourceBuilder withConfiguration(Configuration configuration) {
+            this.configuration = configuration;
+            return this;
+        }
+
+        public FileSystemDataSource build() {
+            return new FileSystemDataSource(this.id, this.name, this.description, this.isActive, this.configuration);
+        }
     }
 }
