@@ -2,8 +2,9 @@ package org.sp.etl.core.model.executor.sp.function
 
 import org.apache.spark.sql.DataFrame
 import org.sp.etl.core.model.{DataBag, Databags}
-import function.DatasetFunction
-import function.dataset._
+import org.sp.etl.function.dataset._
+import org.sp.etl.function.DatasetFunction
+import org.sp.etl.function.dataset.{DatasetJoinFunction, DatasetRegisterAsTableFunction, DatasetUnionFunction, InnerJoinDatasetFunction, LeftJoinDatasetFunction, RightJoinDatasetFunction}
 
 abstract class DatasetFunctionRunner(function: DatasetFunction) extends FunctionRunner[DatasetFunction](function) {
   def run(dataBag: DataBag, databags: Databags): DataBag
@@ -28,6 +29,11 @@ abstract class JoinDatasetFunctionRunner(function: DatasetJoinFunction) extends 
     val jc = leftDataset(leftDatasetColumn) === rightDataset(rightDatasetColumn)
     leftDataset.join(rightDataset, jc, joinType)
   }
+}
+
+
+class UnPersistDatasetColumnFunctionRunner(function: UnPersistDatasetFunction) extends DatasetFunctionRunner(function) {
+  override def run(dataBag: DataBag, databags: Databags): DataBag = DataBag(dataBag.name, dataBag.alias, dataBag.dataset.unpersist())
 }
 
 class InnerJoinDatasetFunctionRunner(function: InnerJoinDatasetFunction) extends JoinDatasetFunctionRunner(function) {

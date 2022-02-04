@@ -1,7 +1,6 @@
-package function.dataset;
+package org.sp.etl.function.dataset;
 
-import function.DatasetFunction;
-import function.column.ColumnFunction;
+import org.sp.etl.function.DatasetFunction;
 import org.sp.etl.common.model.Id;
 
 public class UnPersistDatasetFunction extends DatasetFunction {

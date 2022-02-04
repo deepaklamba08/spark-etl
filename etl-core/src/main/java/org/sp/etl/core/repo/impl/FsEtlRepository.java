@@ -17,7 +17,7 @@ import org.sp.etl.common.repo.RepositoryType;
 import org.sp.etl.common.util.ConfigurationFactory;
 import org.sp.etl.common.util.EtlConstants;
 import org.sp.etl.common.util.Preconditions;
-import function.EtlFunction;
+import org.sp.etl.function.EtlFunction;
 
 
 import java.io.File;

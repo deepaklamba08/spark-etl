@@ -6,12 +6,12 @@ import org.apache.spark.storage.StorageLevel
 import org.sp.etl.common.exception.EtlExceptions.InvalidConfigurationException
 import org.sp.etl.core.model.DataBag
 import org.sp.etl.core.model.executor.sp.AggregationUtil
-import function.column.DateAndTimeFunction._
-import function.column.SortDatasetFunction.SortOrder
-import function.column._
-import function.column.agg.GroupByDatasetFunction
-import function.column.math.SumColumnFunction
-import function.dataset.UnPersistDatasetFunction
+import org.sp.etl.function.column.DateAndTimeFunction._
+import org.sp.etl.function.column.SortDatasetFunction.SortOrder
+import org.sp.etl.function.column.{AddConstantValueFunction, CastColumnFunction, ColumnFunction, DropColumnFunction, FilterDatasetFunction, PersistDatasetFunction, RenameColumnFunction, RepartitionDatasetFunction, SortDatasetFunction}
+import org.sp.etl.function.column.agg.GroupByDatasetFunction
+import org.sp.etl.function.column.math.SumColumnFunction
+import org.sp.etl.function.dataset.UnPersistDatasetFunction
 
 import scala.collection.JavaConverters._
 
@@ -80,10 +80,6 @@ class PersistDatasetColumnFunctionRunner(function: PersistDatasetFunction) exten
       case other => throw new InvalidConfigurationException(s"invalid storage level -$other")
     }
   }
-}
-
-class UnPersistDatasetColumnFunctionRunner(function: UnPersistDatasetFunction) extends ColumnFunctionRunner(function) {
-  override def run(dataBag: DataBag): DataBag = DataBag(dataBag.name, dataBag.alias, dataBag.dataset.unpersist())
 }
 
 class GroupByDatasetColumnFunctionRunner(function: GroupByDatasetFunction) extends ColumnFunctionRunner(function) {

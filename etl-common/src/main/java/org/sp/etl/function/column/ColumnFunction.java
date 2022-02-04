@@ -1,6 +1,6 @@
-package function.column;
+package org.sp.etl.function.column;
 
-import function.EtlFunction;
+import org.sp.etl.function.EtlFunction;
 import org.sp.etl.common.model.Id;
 
 public abstract class ColumnFunction implements EtlFunction {

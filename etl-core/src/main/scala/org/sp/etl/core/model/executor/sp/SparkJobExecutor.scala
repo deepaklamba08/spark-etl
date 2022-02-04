@@ -29,7 +29,7 @@ class SparkJobExecutor(appName: String, sparkConfig: JsonConfiguration) extends 
 
     val stepExecutor = new SparkStepExecutor(new SparkDataLoader(sparkSession))
 
-    var jobMetricsBuilder = new JobMetricsBuilder(job.getJobName, new Date())
+    var jobMetricsBuilder = new JobMetricsBuilder(job.getName, new Date())
 
     val finalResult = steps.tail.foldLeft({
       val stepExeResult = this.executeStep(steps.head, stepExecutor, Databags.emptyDatabag)
@@ -54,7 +54,7 @@ class SparkJobExecutor(appName: String, sparkConfig: JsonConfiguration) extends 
   }
 
   private def validateJob(job: Job) = {
-    this.groupSteps(job, s => s.getStepName).fold(
+    this.groupSteps(job, s => s.getName).fold(
       this.groupSteps(job, s => s.getOutputSourceName).fold(true)
       (_ => false))(_ => false)
   }

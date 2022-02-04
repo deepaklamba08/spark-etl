@@ -32,7 +32,7 @@ class JobOrchestrator(etlRepositroty: EtlRepository) {
 
     if (etlJob == null) {
       throw new EtlExceptions.ObjectNotFoundException(s"could not find job ${jobName} in the repository")
-    } else if (!etlJob.isEnabled) {
+    } else if (!etlJob.isActive) {
       throw new IllegalStateException(s"job ${jobName} is disabled in the repository")
     } else {
       etlJob

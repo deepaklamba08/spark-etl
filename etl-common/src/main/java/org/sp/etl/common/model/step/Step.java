@@ -3,7 +3,7 @@ package org.sp.etl.common.model.step;
 import org.sp.etl.common.model.Configuration;
 import org.sp.etl.common.model.Id;
 import org.sp.etl.common.model.Identifiable;
-import function.EtlFunction;
+import org.sp.etl.function.EtlFunction;
 
 import java.util.ArrayList;
 import java.util.List;

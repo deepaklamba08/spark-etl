@@ -1,6 +1,6 @@
-package function.dataset;
+package org.sp.etl.function.dataset;
 
-import function.DatasetFunction;
+import org.sp.etl.function.DatasetFunction;
 import org.sp.etl.common.model.Id;
 
 public abstract class DatasetUnionFunction extends DatasetFunction {

@@ -1,4 +1,4 @@
-package function.column.agg;
+package org.sp.etl.function.column.agg;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

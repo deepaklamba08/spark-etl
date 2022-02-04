@@ -1,4 +1,4 @@
-package function.column;
+package org.sp.etl.function.column;
 
 import org.sp.etl.common.model.Id;
 
@@ -13,5 +13,13 @@ public class RepartitionDatasetFunction extends ColumnFunction {
         super(id, name, description, isActive);
         this.partitionColumns = partitionColumns;
         this.numPartitions = numPartitions;
+    }
+
+    public List<String> getPartitionColumns() {
+        return partitionColumns;
+    }
+
+    public int getNumPartitions() {
+        return numPartitions;
     }
 }

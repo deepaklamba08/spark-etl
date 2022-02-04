@@ -1,11 +1,10 @@
 package org.sp.etl.core.model.executor
 
 import java.util.Date
-
 import org.slf4j.LoggerFactory
 import org.sp.etl.core.metrics.FunctionMetrics
 import org.sp.etl.core.model.{SuccessStatus, _}
-import function.EtlFunction
+import org.sp.etl.function.EtlFunction
 
 import scala.collection.mutable.ListBuffer
 
@@ -22,8 +21,8 @@ trait TransformationRunner {
     val metrics = ListBuffer[FunctionMetrics]()
     while (functions.hasNext && status == SuccessStatus) {
       val trFunction = functions.next()
-      val functionMetrics = new FunctionMetrics.FunctionMetricsBuilder(trFunction.name(), new Date())
-      logger.debug(s"executing function - ${trFunction.name()}")
+      val functionMetrics = new FunctionMetrics.FunctionMetricsBuilder(trFunction.getName(), new Date())
+      logger.debug(s"executing function - ${trFunction.getName()}")
       val result = this.executeFunction(trFunction, databag, transformation.secondary)
       metrics.+=(functionMetrics.withEndTime(new Date()).build())
       databag = result.dataBag

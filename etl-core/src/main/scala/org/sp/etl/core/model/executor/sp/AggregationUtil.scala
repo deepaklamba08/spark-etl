@@ -2,7 +2,7 @@ package org.sp.etl.core.model.executor.sp
 
 import org.apache.spark.sql.{Column, DataFrame, functions}
 import org.sp.etl.core.model.DataBag
-import function.column.agg.{AggregateValue, GroupByDatasetFunction, MaxValue, SumValue}
+import org.sp.etl.function.column.agg.{AggregateValue, GroupByDatasetFunction, MaxValue, SumValue}
 
 import scala.collection.JavaConverters._
 

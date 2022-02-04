@@ -1,4 +1,4 @@
-package function.column.agg;
+package org.sp.etl.function.column.agg;
 
 public class SumValue extends AggregateValue {
 

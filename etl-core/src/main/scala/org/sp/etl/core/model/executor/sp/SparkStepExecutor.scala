@@ -17,7 +17,7 @@ class SparkStepExecutor(dataLoader: DataLoader) extends StepExecutor {
   private lazy val transformationRunner = new SparkTransformationRunner()
 
   override def executeStep(step: Step, otherDatabags: Databags): StepExecutionResult = {
-    logger.debug(s"executing step - ${step.getStepName}")
+    logger.debug(s"executing step - ${step.getName}")
 
     val transformation = this.createTransformation(step, otherDatabags)
 
