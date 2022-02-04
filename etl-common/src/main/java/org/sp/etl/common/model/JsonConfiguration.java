@@ -1,6 +1,5 @@
 package org.sp.etl.common.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -34,10 +33,35 @@ public class JsonConfiguration implements Serializable, Configuration {
         this.dataNode = ((JsonConfiguration) dataObject).dataNode;
     }
 
+    @Override
+    public boolean hasField(String fieldName) {
+        return false;
+    }
+
 
     @Override
     public String getStringValue(String fieldName) {
         return this.checkAndGet(fieldName, String.class);
+    }
+
+    @Override
+    public String getStringValue(String fieldName, String defaultValue) {
+        return null;
+    }
+
+    @Override
+    public boolean getBooleanValue(String fieldName) {
+        return false;
+    }
+
+    @Override
+    public boolean getBooleanValue(String fieldName, boolean defaultValue) {
+        return false;
+    }
+
+    @Override
+    public List<String> getListValue(String fieldName) {
+        return null;
     }
 
 
@@ -51,7 +75,7 @@ public class JsonConfiguration implements Serializable, Configuration {
     }
 
     @Override
-    @JsonIgnore
+
     public Iterator<String> getFields() {
         return this.dataNode != null && !this.dataNode.isNull() ? this.dataNode.fieldNames() : null;
     }
@@ -82,14 +106,14 @@ public class JsonConfiguration implements Serializable, Configuration {
     }
 
     @Override
-    @JsonIgnore
+
 
     public boolean isArray() {
         return dataNode != null && dataNode.isArray();
     }
 
     @Override
-    @JsonIgnore
+
 
     public boolean isArray(String fieldName) {
         JsonNode value = this.dataNode != null ? dataNode.get(fieldName) : null;
@@ -97,14 +121,14 @@ public class JsonConfiguration implements Serializable, Configuration {
     }
 
     @Override
-    @JsonIgnore
+
 
     public boolean isObject() {
         return dataNode != null && dataNode.isObject();
     }
 
     @Override
-    @JsonIgnore
+
 
     public boolean isObject(String fieldName) {
         JsonNode value = this.dataNode != null ? dataNode.get(fieldName) : null;
@@ -113,7 +137,7 @@ public class JsonConfiguration implements Serializable, Configuration {
     }
 
     @Override
-    @JsonIgnore
+
 
     public boolean isNull() {
         return this.dataNode == null || this.dataNode.isNull();
@@ -121,6 +145,16 @@ public class JsonConfiguration implements Serializable, Configuration {
 
     @Override
     public List<Configuration> getAsList() {
+        return null;
+    }
+
+    @Override
+    public Configuration getConfiguration(String fieldName) {
+        return null;
+    }
+
+    @Override
+    public Configuration getConfiguration(String fieldName, Configuration defaultValue) {
         return null;
     }
 

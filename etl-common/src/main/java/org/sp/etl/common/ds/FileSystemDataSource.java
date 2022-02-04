@@ -3,16 +3,23 @@ package org.sp.etl.common.ds;
 import org.sp.etl.common.model.Configuration;
 import org.sp.etl.common.model.Id;
 
-public class FileSystemDataSource  implements DataSource {
+import java.util.Map;
+
+public class FileSystemDataSource implements DataSource {
     private Id id;
     private String name;
     private String description;
     private boolean isActive;
-    protected FileSystemDataSource(Id id, String name, String description, boolean isActive, Configuration configuration) {
+    private Map<String, String> namedPaths;
+    private Configuration configuration;
+
+    protected FileSystemDataSource(Id id, String name, String description, boolean isActive, Map<String, String> namedPaths, Configuration configuration) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.isActive = isActive;
+        this.namedPaths = namedPaths;
+        this.configuration = configuration;
     }
 
     public String getPathByName(String name) {
@@ -44,6 +51,7 @@ public class FileSystemDataSource  implements DataSource {
         private String name;
         private String description;
         private boolean isActive;
+        private Map<String, String> namedPaths;
         private Configuration configuration;
 
         public Builder withId(Id id) {
@@ -58,6 +66,10 @@ public class FileSystemDataSource  implements DataSource {
 
         public Builder withDescription(String description) {
             this.description = description;
+            return this;
+        }
+        public Builder withActive(boolean isActive) {
+            this.isActive = isActive;
             return this;
         }
 
@@ -76,8 +88,13 @@ public class FileSystemDataSource  implements DataSource {
             return this;
         }
 
+        public Builder withNamedPaths(Map<String, String> namedPaths) {
+            this.namedPaths = namedPaths;
+            return this;
+        }
+
         public FileSystemDataSource build() {
-            return new FileSystemDataSource(this.id, this.name, this.description, this.isActive, this.configuration);
+            return new FileSystemDataSource(this.id, this.name, this.description, this.isActive, this.namedPaths, this.configuration);
         }
     }
 }

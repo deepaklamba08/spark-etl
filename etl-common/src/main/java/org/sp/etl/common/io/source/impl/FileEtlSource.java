@@ -79,6 +79,11 @@ public class FileEtlSource implements EtlSource {
             return this;
         }
 
+        public Builder withActive(boolean isActive) {
+            this.isActive = isActive;
+            return this;
+        }
+
         public Builder makeActive() {
             this.isActive = true;
             return this;

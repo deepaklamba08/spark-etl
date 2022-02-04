@@ -3,7 +3,6 @@ package org.sp.etl.common.io.tr.impl;
 import org.sp.etl.common.io.tr.EtlTarget;
 import org.sp.etl.common.model.Configuration;
 import org.sp.etl.common.model.Id;
-import org.sp.etl.common.model.Identifiable;
 
 public class FileEtlTarget implements EtlTarget {
 
@@ -77,7 +76,10 @@ public class FileEtlTarget implements EtlTarget {
             this.description = description;
             return this;
         }
-
+        public Builder withActive(boolean isActive) {
+            this.isActive = isActive;
+            return this;
+        }
         public Builder makeActive() {
             this.isActive = true;
             return this;

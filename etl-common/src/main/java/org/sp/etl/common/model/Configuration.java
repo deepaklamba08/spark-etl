@@ -4,10 +4,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public interface Configuration extends Identifiable{
+public interface Configuration extends Identifiable {
     void importFrom(Configuration dataObject);
 
+    boolean hasField(String fieldName);
+
     String getStringValue(String fieldName);
+
+    String getStringValue(String fieldName, String defaultValue);
+
+    boolean getBooleanValue(String fieldName);
+
+    boolean getBooleanValue(String fieldName, boolean defaultValue);
+
+    List<String> getListValue(String fieldName);
 
     Configuration getAttribute(String fieldName);
 
@@ -32,4 +42,8 @@ public interface Configuration extends Identifiable{
     boolean isNull();
 
     List<Configuration> getAsList();
+
+    public Configuration getConfiguration(String fieldName);
+
+    public Configuration getConfiguration(String fieldName, Configuration defaultValue);
 }
