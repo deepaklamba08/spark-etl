@@ -33,8 +33,10 @@ class SparkDataConsumer extends DataConsumer {
       throw new InvalidConfigurationException("data source type is invalid")
     }
     val fileDs = targetDs.asInstanceOf[FileSystemDataSource]
-    val writer = databag.dataset.write.format(fsTarget.fileFormat())
-    this.setConfig(writer, fsTarget.config()).mode(fsTarget.getSaveMode).save(fileDs.getPath(fsTarget.getFileName))
+    val writer = databag.dataset.write.format(fsTarget.getFormat())
+    this.setConfig(writer, fsTarget.getWriterConfig())
+      .mode(fsTarget.getSaveMode)
+      .save(fileDs.getPathByName(fsTarget.getLocationName))
   }
 
   private def setConfig(writer: DataFrameWriter[Row], config: util.Map[String, String]) = {

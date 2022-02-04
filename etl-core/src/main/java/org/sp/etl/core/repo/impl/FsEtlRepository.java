@@ -112,7 +112,8 @@ public class FsEtlRepository implements EtlRepository {
                 EtlConstants.NAME_FIELD, EtlConstants.NAMED_PATH_FIELD};
 
         private static String[] ETL_TARGET_REQ_SOURCE_FIELDS = new String[]{EtlConstants.TYPE_FIELD, EtlConstants.ID_FIELD,
-                EtlConstants.NAME_FIELD, EtlConstants.DS_NAME_FIELD, EtlConstants.ETL_TARGET_SAVE_MODE_FIELD};
+                EtlConstants.NAME_FIELD, EtlConstants.DS_NAME_FIELD, EtlConstants.ETL_TARGET_SAVE_MODE_FIELD,
+        EtlConstants.ETL_TARGET_FORMAT_FIELD,EtlConstants.ETL_TARGET_LOCATION_NAME_FIELD};
 
         private static String[] ETL_SOURCE_REQ_SOURCE_FIELDS = new String[]{EtlConstants.TYPE_FIELD, EtlConstants.ID_FIELD,
                 EtlConstants.NAME_FIELD, EtlConstants.DS_NAME_FIELD, EtlConstants.ETL_SOURCE_ALIAS};
@@ -204,6 +205,8 @@ public class FsEtlRepository implements EtlRepository {
                         .withActive(configuration.getBooleanValue(EtlConstants.ACTIVE_FIELD, false))
                         .withSaveMode(configuration.getStringValue(EtlConstants.ETL_TARGET_SAVE_MODE_FIELD))
                         .withDataSourceName(configuration.getStringValue(EtlConstants.DS_NAME_FIELD))
+                        .withFormat(configuration.getStringValue(EtlConstants.ETL_TARGET_FORMAT_FIELD))
+                        .withLocationName(configuration.getStringValue(EtlConstants.ETL_TARGET_LOCATION_NAME_FIELD))
                         .withConfiguration(configuration.getConfiguration(EtlConstants.CONFIGURATION_FIELD, null));
                 target = builder.build();
             } else {

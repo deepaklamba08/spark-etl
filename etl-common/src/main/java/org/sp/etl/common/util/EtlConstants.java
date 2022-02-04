@@ -22,6 +22,8 @@ public class EtlConstants {
     public static final String DS_NAME_FIELD = "dataSourceName";
     public static final String ETL_TARGET_TYPE_FILE_SYSTEM = "fileSystem";
     public static final String ETL_TARGET_SAVE_MODE_FIELD = "saveMode";
+    public static final String ETL_TARGET_FORMAT_FIELD = "format";
+    public static final String ETL_TARGET_LOCATION_NAME_FIELD = "locationName";
 
 
     public static final String ETL_SOURCE_TYPE_FILE_SYSTEM = "fileSystem";
