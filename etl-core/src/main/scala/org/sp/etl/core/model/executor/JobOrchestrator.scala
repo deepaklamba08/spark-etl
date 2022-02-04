@@ -4,13 +4,13 @@ import org.slf4j.LoggerFactory
 import org.sp.etl.common.exception.EtlExceptions
 import org.sp.etl.common.exception.EtlExceptions.{EtlAppException, ObjectNotFoundException}
 import org.sp.etl.common.model.job.Job
-import org.sp.etl.common.repo.EtlRepositroty
+import org.sp.etl.common.repo.EtlRepository
 import org.sp.etl.core.model._
 import org.sp.etl.core.util.Constants
 
 import scala.collection.JavaConverters._
 
-class JobOrchestrator(etlRepositroty: EtlRepositroty) {
+class JobOrchestrator(etlRepositroty: EtlRepository) {
   private val logger = LoggerFactory.getLogger(this.getClass)
 
   def executeJob(jobName: String) = {

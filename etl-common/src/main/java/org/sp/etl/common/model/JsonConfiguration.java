@@ -190,4 +190,24 @@ public class JsonConfiguration implements Serializable, Configuration {
 
         return object;
     }
+
+    @Override
+    public boolean isActive() {
+        return false;
+    }
+
+    @Override
+    public Id getId() {
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public String getDescription() {
+        return null;
+    }
 }

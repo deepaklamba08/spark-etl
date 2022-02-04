@@ -4,12 +4,12 @@ package org.sp.etl.common.repo;
 import org.sp.etl.common.ds.DataSource;
 import org.sp.etl.common.io.source.EtlSource;
 import org.sp.etl.common.io.tr.EtlTarget;
+import org.sp.etl.common.model.Configuration;
 import org.sp.etl.common.model.job.Job;
-import org.sp.etl.common.model.JsonConfiguration;
 
-public interface EtlRepositroty {
+public interface EtlRepository {
 
-    public RepositrotyType getType();
+    public RepositoryType getType();
 
     public Job lookupJob(String jobName);
 
@@ -19,5 +19,5 @@ public interface EtlRepositroty {
 
     public DataSource lookupDataSource(String dataSourceName);
 
-    public JsonConfiguration lookupObject(String objectName);
+    public Configuration lookupObject(String objectName);
 }

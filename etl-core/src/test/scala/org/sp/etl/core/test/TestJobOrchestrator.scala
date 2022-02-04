@@ -3,7 +3,7 @@ package org.sp.etl.core.test
 import org.apache.log4j.{Level, Logger}
 import org.scalatest.FunSuite
 import org.sp.etl.core.model.executor.JobOrchestrator
-import org.sp.etl.core.repo.impl.LocalFsEtlRepositroty
+import org.sp.etl.core.repo.impl.LocalFsEtlRepository
 
 import scala.collection.JavaConverters._
 
@@ -18,18 +18,18 @@ class TestJobOrchestrator extends FunSuite {
     "objectConfigFile" -> "src/test/resources/etl_repo/objects/object_config.json")
 
   test("run a job with single dataset from repository") {
-    val repository = new LocalFsEtlRepositroty(parameters.asJava)
+    val repository = new LocalFsEtlRepository(parameters.asJava)
 
     new JobOrchestrator(repository).executeJob("single-dataset-job")
   }
 
   test("run a job with multiple dataset from repository") {
-    val repository = new LocalFsEtlRepositroty(parameters.asJava)
+    val repository = new LocalFsEtlRepository(parameters.asJava)
 
     new JobOrchestrator(repository).executeJob("multiple-dataset-job")
   }
   test("run a job with multiple steps from repository") {
-    val repository = new LocalFsEtlRepositroty(parameters.asJava)
+    val repository = new LocalFsEtlRepository(parameters.asJava)
 
     new JobOrchestrator(repository).executeJob("multiple-steps-job")
   }

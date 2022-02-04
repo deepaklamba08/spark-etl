@@ -1,23 +1,33 @@
 package org.sp.etl.common.io.tr.impl;
 
 import org.sp.etl.common.io.tr.EtlTarget;
+import org.sp.etl.common.model.Configuration;
+import org.sp.etl.common.model.Id;
+import org.sp.etl.common.model.Identifiable;
 
-import java.util.Map;
+public class FileEtlTarget implements EtlTarget {
 
-public abstract class FileEtlTarget implements EtlTarget {
-
+    private Id id;
     private String name;
+    private String description;
+    private boolean isActive;
     private String dataSourceName;
-    private String fileName;
     private String saveMode;
-    private Map<String, String> config;
+    private Configuration configuration;
 
-    @Override
-    public Map<String, String> config() {
-        return this.config;
+    protected FileEtlTarget(Id id, String name, String description, boolean isActive, String dataSourceName, String saveMode, Configuration configuration) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.isActive = isActive;
+        this.dataSourceName = dataSourceName;
+        this.saveMode = saveMode;
+        this.configuration = configuration;
     }
 
-    public abstract String fileFormat();
+    public String getSaveMode() {
+        return saveMode;
+    }
 
     @Override
     public String dataSourceName() {
@@ -25,47 +35,76 @@ public abstract class FileEtlTarget implements EtlTarget {
     }
 
     @Override
-    public String targetName() {
+    public boolean isActive() {
+        return this.isActive;
+    }
+
+    @Override
+    public Id getId() {
+        return this.id;
+    }
+
+    @Override
+    public String getName() {
         return this.name;
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public String getDescription() {
+        return this.description;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public static class Builder {
+        private Id id;
+        private String name;
+        private String description;
+        private boolean isActive;
+        private String dataSourceName;
+        private String saveMode;
+        private Configuration configuration;
 
-    public void setDataSourceName(String dataSourceName) {
-        this.dataSourceName = dataSourceName;
-    }
+        public Builder withId(Id id) {
+            this.id = id;
+            return this;
+        }
 
-    public String getDataSourceName() {
-        return dataSourceName;
-    }
+        public Builder withName(String name) {
+            this.name = name;
+            return this;
+        }
 
-    public Map<String, String> getConfig() {
-        return config;
-    }
+        public Builder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
 
-    public void setConfig(Map<String, String> config) {
-        this.config = config;
-    }
+        public Builder makeActive() {
+            this.isActive = true;
+            return this;
+        }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
+        public Builder makeInActive() {
+            this.isActive = false;
+            return this;
+        }
 
-    public String getFileName() {
-        return fileName;
-    }
+        public Builder withDataSourceName(String dataSourceName) {
+            this.dataSourceName = dataSourceName;
+            return this;
+        }
 
-    public void setSaveMode(String saveMode) {
-        this.saveMode = saveMode;
-    }
+        public Builder withSaveMode(String saveMode) {
+            this.saveMode = saveMode;
+            return this;
+        }
 
-    public String getSaveMode() {
-        return saveMode;
+        public Builder withConfiguration(Configuration configuration) {
+            this.configuration = configuration;
+            return this;
+        }
+
+        public FileEtlTarget build() {
+            return new FileEtlTarget(this.id, this.name, this.description, this.isActive, this.dataSourceName, this.saveMode, this.configuration);
+        }
     }
 }

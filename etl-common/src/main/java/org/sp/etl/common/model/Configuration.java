@@ -3,7 +3,7 @@ package org.sp.etl.common.model;
 import java.util.Iterator;
 import java.util.Map;
 
-public interface Configuration {
+public interface Configuration extends Identifiable{
     void importFrom(Configuration dataObject);
 
     String getStringValue(String fieldName);

@@ -1,36 +1,12 @@
 package org.sp.etl.common.model;
 
-public class Identifiable {
-    private Id id;
-    private String name;
-    private String description;
-    private boolean isActive;
+public interface Identifiable {
 
-    protected Identifiable(Id id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    public boolean isActive();
 
-    protected Identifiable(Id id, String name, String description, boolean isActive) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.isActive = isActive;
-    }
+    public Id getId();
 
-    public boolean isActive() {
-        return isActive;
-    }
+    public String getName();
 
-    public Id getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
+    public String getDescription();
 }
