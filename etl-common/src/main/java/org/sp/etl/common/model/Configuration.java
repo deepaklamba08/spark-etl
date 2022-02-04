@@ -19,6 +19,8 @@ public interface Configuration extends Identifiable {
 
     List<String> getListValue(String fieldName);
 
+    int getIntValue(String fieldName);
+
     Configuration getAttribute(String fieldName);
 
     Iterator<String> getFields();

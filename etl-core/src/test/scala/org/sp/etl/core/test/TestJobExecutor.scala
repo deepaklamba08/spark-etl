@@ -10,10 +10,10 @@ import org.sp.etl.common.model.job.Job
 import org.sp.etl.common.model.step.Step
 import org.sp.etl.core.model.executor.sp.SparkJobExecutor
 import org.sp.etl.core.model.{DataSourceRegistry, EtlSourceRegistry, SuccessStatus}
-import org.sp.etl.function.column.DateAndTimeFunction.CurrentDateFunction
-import org.sp.etl.function.column.agg.{GroupByDatasetFunction, SumValue}
-import org.sp.etl.function.column.math.SumColumnFunction
-import org.sp.etl.function.column.{AddConstantValueFunction, CastColumnFunction, RenameColumnFunction}
+import function.column.DateAndTimeFunction.CurrentDateFunction
+import function.column.agg.{GroupByDatasetFunction, SumValue}
+import function.column.math.SumColumnFunction
+import function.column.{AddConstantValueFunction, CastColumnFunction, RenameColumnFunction}
 
 class TestJobExecutor extends FunSuite {
 

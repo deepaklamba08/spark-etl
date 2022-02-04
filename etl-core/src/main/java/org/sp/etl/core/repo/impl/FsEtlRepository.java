@@ -17,6 +17,7 @@ import org.sp.etl.common.repo.RepositoryType;
 import org.sp.etl.common.util.ConfigurationFactory;
 import org.sp.etl.common.util.EtlConstants;
 import org.sp.etl.common.util.Preconditions;
+import function.EtlFunction;
 
 
 import java.io.File;
@@ -109,12 +110,24 @@ public class FsEtlRepository implements EtlRepository {
 
         private static String[] DATA_SOURCE_REQ_SOURCE_FIELDS = new String[]{EtlConstants.TYPE_FIELD, EtlConstants.ID_FIELD,
                 EtlConstants.NAME_FIELD, EtlConstants.NAMED_PATH_FIELD};
+
         private static String[] ETL_TARGET_REQ_SOURCE_FIELDS = new String[]{EtlConstants.TYPE_FIELD, EtlConstants.ID_FIELD,
                 EtlConstants.NAME_FIELD, EtlConstants.DS_NAME_FIELD, EtlConstants.ETL_TARGET_SAVE_MODE_FIELD};
+
         private static String[] ETL_SOURCE_REQ_SOURCE_FIELDS = new String[]{EtlConstants.TYPE_FIELD, EtlConstants.ID_FIELD,
                 EtlConstants.NAME_FIELD, EtlConstants.DS_NAME_FIELD, EtlConstants.ETL_SOURCE_ALIAS};
-        private static String[] ETL_JOB_REQ_FIELDS = new String[]{EtlConstants.TYPE_FIELD, EtlConstants.ID_FIELD,
-                EtlConstants.NAME_FIELD, EtlConstants.ETL_JOB_TARGETS_FIELD, EtlConstants.ETL_JOB_STEPS_FIELD};
+
+        private static String[] ETL_JOB_REQ_FIELDS = new String[]{EtlConstants.ID_FIELD, EtlConstants.NAME_FIELD,
+                EtlConstants.ETL_JOB_TARGETS_FIELD, EtlConstants.ETL_JOB_STEPS_FIELD};
+
+        private static String[] ETL_STEP_REQ_FIELDS = new String[]{EtlConstants.ID_FIELD, EtlConstants.NAME_FIELD,
+                EtlConstants.ETL_STEP_SOURCES_FIELD, EtlConstants.ETL_STEP_OP_SOURCE_NAME_FIELD,
+                EtlConstants.ETL_STEP_OP_SOURCE_ALIAS_FIELD, EtlConstants.ETL_STEP_FUNCTIONS_FIELD,
+                EtlConstants.ETL_STEP_INDEX_FIELD};
+
+        private static String[] ETL_FUNCTION_REQ_FIELDS = new String[]{EtlConstants.TYPE_FIELD, EtlConstants.ID_FIELD,
+                EtlConstants.NAME_FIELD, EtlConstants.NAMED_PATH_FIELD};
+
 
         static Job mapJob(Configuration configuration) {
             Preconditions.validateFields(configuration, "not all mandatory fields are present", ETL_JOB_REQ_FIELDS);
@@ -134,6 +147,27 @@ public class FsEtlRepository implements EtlRepository {
         }
 
         private static Step mapStep(Configuration configuration) {
+            Preconditions.validateFields(configuration, "not all mandatory fields are present", ETL_STEP_REQ_FIELDS);
+            Step.Builder builder = new Step.Builder()
+                    .withId(new StringId(configuration.getStringValue(EtlConstants.ID_FIELD)))
+                    .withName(configuration.getStringValue(EtlConstants.NAME_FIELD))
+                    .withDescription(configuration.getStringValue(EtlConstants.DESCRIPTION_FIELD, null))
+                    .withActive(configuration.getBooleanValue(EtlConstants.ACTIVE_FIELD, false))
+                    .withConfiguration(configuration.getConfiguration(EtlConstants.CONFIGURATION_FIELD, null))
+                    .withStepIndex(configuration.getIntValue(EtlConstants.ETL_STEP_INDEX_FIELD))
+                    .withOutputSourceName(configuration.getStringValue(EtlConstants.ETL_STEP_OP_SOURCE_NAME_FIELD))
+                    .withOutputSourceAlias(configuration.getStringValue(EtlConstants.ETL_STEP_OP_SOURCE_ALIAS_FIELD));
+
+
+            configuration.getConfiguration(EtlConstants.ETL_STEP_FUNCTIONS_FIELD).getAsList()
+                    .stream().map(ConfigMapper::mapEtlFunction)
+                    .forEach(builder::withEtlFunction);
+            return builder.build();
+        }
+
+        private static EtlFunction mapEtlFunction(Configuration configuration) {
+            Preconditions.validateFields(configuration, "not all mandatory fields are present", ETL_FUNCTION_REQ_FIELDS);
+            String type = configuration.getStringValue(EtlConstants.TYPE_FIELD);
 
             return null;
         }

@@ -2,8 +2,8 @@ package org.sp.etl.core.model.executor.sp.function
 
 import org.apache.spark.sql.DataFrame
 import org.sp.etl.core.model.{DataBag, Databags}
-import org.sp.etl.function.DatasetFunction
-import org.sp.etl.function.dataset._
+import function.DatasetFunction
+import function.dataset._
 
 abstract class DatasetFunctionRunner(function: DatasetFunction) extends FunctionRunner[DatasetFunction](function) {
   def run(dataBag: DataBag, databags: Databags): DataBag

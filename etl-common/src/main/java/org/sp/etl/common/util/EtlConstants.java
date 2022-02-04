@@ -30,4 +30,34 @@ public class EtlConstants {
 
     public static final String ETL_JOB_TARGETS_FIELD = "targets";
     public static final String ETL_JOB_STEPS_FIELD = "steps";
+
+    public static final String ETL_STEP_SOURCES_FIELD = "sources";
+    public static final String ETL_STEP_INDEX_FIELD = "stepIndex";
+    public static final String ETL_STEP_OP_SOURCE_NAME_FIELD = "outputSourceName";
+    public static final String ETL_STEP_OP_SOURCE_ALIAS_FIELD = "outputSourceAlias";
+    public static final String ETL_STEP_FUNCTIONS_FIELD = "functions";
+
+    public static final String ETL_COLUMN__FUNCTION = "columnFunction";
+    public static final String ETL_RENAME_COLUMN_FUNCTION = "renameColumnFunction";
+    public static final String ETL_AddConstantValue_FUNCTION = "addConstantValueFunction";
+    public static final String ETL_DropColumn_FUNCTION = "dropColumnColumnFunction";
+    public static final String ETL_Dataset_FUNCTION = "datasetFunction";
+    public static final String ETL_InnerJoinDataset_FUNCTION = "innerJoinDatasetFunction";
+    public static final String ETL_RepartitionDataset_FUNCTION = "repartitionDatasetFunction";
+    public static final String ETL_PersistDataset_FUNCTION = "persistDatasetFunction";
+    public static final String ETL_UnPersistDataset_FUNCTION = "unPersistDatasetFunction";
+    public static final String ETL_GroupByDataset_FUNCTION = "groupByDatasetFunction";
+    public static final String ETL_DatasetUnion_FUNCTION = "datasetUnionFunction";
+    public static final String ETL_DatasetRegisterAsTable_FUNCTION = "datasetRegisterAsTableFunction";
+    public static final String ETL_FilterDataset_FUNCTION = "filterDatasetFunction";
+    public static final String ETL_SortDataset_FUNCTION = "sortDatasetFunction";
+    public static final String ETL_LeftJoinDataset_FUNCTION = "leftJoinDatasetFunction";
+    public static final String ETL_RightJoinDataset_FUNCTION = "rightJoinDatasetFunction";
+    public static final String ETL_CurrentDate_FUNCTION = "currentDateFunction";
+    public static final String ETL_CurrentTimestamp_FUNCTION = "currentTimestampFunction";
+    public static final String ETL_ToDate_FUNCTION = "toDateFunction";
+    public static final String ETL_ToTimestamp_FUNCTION = "toTimestampFunction";
+    public static final String ETL_SumColumn_FUNCTION = "sumColumnFunction";
+    public static final String ETL_CastColumn_FUNCTION = "castColumnFunction";
+
 }

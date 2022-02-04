@@ -5,7 +5,7 @@ import org.sp.etl.common.ds.DataSource
 import org.sp.etl.common.exception.EtlExceptions.ObjectNotFoundException
 import org.sp.etl.common.io.source.EtlSource
 import org.sp.etl.common.io.tr.EtlTarget
-import org.sp.etl.function.EtlFunction
+import function.EtlFunction
 
 case class DataBag(name: String, alias: String, dataset: DataFrame)
 

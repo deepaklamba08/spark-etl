@@ -5,7 +5,7 @@ import java.util.Date
 import org.slf4j.LoggerFactory
 import org.sp.etl.core.metrics.FunctionMetrics
 import org.sp.etl.core.model.{SuccessStatus, _}
-import org.sp.etl.function.EtlFunction
+import function.EtlFunction
 
 import scala.collection.mutable.ListBuffer
 

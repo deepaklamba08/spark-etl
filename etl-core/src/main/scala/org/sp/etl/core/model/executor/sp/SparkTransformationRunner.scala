@@ -3,8 +3,8 @@ package org.sp.etl.core.model.executor.sp
 import org.sp.etl.core.model.executor.sp.function.{ColumnFunctionRunnerFactory, DatasetFunctionRunnerFactory}
 import org.sp.etl.core.model.executor.{FunctionExecutionResult, TransformationRunner}
 import org.sp.etl.core.model.{DataBag, Databags, FailedStatus}
-import org.sp.etl.function.column.ColumnFunction
-import org.sp.etl.function.{DatasetFunction, EtlFunction}
+import function.column.ColumnFunction
+import function.{DatasetFunction, EtlFunction}
 
 import scala.util.{Failure, Success, Try}
 

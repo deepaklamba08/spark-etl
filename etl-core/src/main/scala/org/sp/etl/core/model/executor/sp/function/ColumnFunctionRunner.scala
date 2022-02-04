@@ -1,17 +1,17 @@
 package org.sp.etl.core.model.executor.sp.function
 
 import java.util
-
 import org.apache.spark.sql.{DataFrame, functions}
 import org.apache.spark.storage.StorageLevel
 import org.sp.etl.common.exception.EtlExceptions.InvalidConfigurationException
 import org.sp.etl.core.model.DataBag
 import org.sp.etl.core.model.executor.sp.AggregationUtil
-import org.sp.etl.function.column.DateAndTimeFunction._
-import org.sp.etl.function.column.SortDatasetFunction.SortOrder
-import org.sp.etl.function.column._
-import org.sp.etl.function.column.agg.GroupByDatasetFunction
-import org.sp.etl.function.column.math.SumColumnFunction
+import function.column.DateAndTimeFunction._
+import function.column.SortDatasetFunction.SortOrder
+import function.column._
+import function.column.agg.GroupByDatasetFunction
+import function.column.math.SumColumnFunction
+import function.dataset.UnPersistDatasetFunction
 
 import scala.collection.JavaConverters._
 
@@ -59,7 +59,7 @@ class DropColumnColumnFunctionRunner(function: DropColumnFunction) extends Colum
 }
 
 class RepartitionDatasetColumnFunctionRunner(function: RepartitionDatasetFunction) extends ColumnFunctionRunner(function) {
-  override def run(dataBag: DataBag): DataBag = DataBag(dataBag.name, dataBag.alias, dataBag.dataset.repartition(function.getNumPartitons, function.getPartitionColumns.asScala.map(functions.col): _*))
+  override def run(dataBag: DataBag): DataBag = DataBag(dataBag.name, dataBag.alias, dataBag.dataset.repartition(function.getNumPartitions, function.getPartitionColumns.asScala.map(functions.col): _*))
 }
 
 class PersistDatasetColumnFunctionRunner(function: PersistDatasetFunction) extends ColumnFunctionRunner(function) {
