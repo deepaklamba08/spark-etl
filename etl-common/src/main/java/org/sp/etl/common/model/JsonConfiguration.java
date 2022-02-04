@@ -11,6 +11,7 @@ import org.sp.etl.common.util.DataUtils;
 
 import java.io.*;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class JsonConfiguration implements Serializable, Configuration {
@@ -116,6 +117,11 @@ public class JsonConfiguration implements Serializable, Configuration {
 
     public boolean isNull() {
         return this.dataNode == null || this.dataNode.isNull();
+    }
+
+    @Override
+    public List<Configuration> getAsList() {
+        return null;
     }
 
 
