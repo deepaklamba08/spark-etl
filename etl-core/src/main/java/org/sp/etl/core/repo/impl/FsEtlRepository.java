@@ -13,6 +13,7 @@ import org.sp.etl.common.model.step.Step;
 import org.sp.etl.common.repo.EtlRepository;
 import org.sp.etl.common.repo.RepositoryType;
 import org.sp.etl.common.util.ConfigurationFactory;
+import org.sp.etl.common.util.DataUtils;
 import org.sp.etl.common.util.EtlConstants;
 import org.sp.etl.common.util.Preconditions;
 import org.sp.etl.function.EtlFunction;
@@ -141,6 +142,7 @@ public class FsEtlRepository implements EtlRepository {
 
 
         static Job mapJob(Configuration configuration) {
+//            DataUtils.makeString("not all mandatory fields are present. mandatory fields - ", ",", ETL_JOB_REQ_FIELDS);
             Preconditions.validateFields(configuration, "not all mandatory fields are present", ETL_JOB_REQ_FIELDS);
 
             Job.Builder builder = new Job.Builder().withId(new StringId(configuration.getStringValue(EtlConstants.ID_FIELD)))
