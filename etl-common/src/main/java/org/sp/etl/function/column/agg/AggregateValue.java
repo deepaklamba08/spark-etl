@@ -1,16 +1,5 @@
 package org.sp.etl.function.column.agg;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
-
-@JsonSubTypes(
-        {
-                @JsonSubTypes.Type(value = MaxValue.class, name = "maxValue"),
-                @JsonSubTypes.Type(value = SumValue.class, name = "sumValue")
-        })
-
 public abstract class AggregateValue {
 
     private String columnName;

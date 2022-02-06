@@ -4,12 +4,12 @@ import org.sp.etl.common.model.Id;
 
 public class CastColumnFunction extends ColumnFunction {
 
-    private String resultColumnName;
+    private String resultColumn;
     private String sourceColumn;
     private String toType;
 
-    public String getResultColumnName() {
-        return resultColumnName;
+    public String getResultColumn() {
+        return resultColumn;
     }
 
     public String getSourceColumn() {
@@ -22,7 +22,7 @@ public class CastColumnFunction extends ColumnFunction {
 
     public CastColumnFunction(Id id, String name, String description, boolean isActive, String resultColumnName, String sourceColumn, String toType) {
         super(id, name, description, isActive);
-        this.resultColumnName = resultColumnName;
+        this.resultColumn = resultColumnName;
         this.sourceColumn = sourceColumn;
         this.toType = toType;
     }

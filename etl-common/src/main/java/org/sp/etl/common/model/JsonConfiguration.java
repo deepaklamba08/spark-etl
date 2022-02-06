@@ -65,6 +65,11 @@ public class JsonConfiguration implements Serializable, Configuration {
     }
 
     @Override
+    public List<String> getListValue(String fieldName, List<String> defaultValue) {
+        return null;
+    }
+
+    @Override
     public int getIntValue(String fieldName) {
         return 0;
     }

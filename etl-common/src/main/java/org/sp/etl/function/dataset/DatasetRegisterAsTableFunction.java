@@ -3,7 +3,7 @@ package org.sp.etl.function.dataset;
 import org.sp.etl.function.DatasetFunction;
 import org.sp.etl.common.model.Id;
 
-public abstract class DatasetRegisterAsTableFunction extends DatasetFunction {
+public class DatasetRegisterAsTableFunction extends DatasetFunction {
 
     private String datasetName;
 

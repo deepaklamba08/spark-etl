@@ -39,27 +39,50 @@ public class EtlConstants {
     public static final String ETL_STEP_OP_SOURCE_ALIAS_FIELD = "outputSourceAlias";
     public static final String ETL_STEP_FUNCTIONS_FIELD = "functions";
 
-    public static final String ETL_COLUMN__FUNCTION = "columnFunction";
+
     public static final String ETL_RENAME_COLUMN_FUNCTION = "renameColumnFunction";
-    public static final String ETL_AddConstantValue_FUNCTION = "addConstantValueFunction";
-    public static final String ETL_DropColumn_FUNCTION = "dropColumnColumnFunction";
-    public static final String ETL_Dataset_FUNCTION = "datasetFunction";
-    public static final String ETL_InnerJoinDataset_FUNCTION = "innerJoinDatasetFunction";
-    public static final String ETL_RepartitionDataset_FUNCTION = "repartitionDatasetFunction";
-    public static final String ETL_PersistDataset_FUNCTION = "persistDatasetFunction";
-    public static final String ETL_UnPersistDataset_FUNCTION = "unPersistDatasetFunction";
-    public static final String ETL_GroupByDataset_FUNCTION = "groupByDatasetFunction";
-    public static final String ETL_DatasetUnion_FUNCTION = "datasetUnionFunction";
-    public static final String ETL_DatasetRegisterAsTable_FUNCTION = "datasetRegisterAsTableFunction";
-    public static final String ETL_FilterDataset_FUNCTION = "filterDatasetFunction";
-    public static final String ETL_SortDataset_FUNCTION = "sortDatasetFunction";
-    public static final String ETL_LeftJoinDataset_FUNCTION = "leftJoinDatasetFunction";
-    public static final String ETL_RightJoinDataset_FUNCTION = "rightJoinDatasetFunction";
-    public static final String ETL_CurrentDate_FUNCTION = "currentDateFunction";
-    public static final String ETL_CurrentTimestamp_FUNCTION = "currentTimestampFunction";
-    public static final String ETL_ToDate_FUNCTION = "toDateFunction";
-    public static final String ETL_ToTimestamp_FUNCTION = "toTimestampFunction";
-    public static final String ETL_SumColumn_FUNCTION = "sumColumnFunction";
-    public static final String ETL_CastColumn_FUNCTION = "castColumnFunction";
+    public static final String ETL_ADD_CONSTANT_VALUE_FUNCTION = "addConstantValueFunction";
+    public static final String ETL_DROP_COLUMN_FUNCTION = "dropColumnColumnFunction";
+    public static final String ETL_REPARTITION_DATASET_FUNCTION = "repartitionDatasetFunction";
+    public static final String ETL_PERSIST_DATASET_FUNCTION = "persistDatasetFunction";
+    public static final String ETL_UN_PERSIST_DATASET_FUNCTION = "unPersistDatasetFunction";
+    public static final String ETL_GROUP_BY_DATASET_FUNCTION = "groupByDatasetFunction";
+    public static final String ETL_DATASET_UNION_FUNCTION = "datasetUnionFunction";
+    public static final String ETL_DATASET_REGISTER_AS_TABLE_FUNCTION = "datasetRegisterAsTableFunction";
+    public static final String ETL_FILTER_DATASET_FUNCTION = "filterDatasetFunction";
+    public static final String ETL_SORT_DATASET_FUNCTION = "sortDatasetFunction";
+    public static final String ETL_INNER_JOIN_DATASET_FUNCTION = "innerJoinDatasetFunction";
+    public static final String ETL_LEFT_JOIN_DATASET_FUNCTION = "leftJoinDatasetFunction";
+    public static final String ETL_RIGHT_JOIN_DATASET_FUNCTION = "rightJoinDatasetFunction";
+    public static final String ETL_CURRENT_DATE_FUNCTION = "currentDateFunction";
+    public static final String ETL_CURRENT_TIMESTAMP_FUNCTION = "currentTimestampFunction";
+    public static final String ETL_TO_DATE_FUNCTION = "toDateFunction";
+    public static final String ETL_TO_TIMESTAMP_FUNCTION = "toTimestampFunction";
+    public static final String ETL_SUM_COLUMN_FUNCTION = "sumColumnFunction";
+    public static final String ETL_CAST_COLUMN_FUNCTION = "castColumnFunction";
+
+
+    public static final String OLD_NAME_FIELD = "oldName";
+    public static final String NEW_NAME_FIELD = "newName";
+    public static final String COLUMN_NAME_FIELD = "columnName";
+    public static final String VALUE_FIELD = "value";
+    public static final String REPARTITION_COLUMNS_FIELD = "partitionColumns";
+    public static final String NUM_PARTITIONS_FIELD = "numPartitions";
+    public static final String PERSIST_LEVEL_FIELD = "persistLevel";
+    public static final String GROUP_BY_COLUMNS_FIELD = "groupByColumns";
+    public static final String AGGREGATE_VALUES_FIELD = "aggregateValues";
+    public static final String AGGREGATE_VALUE_MAX_FIELD = "aggregateValueMax";
+    public static final String AGGREGATE_VALUE_SUM_FIELD = "aggregateValueSumValue";
+    public static final String AGGREGATE_VALUE_RESULT_ALIAS_FIELD = "resultAlias";
+    public static final String SECOND_DATASET_NAME_FIELD = "secondDatasetName";
+    public static final String UNION_BY_NAME_FIELD = "unionByName";
+    public static final String DATASET_NAME_FIELD = "datasetName";
+    public static final String FILTER_CONDITION_FIELD = "filterCondition";
+    public static final String SORT_COLUMNS_FIELD = "sortColumns";
+    public static final String FORMAT_FIELD = "format";
+    public static final String SOURCE_COLUMN_FIELD = "sourceColumn";
+    public static final String RESULT_COLUMN_NAME_FIELD = "resultColumnName";
+    public static final String COLUMNS_FIELD = "columns";
+    public static final String TO_TYPE_FIELD = "toType";
 
 }

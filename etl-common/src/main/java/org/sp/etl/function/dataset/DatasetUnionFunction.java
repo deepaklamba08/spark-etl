@@ -3,7 +3,7 @@ package org.sp.etl.function.dataset;
 import org.sp.etl.function.DatasetFunction;
 import org.sp.etl.common.model.Id;
 
-public abstract class DatasetUnionFunction extends DatasetFunction {
+public class DatasetUnionFunction extends DatasetFunction {
 
     private String secondDatasetName;
     private boolean unionByName;

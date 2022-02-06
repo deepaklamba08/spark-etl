@@ -131,6 +131,6 @@ class SumColumnColumnFunctionRunner(function: SumColumnFunction) extends ColumnF
 }
 
 class CastColumnColumnFunctionRunner(function: CastColumnFunction) extends ColumnFunctionRunner(function) {
-  override def run(dataBag: DataBag): DataBag = DataBag(dataBag.name, dataBag.alias, dataBag.dataset.withColumn(function.getResultColumnName, functions.col(function.getSourceColumn).cast(function.getToType).alias(function.getResultColumnName)))
+  override def run(dataBag: DataBag): DataBag = DataBag(dataBag.name, dataBag.alias, dataBag.dataset.withColumn(function.getResultColumn, functions.col(function.getSourceColumn).cast(function.getToType).alias(function.getResultColumn)))
 }
 

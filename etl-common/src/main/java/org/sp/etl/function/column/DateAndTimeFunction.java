@@ -12,6 +12,10 @@ public abstract class DateAndTimeFunction extends ColumnFunction {
         this.columnName = columnName;
         this.format = format;
     }
+    public DateAndTimeFunction(Id id, String name, String description, boolean isActive, String columnName) {
+        super(id, name, description, isActive);
+        this.columnName = columnName;
+    }
 
     public String getColumnName() {
         return columnName;
@@ -29,8 +33,8 @@ public abstract class DateAndTimeFunction extends ColumnFunction {
     }
 
     public static class CurrentTimestampFunction extends DateAndTimeFunction {
-        public CurrentTimestampFunction(Id id, String name, String description, boolean isActive, String columnName, String format) {
-            super(id, name, description, isActive, columnName, format);
+        public CurrentTimestampFunction(Id id, String name, String description, boolean isActive, String columnName) {
+            super(id, name, description, isActive, columnName);
         }
     }
 
