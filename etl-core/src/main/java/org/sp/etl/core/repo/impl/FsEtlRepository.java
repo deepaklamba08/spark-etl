@@ -13,7 +13,6 @@ import org.sp.etl.common.model.step.Step;
 import org.sp.etl.common.repo.EtlRepository;
 import org.sp.etl.common.repo.RepositoryType;
 import org.sp.etl.common.util.ConfigurationFactory;
-import org.sp.etl.common.util.DataUtils;
 import org.sp.etl.common.util.EtlConstants;
 import org.sp.etl.common.util.Preconditions;
 import org.sp.etl.function.EtlFunction;
@@ -43,7 +42,7 @@ public class FsEtlRepository implements EtlRepository {
     private final DataStore<EtlTarget> etlTargetDataStore;
 
     public FsEtlRepository(Map<String, String> parameters) {
-        ConfigurationType configurationType = ConfigurationType.getConfigurationType(parameters.get(""));
+        ConfigurationType configurationType = ConfigurationType.getConfigurationType(parameters.get(EtlConstants.CONFIGURATION_TYPE_FIELD));
         this.jobDataStore = new DataStore<>(configurationType, this.getPath(EtlConstants.JOB_CONF_FILE_KEY, parameters), ConfigMapper::mapJob, Job::getName);
         this.jsonDataObjectDataStore = new DataStore<>(configurationType, this.getPath(EtlConstants.OBJECT_CONF_FILE_KEY, parameters), Function.identity(), Identifiable::getName);
         this.etlSourceDataStore = new DataStore<>(configurationType, this.getPath(EtlConstants.SOURCE_CONF_FILE_KEY, parameters), ConfigMapper::mapEtlSource, Identifiable::getName);
@@ -169,7 +168,8 @@ public class FsEtlRepository implements EtlRepository {
                     .withConfiguration(configuration.getConfiguration(EtlConstants.CONFIGURATION_FIELD, null))
                     .withStepIndex(configuration.getIntValue(EtlConstants.ETL_STEP_INDEX_FIELD))
                     .withOutputSourceName(configuration.getStringValue(EtlConstants.ETL_STEP_OP_SOURCE_NAME_FIELD))
-                    .withOutputSourceAlias(configuration.getStringValue(EtlConstants.ETL_STEP_OP_SOURCE_ALIAS_FIELD));
+                    .withOutputSourceAlias(configuration.getStringValue(EtlConstants.ETL_STEP_OP_SOURCE_ALIAS_FIELD))
+                    .withPrimarySource(configuration.getStringValue(EtlConstants.ETL_STEP_PRIMARY_SOURCE_FIELD));
 
 
             configuration.getConfiguration(EtlConstants.ETL_STEP_FUNCTIONS_FIELD).getAsList()
@@ -283,6 +283,8 @@ public class FsEtlRepository implements EtlRepository {
                         .withActive(configuration.getBooleanValue(EtlConstants.ACTIVE_FIELD, false))
                         .withDataSourceName(configuration.getStringValue(EtlConstants.DS_NAME_FIELD))
                         .withAlias(configuration.getStringValue(EtlConstants.ETL_SOURCE_ALIAS))
+                        .withFileFormat(configuration.getStringValue(EtlConstants.ETL_SOURCE_FILE_FORMAT_FIELD))
+                        .withLocationName(configuration.getStringValue(EtlConstants.ETL_SOURCE_LOCATION_NAME_FIELD))
                         .withConfiguration(configuration.getConfiguration(EtlConstants.CONFIGURATION_FIELD, null));
                 return builder.build();
             } else {

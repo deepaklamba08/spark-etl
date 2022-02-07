@@ -16,7 +16,6 @@ public class FileEtlTarget implements EtlTarget {
     private String locationName;
     private String saveMode;
     private String format;
-    private Map<String, String> writerConfig;
     private Configuration configuration;
 
     protected FileEtlTarget(Id id, String name, String description, boolean isActive, String dataSourceName, String locationName, String saveMode, String format, Configuration configuration) {
@@ -37,10 +36,6 @@ public class FileEtlTarget implements EtlTarget {
 
     public String getFormat() {
         return format;
-    }
-
-    public Map<String, String> getWriterConfig() {
-        return writerConfig;
     }
 
     public String getLocationName() {
@@ -72,6 +67,9 @@ public class FileEtlTarget implements EtlTarget {
         return this.description;
     }
 
+    public Map<String, String> writerConfig() {
+        return null;
+    }
     public static class Builder {
         private Id id;
         private String name;

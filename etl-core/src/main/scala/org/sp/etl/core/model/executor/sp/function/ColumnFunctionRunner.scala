@@ -29,7 +29,6 @@ object ColumnFunctionRunnerFactory {
       case dc: DropColumnFunction => new DropColumnColumnFunctionRunner(dc)
       case rp: RepartitionDatasetFunction => new RepartitionDatasetColumnFunctionRunner(rp)
       case pr: PersistDatasetFunction => new PersistDatasetColumnFunctionRunner(pr)
-      case un: UnPersistDatasetFunction => new UnPersistDatasetColumnFunctionRunner(un)
       case gr: GroupByDatasetFunction => new GroupByDatasetColumnFunctionRunner(gr)
       case flt: FilterDatasetFunction => new FilterDatasetColumnFunctionRunner(flt)
       case so: SortDatasetFunction => new SortDatasetColumnFunctionRunner(so)

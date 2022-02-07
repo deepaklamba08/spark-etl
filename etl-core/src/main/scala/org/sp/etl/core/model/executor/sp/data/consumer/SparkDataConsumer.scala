@@ -34,7 +34,7 @@ class SparkDataConsumer extends DataConsumer {
     }
     val fileDs = targetDs.asInstanceOf[FileSystemDataSource]
     val writer = databag.dataset.write.format(fsTarget.getFormat())
-    this.setConfig(writer, fsTarget.getWriterConfig())
+    this.setConfig(writer, fsTarget.writerConfig())
       .mode(fsTarget.getSaveMode)
       .save(fileDs.getPathByName(fsTarget.getLocationName))
   }

@@ -44,12 +44,18 @@ class JobOrchestrator(etlRepositroty: EtlRepository) {
     sources.foreach(EtlSourceRegistry.registerSource)
     sources.map(_.dataSourceName()).map(this.lookupDataSource).foreach(DataSourceRegistry.registerDataSource)
 
-    val target = etlRepositroty.lookupEtlTarget(job.getTargetName)
-    if (target == null) {
-      throw new ObjectNotFoundException(s"could not found target - ${job.getTargetName}")
-    }
-    EtlTargetRegistry.registerTarget(target)
-    DataSourceRegistry.registerDataSource(this.lookupDataSource(target.dataSourceName()))
+    job.getTargets.asScala.map(etlRepositroty.lookupEtlTarget)
+      .foreach(target => {
+        EtlTargetRegistry.registerTarget(target)
+        DataSourceRegistry.registerDataSource(this.lookupDataSource(target.dataSourceName()))
+      })
+    /*    val target = etlRepositroty.lookupEtlTarget(job.getTargetName)
+        if (target == null) {
+          throw new ObjectNotFoundException(s"could not found target - ${job.getTargetName}")
+        }
+        EtlTargetRegistry.registerTarget(target)*/
+
+    //DataSourceRegistry.registerDataSource(this.lookupDataSource(target.dataSourceName()))
   }
 
   private def lookupDataSource(dataSourceName: String) = {
@@ -61,16 +67,18 @@ class JobOrchestrator(etlRepositroty: EtlRepository) {
   }
 
   private def executeJobInternal(job: Job) = {
-    val executor = JobExecutorFactory.createJobExecutor(job.getJobName, Constants.SPARK_JOB_EXECUTOR, this.etlRepositroty.lookupObject(Constants.EXECUTOR_CONF_NAME))
+    val executor = JobExecutorFactory.createJobExecutor(job.getName, Constants.SPARK_JOB_EXECUTOR, this.etlRepositroty.lookupObject(Constants.EXECUTOR_CONF_NAME))
     val jobExecutionResult = executor.executeJob(job)
     jobExecutionResult.status match {
-      case SuccessStatus => this.storeResultDataset(job.getTargetName, jobExecutionResult.dataBag)
+      case SuccessStatus => this.storeResultDataset(job.getTargets.asScala, jobExecutionResult.dataBag)
       case FailedStatus => logger.error(s"job execution failed, cause - ${jobExecutionResult.executionMessage}")
     }
   }
 
-  private def storeResultDataset(targetName: String, dataset: DataBag) = {
-    val etlTarget = EtlTargetRegistry.lookupTarget(targetName)
-    DataConsumerFactory.createDataConsumer(Constants.SPARK_JOB_EXECUTOR).consume(dataset, etlTarget)
+  private def storeResultDataset(targets: Seq[String], dataset: DataBag) = {
+    targets.foreach(targetName => {
+      val etlTarget = EtlTargetRegistry.lookupTarget(targetName)
+      DataConsumerFactory.createDataConsumer(Constants.SPARK_JOB_EXECUTOR).consume(dataset, etlTarget)
+    })
   }
 }

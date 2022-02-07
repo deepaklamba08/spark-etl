@@ -22,7 +22,7 @@ class SparkStepExecutor(dataLoader: DataLoader) extends StepExecutor {
     val transformation = this.createTransformation(step, otherDatabags)
 
     val transformationResult = transformationRunner.runTransformation(transformation)
-    val stepMetrics = transformationResult.functionMetrics.foldLeft(new StepMetrics.StepMetricsBuilder(step.getStepName, step.getStepIndex, new Date()))((acc, metrics) => acc.withFunctionMetrics(metrics))
+    val stepMetrics = transformationResult.functionMetrics.foldLeft(new StepMetrics.StepMetricsBuilder(step.getName, step.getStepIndex, new Date()))((acc, metrics) => acc.withFunctionMetrics(metrics))
 
     transformationResult.status match {
       case SuccessStatus =>
@@ -38,8 +38,8 @@ class SparkStepExecutor(dataLoader: DataLoader) extends StepExecutor {
     val databags = step.getSources.asScala.map(this.lookupDatabag(dataLoader, otherDatabags) _)
     logger.debug(s"number of  datasets in step - ${databags.size}")
 
-    val primaryInput = databags.find(_.name.equals(step.getInputSourceName)).fold(throw new ObjectNotFoundException(s"could not find primary datasets - ${step.getInputSourceName}"))(c => c)
-    val secondaryInput = databags.filter(!_.name.equals(step.getInputSourceName))
+    val primaryInput = databags.find(_.name.equals(step.getPrimarySource)).fold(throw new ObjectNotFoundException(s"could not find primary datasets - ${step.getPrimarySource}"))(c => c)
+    val secondaryInput = databags.filter(!_.name.equals(step.getPrimarySource))
 
     Transformation(step.getEtlFunctions.asScala.toList, primaryInput, new Databags((secondaryInput ++ otherDatabags.getDatabags).toList))
   }

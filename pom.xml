@@ -12,7 +12,7 @@
         <module>etl-common</module>
         <module>etl-core</module>
         <module>etl-app</module>
-        <module>etl-function</module>
+<!--        <module>etl-function</module>-->
     </modules>
 
     <properties>
@@ -22,6 +22,7 @@
         <spark.scala-2.11.version>3.0.0</spark.scala-2.11.version>
         <spark.version>${spark.scala-2.11.version}</spark.version>
         <scala.binary.version>2.12</scala.binary.version>
+        <testng.version>6.10</testng.version>
     </properties>
 
     <dependencies>
@@ -54,6 +55,14 @@
             <artifactId>spark-sql_${scala.binary.version}</artifactId>
             <version>${spark.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

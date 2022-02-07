@@ -45,7 +45,7 @@ object EtlSourceRegistry {
   private val registry = new Registry[EtlSource]()
 
   def registerSource(source: EtlSource): Unit = {
-    val fx: EtlSource => String = e => e.sourceName()
+    val fx: EtlSource => String = e => e.getName()
     this.registry.register(source, fx)
   }
 
@@ -58,7 +58,7 @@ object EtlTargetRegistry {
   private val registry = new Registry[EtlTarget]()
 
   def registerTarget(target: EtlTarget): Unit = {
-    val fx: EtlTarget => String = e => e.targetName()
+    val fx: EtlTarget => String = e => e.getName()
     this.registry.register(target, fx)
   }
 
@@ -71,7 +71,7 @@ object DataSourceRegistry {
   private val registry = new Registry[DataSource]()
 
   def registerDataSource(dataSource: DataSource): Unit = {
-    val fx: DataSource => String = e => e.dataSourceName()
+    val fx: DataSource => String = e => e.getName()
     this.registry.register(dataSource, fx)
   }
 

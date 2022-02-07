@@ -17,7 +17,9 @@ public class EtlConstants {
     public static final String ACTIVE_FIELD = "isActive";
     public static final String NAMED_PATH_FIELD = "namedPath";
     public static final String CONFIGURATION_FIELD = "configuration";
-
+    public static final String CONFIGURATION_TYPE_FIELD = "configurationType";
+    public static final String ETL_SOURCE_FILE_FORMAT_FIELD = "format";
+    public static final String ETL_SOURCE_LOCATION_NAME_FIELD = "locationName";
 
     public static final String DS_NAME_FIELD = "dataSourceName";
     public static final String ETL_TARGET_TYPE_FILE_SYSTEM = "fileSystem";
@@ -37,6 +39,7 @@ public class EtlConstants {
     public static final String ETL_STEP_INDEX_FIELD = "stepIndex";
     public static final String ETL_STEP_OP_SOURCE_NAME_FIELD = "outputSourceName";
     public static final String ETL_STEP_OP_SOURCE_ALIAS_FIELD = "outputSourceAlias";
+    public static final String ETL_STEP_PRIMARY_SOURCE_FIELD = "primarySource";
     public static final String ETL_STEP_FUNCTIONS_FIELD = "functions";
 
 

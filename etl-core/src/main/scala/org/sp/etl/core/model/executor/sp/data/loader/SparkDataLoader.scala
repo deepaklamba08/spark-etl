@@ -19,7 +19,7 @@ class SparkDataLoader(sparkSession: SparkSession) extends DataLoader {
         case fileSource: FileEtlSource if (dataSource.isInstanceOf[FileSystemDataSource]) => this.loadFileDataset(fileSource, dataSource.asInstanceOf[FileSystemDataSource])
         case other => throw new UnsupportedOperationException(s"source not supported - ${other.getClass}")
       }
-      DataBag(source.sourceName(), source.sourceAlias(), dataset)
+      DataBag(source.getName(), source.getAlias(), dataset)
     } catch {
       case an: AnalysisException => throw new SystemFailureException("Error occurred while loading dataset", an)
       case other => throw other
@@ -27,8 +27,8 @@ class SparkDataLoader(sparkSession: SparkSession) extends DataLoader {
   }
 
   private def loadFileDataset(fileSource: FileEtlSource, dataSource: FileSystemDataSource) = {
-    val reader = this.sparkSession.read.format(fileSource.fileFormat())
-    this.setConfig(reader, fileSource.config()).load(dataSource.getPath(fileSource.getFileName))
+    val reader = this.sparkSession.read.format(fileSource.getFileFormat())
+    this.setConfig(reader, fileSource.readerConfig()).load(dataSource.getPathByName(fileSource.getLocationName))
   }
 
   private def setConfig(reader: DataFrameReader, config: util.Map[String, String]) = {

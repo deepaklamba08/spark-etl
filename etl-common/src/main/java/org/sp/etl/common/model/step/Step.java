@@ -15,18 +15,20 @@ public class Step implements Identifiable {
     private String description;
     private boolean isActive;
     private int stepIndex;
+    private String primarySource;
     private List<String> sources;
     private String outputSourceName;
     private String outputSourceAlias;
     private List<EtlFunction> etlFunctions;
     private Configuration configuration;
 
-    private Step(Id id, String name, String description, boolean isActive, int stepIndex, List<String> sources, String outputSourceName, String outputSourceAlias, List<EtlFunction> etlFunctions, Configuration configuration) {
+    private Step(Id id, String name, String description, boolean isActive, int stepIndex, String primarySource, List<String> sources, String outputSourceName, String outputSourceAlias, List<EtlFunction> etlFunctions, Configuration configuration) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.isActive = isActive;
         this.stepIndex = stepIndex;
+        this.primarySource = primarySource;
         this.sources = sources;
         this.outputSourceName = outputSourceName;
         this.outputSourceAlias = outputSourceAlias;
@@ -52,6 +54,10 @@ public class Step implements Identifiable {
 
     public List<EtlFunction> getEtlFunctions() {
         return etlFunctions;
+    }
+
+    public String getPrimarySource() {
+        return primarySource;
     }
 
     @Override
@@ -85,6 +91,7 @@ public class Step implements Identifiable {
         private String outputSourceAlias;
         private List<EtlFunction> etlFunctions;
         private Configuration configuration;
+        private String primarySource;
 
         public Builder withId(Id id) {
             this.id = id;
@@ -139,6 +146,11 @@ public class Step implements Identifiable {
             return this;
         }
 
+        public Builder withPrimarySource(String primarySource) {
+            this.primarySource = primarySource;
+            return this;
+        }
+
         public Builder withEtlFunction(EtlFunction etlFunction) {
             if (this.etlFunctions == null) {
                 this.etlFunctions = new ArrayList<>();
@@ -153,7 +165,7 @@ public class Step implements Identifiable {
         }
 
         public Step build() {
-            return new Step(this.id, this.name, this.description, this.isActive, this.stepIndex, this.sources, this.outputSourceName, this.outputSourceAlias, this.etlFunctions, this.configuration);
+            return new Step(this.id, this.name, this.description, this.isActive, this.stepIndex, this.primarySource, this.sources, this.outputSourceName, this.outputSourceAlias, this.etlFunctions, this.configuration);
         }
 
     }

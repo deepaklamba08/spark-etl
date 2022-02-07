@@ -19,6 +19,7 @@ object DatasetFunctionRunnerFactory {
       case rj: RightJoinDatasetFunction => new RightJoinDatasetFunctionRunner(rj)
       case un: DatasetUnionFunction => new DatasetUnionFunctionRunner(un)
       case rd: DatasetRegisterAsTableFunction => new DatasetRegisterAsTableFunctionRunner(rd)
+      case un: UnPersistDatasetFunction => new UnPersistDatasetColumnFunctionRunner(un)
       case other => throw new UnsupportedOperationException(s"unsupported dataset function - ${other}")
     }
 }

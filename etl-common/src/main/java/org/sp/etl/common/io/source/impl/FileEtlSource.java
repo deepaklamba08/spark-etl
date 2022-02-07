@@ -4,6 +4,8 @@ import org.sp.etl.common.io.source.EtlSource;
 import org.sp.etl.common.model.Configuration;
 import org.sp.etl.common.model.Id;
 
+import java.util.Map;
+
 public class FileEtlSource implements EtlSource {
 
     private Id id;
@@ -12,20 +14,25 @@ public class FileEtlSource implements EtlSource {
     private boolean isActive;
     private String dataSourceName;
     private String alias;
+    private String fileFormat;
+    private String locationName;
     private Configuration configuration;
 
 
-    public FileEtlSource(Id id, String name, String description, boolean isActive, String dataSourceName, String alias, Configuration configuration) {
+    public FileEtlSource(Id id, String name, String description, boolean isActive, String dataSourceName, String alias, String fileFormat, String locationName, Configuration configuration) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.isActive = isActive;
         this.dataSourceName = dataSourceName;
         this.alias = alias;
+        this.fileFormat = fileFormat;
+        this.locationName = locationName;
         this.configuration = configuration;
     }
 
 
+    @Override
     public String getAlias() {
         return alias;
     }
@@ -55,6 +62,22 @@ public class FileEtlSource implements EtlSource {
         return this.description;
     }
 
+    public String getFileFormat() {
+        return fileFormat;
+    }
+
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public Map<String, String> readerConfig() {
+        return null;
+    }
+
     public static class Builder {
         private Id id;
         private String name;
@@ -62,6 +85,8 @@ public class FileEtlSource implements EtlSource {
         private boolean isActive;
         private String dataSourceName;
         private String alias;
+        private String fileFormat;
+        private String locationName;
         private Configuration configuration;
 
         public Builder withId(Id id) {
@@ -104,13 +129,23 @@ public class FileEtlSource implements EtlSource {
             return this;
         }
 
+        public Builder withFileFormat(String fileFormat) {
+            this.fileFormat = fileFormat;
+            return this;
+        }
+
+        public Builder withLocationName(String locationName) {
+            this.locationName = locationName;
+            return this;
+        }
+
         public Builder withConfiguration(Configuration configuration) {
             this.configuration = configuration;
             return this;
         }
 
         public FileEtlSource build() {
-            return new FileEtlSource(this.id, this.name, this.description, this.isActive, this.dataSourceName, this.alias, this.configuration);
+            return new FileEtlSource(this.id, this.name, this.description, this.isActive, this.dataSourceName, this.alias, this.fileFormat, this.locationName, this.configuration);
         }
     }
 
