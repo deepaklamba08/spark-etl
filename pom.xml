@@ -12,7 +12,6 @@
         <module>etl-common</module>
         <module>etl-core</module>
         <module>etl-app</module>
-<!--        <module>etl-function</module>-->
     </modules>
 
     <properties>
