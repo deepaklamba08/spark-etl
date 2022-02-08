@@ -1,12 +1,20 @@
 [
   {
-    "type": "localFileSystemDs",
-    "baseDirectory": "src/test/resources/test_data",
-    "name": "ds1"
+    "type": "fileSystem",
+    "id": "1",
+    "name": "file-data-source-1",
+    "isActive": true,
+    "namedPath": {
+      "location-1": "src/test/resources/test_data"
+    }
   },
   {
-    "type": "localFileSystemDs",
-    "baseDirectory": "target/",
-    "name": "ds2"
+    "type": "fileSystem",
+    "id": "2",
+    "name": "file-data-source-2",
+    "isActive": true,
+    "namedPath": {
+      "target-location-1": "target/"
+    }
   }
 ]

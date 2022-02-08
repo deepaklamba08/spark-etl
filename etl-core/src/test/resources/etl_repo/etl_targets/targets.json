@@ -1,31 +1,42 @@
 [
   {
-    "type": "csvFileEtlTarget",
+    "type": "fileSystem",
+    "id": "1",
     "name": "target-1",
-    "fileName": "users_1",
+    "isActive": true,
     "dataSourceName": "ds2",
     "saveMode": "overwrite",
+    "format": "csv",
+    "locationName": "loc-1",
     "config": {
       "header": "true"
     }
   },
   {
-    "type": "csvFileEtlTarget",
+    "type": "fileSystem",
+    "id": "2",
     "name": "csvUserTarget-2",
+    "isActive": true,
     "fileName": "users_2",
     "dataSourceName": "ds2",
     "saveMode": "overwrite",
-    "config": {
+    "format": "csv",
+    "locationName": "loc-2",
+    "configuration": {
       "header": "true"
     }
   },
   {
-    "type": "csvFileEtlTarget",
+    "type": "fileSystem",
+    "id": "3",
     "name": "csvUserTarget",
+    "isActive": true,
     "fileName": "users",
     "dataSourceName": "ds2",
     "saveMode": "overwrite",
-    "config": {
+    "format": "csv",
+    "locationName": "loc-3",
+    "configuration": {
       "header": "true"
     }
   }

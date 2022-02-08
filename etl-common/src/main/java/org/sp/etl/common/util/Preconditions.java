@@ -15,4 +15,25 @@ public class Preconditions {
         }
 
     }
+
+    public static void validateFields(Configuration configuration, String... fields) {
+        StringBuilder message = new StringBuilder("configuration has missing fields - ");
+        int missingCount = 0;
+        for (int i = 0; i < fields.length; i++) {
+            if (!configuration.hasField(fields[i])) {
+                message.append(fields[i]);
+                missingCount++;
+            }
+        }
+        if (missingCount > 0) {
+            throw new IllegalStateException(message.toString());
+        }
+
+    }
+
+    public static void checkNull(Object object, String message) {
+        if (object == null) {
+            throw new IllegalArgumentException(message);
+        }
+    }
 }

@@ -3,6 +3,7 @@ package org.sp.etl.common.model;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public interface Configuration extends Identifiable {
     void importFrom(Configuration dataObject);
@@ -46,6 +47,10 @@ public interface Configuration extends Identifiable {
     boolean isNull();
 
     List<Configuration> getAsList();
+
+    Map<String, String> getAsMap();
+
+    <T> Map<String, T> getAsMap(Function<Configuration, T> mapper);
 
     public Configuration getConfiguration(String fieldName);
 

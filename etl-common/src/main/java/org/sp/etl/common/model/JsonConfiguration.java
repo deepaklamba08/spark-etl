@@ -5,13 +5,14 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.sp.etl.common.util.DataUtils;
+import org.sp.etl.common.util.Preconditions;
 
 import java.io.*;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
 
 public class JsonConfiguration implements Serializable, Configuration {
     protected transient JsonNode dataNode;
@@ -35,57 +36,73 @@ public class JsonConfiguration implements Serializable, Configuration {
 
     @Override
     public boolean hasField(String fieldName) {
-        return false;
+        this.checkNull();
+        Iterator<String> fields = this.dataNode.fieldNames();
+        boolean hasField = false;
+        while (!hasField && fields.hasNext()) {
+            hasField = fields.next().equals(fieldName);
+        }
+        return hasField;
     }
 
 
     @Override
     public String getStringValue(String fieldName) {
-        return this.checkAndGet(fieldName, String.class);
+        return this.checkAndGet(fieldName, String.class, this.dataNode);
     }
 
     @Override
     public String getStringValue(String fieldName, String defaultValue) {
-        return null;
+        String value = this.checkAndGet(fieldName, String.class, this.dataNode);
+        return value != null ? value : defaultValue;
     }
 
     @Override
     public boolean getBooleanValue(String fieldName) {
-        return false;
+        return this.checkAndGet(fieldName, Boolean.class, this.dataNode);
     }
 
     @Override
     public boolean getBooleanValue(String fieldName, boolean defaultValue) {
-        return false;
+        Boolean value = this.checkAndGet(fieldName, Boolean.class, this.dataNode);
+        return value != null ? value : defaultValue;
     }
 
     @Override
     public List<String> getListValue(String fieldName) {
-        return null;
+        checkNull();
+        if (this.isArray(fieldName)) {
+            List<String> values = new ArrayList<>();
+            ArrayNode jsonNodes = (ArrayNode) this.dataNode.get(fieldName);
+            Iterator<JsonNode> elements = jsonNodes.elements();
+            while (elements.hasNext()) {
+                values.add(elements.next().asText());
+            }
+            return values;
+        } else {
+            throw new IllegalStateException("value for key - " + fieldName + " is not an array");
+        }
     }
 
     @Override
     public List<String> getListValue(String fieldName, List<String> defaultValue) {
-        return null;
+        List<String> values = this.getListValue(fieldName);
+        return values != null ? values : defaultValue;
     }
 
     @Override
     public int getIntValue(String fieldName) {
-        return 0;
+        return this.checkAndGet(fieldName, Integer.class, this.dataNode);
     }
 
 
     @Override
     public JsonConfiguration getAttribute(String fieldName) {
-        return this.checkAndGet(fieldName, JsonConfiguration.class);
+        return this.checkAndGet(fieldName, JsonConfiguration.class, this.dataNode);
     }
 
-    public JsonNode getDataNode() {
-        return dataNode;
-    }
 
     @Override
-
     public Iterator<String> getFields() {
         return this.dataNode != null && !this.dataNode.isNull() ? this.dataNode.fieldNames() : null;
     }
@@ -116,30 +133,22 @@ public class JsonConfiguration implements Serializable, Configuration {
     }
 
     @Override
-
-
     public boolean isArray() {
         return dataNode != null && dataNode.isArray();
     }
 
     @Override
-
-
     public boolean isArray(String fieldName) {
         JsonNode value = this.dataNode != null ? dataNode.get(fieldName) : null;
         return value != null && value.isArray();
     }
 
     @Override
-
-
     public boolean isObject() {
         return dataNode != null && dataNode.isObject();
     }
 
     @Override
-
-
     public boolean isObject(String fieldName) {
         JsonNode value = this.dataNode != null ? dataNode.get(fieldName) : null;
         return value != null && value.isObject();
@@ -147,25 +156,63 @@ public class JsonConfiguration implements Serializable, Configuration {
     }
 
     @Override
-
-
     public boolean isNull() {
         return this.dataNode == null || this.dataNode.isNull();
     }
 
     @Override
     public List<Configuration> getAsList() {
-        return null;
+        if (this.isArray()) {
+            Iterator<JsonNode> elements = this.dataNode.elements();
+            List<Configuration> values = new ArrayList<>();
+            while (elements.hasNext()) {
+                values.add(new JsonConfiguration(elements.next()));
+            }
+            return values;
+        } else {
+            throw new IllegalStateException("vale is not an array");
+        }
+    }
+
+    @Override
+    public Map<String, String> getAsMap() {
+        if (this.isObject()) {
+            Iterator<String> fields = this.dataNode.fieldNames();
+            Map<String, String> values = new HashMap<>();
+            while (fields.hasNext()) {
+                String field = fields.next();
+                values.put(field, this.dataNode.get(field).asText());
+            }
+            return values;
+        } else {
+            throw new IllegalStateException("vale is not an object");
+        }
+    }
+
+    @Override
+    public <T> Map<String, T> getAsMap(Function<Configuration, T> mapper) {
+        if (this.isObject()) {
+            Iterator<String> fields = this.dataNode.fieldNames();
+            Map<String, T> values = new HashMap<>();
+            while (fields.hasNext()) {
+                String field = fields.next();
+                values.put(field, mapper.apply(new JsonConfiguration(this.dataNode.get(field))));
+            }
+            return values;
+        } else {
+            throw new IllegalStateException("vale is not an object");
+        }
     }
 
     @Override
     public Configuration getConfiguration(String fieldName) {
-        return null;
+        return new JsonConfiguration(this.dataNode.get(fieldName));
     }
 
     @Override
     public Configuration getConfiguration(String fieldName, Configuration defaultValue) {
-        return null;
+        JsonNode value = this.dataNode.get(fieldName);
+        return value != null ? new JsonConfiguration(value) : defaultValue;
     }
 
 
@@ -193,11 +240,11 @@ public class JsonConfiguration implements Serializable, Configuration {
         }
     }
 
-    private <T> T checkAndGet(String fieldName, Class<T> type) {
-        if (this.dataNode == null || this.dataNode.isNull()) {
+    private <T> T checkAndGet(String fieldName, Class<T> type, JsonNode dataNode) {
+        if (dataNode == null || dataNode.isNull()) {
             return null;
         }
-        JsonNode value = this.dataNode.get(fieldName);
+        JsonNode value = dataNode.get(fieldName);
         if (value == null || value.isNull()) {
             return null;
         }
@@ -241,6 +288,10 @@ public class JsonConfiguration implements Serializable, Configuration {
         return object;
     }
 
+    private JsonNode getDataNode() {
+        return this.dataNode;
+    }
+
     @Override
     public boolean isActive() {
         return false;
@@ -259,5 +310,9 @@ public class JsonConfiguration implements Serializable, Configuration {
     @Override
     public String getDescription() {
         return null;
+    }
+
+    private void checkNull() {
+        Preconditions.checkNull(this.dataNode, "data node is null");
     }
 }

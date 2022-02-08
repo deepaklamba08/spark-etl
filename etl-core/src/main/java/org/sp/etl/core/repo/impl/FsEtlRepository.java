@@ -142,7 +142,7 @@ public class FsEtlRepository implements EtlRepository {
 
         static Job mapJob(Configuration configuration) {
 //            DataUtils.makeString("not all mandatory fields are present. mandatory fields - ", ",", ETL_JOB_REQ_FIELDS);
-            Preconditions.validateFields(configuration, "not all mandatory fields are present", ETL_JOB_REQ_FIELDS);
+            Preconditions.validateFields(configuration, ETL_JOB_REQ_FIELDS);
 
             Job.Builder builder = new Job.Builder().withId(new StringId(configuration.getStringValue(EtlConstants.ID_FIELD)))
                     .withName(configuration.getStringValue(EtlConstants.NAME_FIELD))
@@ -159,7 +159,7 @@ public class FsEtlRepository implements EtlRepository {
         }
 
         private static Step mapStep(Configuration configuration) {
-            Preconditions.validateFields(configuration, "not all mandatory fields are present", ETL_STEP_REQ_FIELDS);
+            Preconditions.validateFields(configuration, ETL_STEP_REQ_FIELDS);
             Step.Builder builder = new Step.Builder()
                     .withId(new StringId(configuration.getStringValue(EtlConstants.ID_FIELD)))
                     .withName(configuration.getStringValue(EtlConstants.NAME_FIELD))
@@ -179,7 +179,7 @@ public class FsEtlRepository implements EtlRepository {
         }
 
         private static EtlFunction mapEtlFunction(Configuration configuration) {
-            Preconditions.validateFields(configuration, "not all mandatory fields are present", ETL_FUNCTION_REQ_FIELDS);
+            Preconditions.validateFields(configuration, ETL_FUNCTION_REQ_FIELDS);
             String type = configuration.getStringValue(EtlConstants.TYPE_FIELD);
 
             Id id = new StringId(configuration.getStringValue(EtlConstants.ID_FIELD));
@@ -272,7 +272,7 @@ public class FsEtlRepository implements EtlRepository {
         }
 
         static EtlSource mapEtlSource(Configuration configuration) {
-            Preconditions.validateFields(configuration, "not all mandatory fields are present", ETL_SOURCE_REQ_SOURCE_FIELDS);
+            Preconditions.validateFields(configuration, ETL_SOURCE_REQ_SOURCE_FIELDS);
             String type = configuration.getStringValue(EtlConstants.TYPE_FIELD);
 
             if (EtlConstants.ETL_SOURCE_TYPE_FILE_SYSTEM.equals(type)) {
@@ -293,7 +293,7 @@ public class FsEtlRepository implements EtlRepository {
         }
 
         static EtlTarget mapEtlTarget(Configuration configuration) {
-            Preconditions.validateFields(configuration, "not all mandatory fields are present", ETL_TARGET_REQ_SOURCE_FIELDS);
+            Preconditions.validateFields(configuration, ETL_TARGET_REQ_SOURCE_FIELDS);
             String type = configuration.getStringValue(EtlConstants.TYPE_FIELD);
 
             if (EtlConstants.ETL_TARGET_TYPE_FILE_SYSTEM.equals(type)) {
@@ -314,7 +314,7 @@ public class FsEtlRepository implements EtlRepository {
         }
 
         static DataSource mapDataSource(Configuration configuration) {
-            Preconditions.validateFields(configuration, "not all mandatory fields are present", DATA_SOURCE_REQ_SOURCE_FIELDS);
+            Preconditions.validateFields(configuration, DATA_SOURCE_REQ_SOURCE_FIELDS);
 
             String type = configuration.getStringValue(EtlConstants.TYPE_FIELD);
 

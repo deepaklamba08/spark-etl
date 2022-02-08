@@ -1,7 +1,5 @@
 package org.sp.etl.common.model;
 
-import org.sp.etl.common.repo.RepositoryType;
-
 public enum ConfigurationType {
     JSON("json");
 
@@ -18,5 +16,9 @@ public enum ConfigurationType {
             }
         }
         throw new IllegalArgumentException("invalid configuration type - " + typeName);
+    }
+
+    public String getTypeName() {
+        return typeName;
     }
 }

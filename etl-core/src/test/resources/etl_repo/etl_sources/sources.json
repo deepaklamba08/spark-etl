@@ -1,21 +1,27 @@
 [
   {
-    "type": "csvFileEtlSource",
+    "type": "fileSystem",
+    "id": "1",
     "name": "users_data",
+    "isActive": true,
     "alias": "users",
-    "fileName": "users.csv",
+    "format": "csv",
+    "locationName": "path1",
     "dataSourceName": "ds1",
-    "config": {
+    "configuration": {
       "header": "true"
     }
   },
   {
-    "type": "jsonFileEtlSource",
+    "type": "fileSystem",
+    "id": "2",
     "name": "address_detail",
+    "isActive": true,
     "alias": "address",
-    "fileName": "address.json",
+    "format": "json",
+    "locationName": "path2",
     "dataSourceName": "ds1",
-    "config": {
+    "configuration": {
       "multiline": "true"
     }
   }
