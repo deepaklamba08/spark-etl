@@ -5,6 +5,7 @@ import org.sp.etl.common.exception.EtlExceptions;
 import org.sp.etl.common.io.source.EtlSource;
 import org.sp.etl.common.io.tr.EtlTarget;
 import org.sp.etl.common.model.ConfigurationType;
+import org.sp.etl.common.model.job.Job;
 import org.sp.etl.common.repo.EtlRepository;
 import org.sp.etl.common.util.EtlConstants;
 import org.sp.etl.core.repo.impl.FsEtlRepository;
@@ -44,10 +45,18 @@ public class TestFsEtlRepository {
         Assert.assertNotNull(source);
         Assert.assertEquals(source.getName(), "users_data");
     }
+
     @Test
     public void lookupEtlTarget() throws EtlExceptions.InvalidConfigurationException {
         EtlTarget target = this.etlRepository.lookupEtlTarget("target-1");
         Assert.assertNotNull(target);
         Assert.assertEquals(target.getName(), "target-1");
+    }
+
+    @Test
+    public void lookupJob() throws EtlExceptions.InvalidConfigurationException {
+        Job job = this.etlRepository.lookupJob("single-dataset-job");
+        Assert.assertNotNull(job);
+        Assert.assertEquals(job.getName(), "single-dataset-job");
     }
 }

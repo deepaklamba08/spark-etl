@@ -252,6 +252,8 @@ public class JsonConfiguration implements Serializable, Configuration {
             return (T) value.asText();
         } else if (JsonConfiguration.class.equals(type)) {
             return (T) new JsonConfiguration(value);
+        } else if (Integer.class.equals(type)) {
+            return (T) new Integer(value.asInt());
         }
 
         return null;

@@ -1,21 +1,26 @@
 [
   {
-    "jobName": "single-dataset-job",
-    "jobDescription": "job with single step and single dataset",
-    "targetName": "target-1",
-    "enabled": true,
+    "id": "1",
+    "name": "single-dataset-job",
+    "description": "job with single step and single dataset",
+    "targets": [
+      "target-1"
+    ],
+    "isActive": true,
     "steps": [
       {
-        "stepName": "step-1",
+        "id": "1",
+        "name": "step-1",
         "stepIndex": 0,
-        "inputSourceName": "users_data",
+        "primarySource": "users_data",
         "outputSourceName": "users_data_op",
         "outputSourceAlias": "users_data_updated",
         "sources": [
           "users_data"
         ],
-        "etlFunctions": [
+        "functions": [
           {
+            "id": "1",
             "type": "renameColumnFunction",
             "name": "rename column",
             "description": "rename dataset column",
@@ -23,6 +28,7 @@
             "newName": "user_address"
           },
           {
+            "id": "2",
             "type": "addConstantValueFunction",
             "name": "add column",
             "description": "add column column to dataset",
@@ -34,23 +40,28 @@
     ]
   },
   {
-    "jobName": "multiple-dataset-job",
-    "jobDescription": "job with multiple datasets in a single step",
-    "targetName": "csvUserTarget-2",
-    "enabled": true,
+    "id": "1",
+    "name": "multiple-dataset-job",
+    "description": "job with multiple datasets in a single step",
+    "targets": [
+      "csvUserTarget-2"
+    ],
+    "isActive": true,
     "steps": [
       {
-        "stepName": "step-1",
+        "id": "1",
+        "name": "step-1",
         "stepIndex": 0,
-        "inputSourceName": "users_data",
+        "primarySource": "users_data",
         "outputSourceName": "users_data_op",
         "outputSourceAlias": "users_data_updated",
         "sources": [
           "users_data",
           "address_detail"
         ],
-        "etlFunctions": [
+        "functions": [
           {
+            "id": "1",
             "type": "innerJoinDatasetFunction",
             "name": "inner join datasets",
             "description": "inner join datasets",
@@ -60,6 +71,7 @@
             "rightDatasetColumn": "user_id"
           },
           {
+            "id": "2",
             "type": "dropColumnColumnFunction",
             "name": "drop address column",
             "description": "drop address column",
@@ -70,22 +82,27 @@
     ]
   },
   {
-    "jobName": "multiple-steps-job",
-    "jobDescription": "job with multiple steps",
-    "targetName": "csvUserTarget",
-    "enabled": true,
+    "id": "1",
+    "name": "multiple-steps-job",
+    "description": "job with multiple steps",
+    "targets": [
+      "csvUserTarget"
+    ],
+    "isActive": true,
     "steps": [
       {
-        "stepName": "step-1",
+        "id": "1",
+        "name": "step-1",
         "stepIndex": 0,
-        "inputSourceName": "users_data",
+        "primarySource": "users_data",
         "outputSourceName": "users_data_op",
         "outputSourceAlias": "users_data_updated",
         "sources": [
           "users_data"
         ],
-        "etlFunctions": [
+        "functions": [
           {
+            "id": "1",
             "type": "addConstantValueFunction",
             "name": "add column",
             "description": "add column column to dataset",
@@ -95,16 +112,17 @@
         ]
       },
       {
-        "stepName": "step-2",
+        "name": "step-2",
         "stepIndex": 1,
-        "inputSourceName": "address_detail",
+        "primarySource": "address_detail",
         "outputSourceName": "address_detail_op",
         "outputSourceAlias": "address_detail_updated",
         "sources": [
           "address_detail"
         ],
-        "etlFunctions": [
+        "functions": [
           {
+            "id": "1",
             "type": "addConstantValueFunction",
             "name": "add column",
             "description": "add column column to dataset",
@@ -114,16 +132,17 @@
         ]
       },
       {
-        "stepName": "step-3",
+        "name": "step-3",
         "stepIndex": 2,
-        "inputSourceName": "users_data_op",
+        "primarySource": "users_data_op",
         "outputSourceName": "step_3_op",
         "outputSourceAlias": "step_3",
         "sources": [
           "users_data_op"
         ],
-        "etlFunctions": [
+        "functions": [
           {
+            "id": "1",
             "type": "innerJoinDatasetFunction",
             "name": "inner join datasets",
             "description": "inner join datasets",
@@ -133,12 +152,14 @@
             "rightDatasetColumn": "rnid"
           },
           {
+            "id": "2",
             "type": "dropColumnColumnFunction",
             "name": "drop rnid column",
             "description": "drop rnid column",
             "columnName": "rnid"
           },
           {
+            "id": "3",
             "type": "dropColumnColumnFunction",
             "name": "drop address column",
             "description": "drop address column",

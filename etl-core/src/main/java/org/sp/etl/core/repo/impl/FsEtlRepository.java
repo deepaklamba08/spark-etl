@@ -141,7 +141,6 @@ public class FsEtlRepository implements EtlRepository {
 
 
         static Job mapJob(Configuration configuration) {
-//            DataUtils.makeString("not all mandatory fields are present. mandatory fields - ", ",", ETL_JOB_REQ_FIELDS);
             Preconditions.validateFields(configuration, ETL_JOB_REQ_FIELDS);
 
             Job.Builder builder = new Job.Builder().withId(new StringId(configuration.getStringValue(EtlConstants.ID_FIELD)))
