@@ -14,7 +14,7 @@ class SparkTransformationRunner extends TransformationRunner {
   override protected def executeFunction(etlFunction: EtlFunction, primary: DataBag, secondary: Databags): FunctionExecutionResult = {
     Try(runFunction(etlFunction, primary, secondary)) match {
       case Success(databag) => FunctionExecutionResult(databag)
-      case Failure(cause) => FunctionExecutionResult(null, cause.getMessage, FailedStatus)
+      case Failure(cause) => FunctionExecutionResult(null, FailedStatus, Some(cause.getMessage))
     }
   }
 

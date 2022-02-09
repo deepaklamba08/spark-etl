@@ -3,8 +3,10 @@ package org.sp.etl.common.io.source.impl;
 import org.sp.etl.common.io.source.EtlSource;
 import org.sp.etl.common.model.Configuration;
 import org.sp.etl.common.model.Id;
+import org.sp.etl.common.util.EtlConstants;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class FileEtlSource implements EtlSource {
 
@@ -74,8 +76,8 @@ public class FileEtlSource implements EtlSource {
         return locationName;
     }
 
-    public Map<String, String> readerConfig() {
-        return null;
+    public Optional<Map<String, String>> readerConfig() {
+        return configuration != null ? Optional.of(configuration.getValueMap(EtlConstants.READER_CONFIG)) : Optional.empty();
     }
 
     public static class Builder {

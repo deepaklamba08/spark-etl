@@ -57,6 +57,14 @@ public class Job implements Identifiable {
         return this.description;
     }
 
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    public String getConfigValue(String key) {
+        return this.configuration != null ? this.configuration.getStringValue(key) : null;
+    }
+
     public static class Builder {
         private Id id;
         private String name;

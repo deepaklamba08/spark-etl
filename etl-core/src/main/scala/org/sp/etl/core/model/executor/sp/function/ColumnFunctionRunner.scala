@@ -124,7 +124,8 @@ class ToTimestampColumnFunctionRunner(function: ToTimestampFunction) extends Col
 class SumColumnColumnFunctionRunner(function: SumColumnFunction) extends ColumnFunctionRunner(function) {
   override def run(dataBag: DataBag): DataBag = {
     val columnsToAdd = function.getColumns.asScala
-    val dataset = dataBag.dataset.withColumn(function.getResultColumnName, columnsToAdd.tail.foldLeft(functions.col(columnsToAdd.head))((a, b) => a + b))
+    val dataset = dataBag.dataset.withColumn(function.getResultColumnName,
+      columnsToAdd.tail.foldLeft(functions.col(columnsToAdd.head))((a, b) => a + functions.col(b)))
     DataBag(dataBag.name, dataBag.alias, dataset)
   }
 }

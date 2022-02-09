@@ -13,7 +13,7 @@ public class FileSystemDataSource implements DataSource {
     private Map<String, String> namedPaths;
     private Configuration configuration;
 
-    protected FileSystemDataSource(Id id, String name, String description, boolean isActive, Map<String, String> namedPaths, Configuration configuration) {
+    private FileSystemDataSource(Id id, String name, String description, boolean isActive, Map<String, String> namedPaths, Configuration configuration) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -22,8 +22,8 @@ public class FileSystemDataSource implements DataSource {
         this.configuration = configuration;
     }
 
-    public String getPathByName(String name) {
-        return null;
+    public String getPathByName(String pathName) {
+        return this.namedPaths.get(pathName);
     }
 
     @Override
@@ -68,6 +68,7 @@ public class FileSystemDataSource implements DataSource {
             this.description = description;
             return this;
         }
+
         public Builder withActive(boolean isActive) {
             this.isActive = isActive;
             return this;

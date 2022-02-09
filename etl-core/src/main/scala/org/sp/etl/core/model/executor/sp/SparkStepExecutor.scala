@@ -29,7 +29,7 @@ class SparkStepExecutor(dataLoader: DataLoader) extends StepExecutor {
         val resultantDatabag = DataBag(step.getOutputSourceName, step.getOutputSourceAlias, transformationResult.dataBag.dataset)
         StepExecutionResult(resultantDatabag, new Databags(resultantDatabag :: otherDatabags.getDatabags), stepMetrics.withEndTime(new Date()).build())
       case FailedStatus =>
-        StepExecutionResult(null, null, stepMetrics.withEndTime(new Date()).build(), transformationResult.executionMessage, transformationResult.status)
+        StepExecutionResult(null, null, stepMetrics.withEndTime(new Date()).build(), transformationResult.executionMessage.get, transformationResult.status)
     }
 
   }

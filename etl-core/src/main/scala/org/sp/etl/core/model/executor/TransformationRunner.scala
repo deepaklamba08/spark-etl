@@ -18,6 +18,7 @@ trait TransformationRunner {
     val functions = transformation.functions.iterator
     var status: Status = SuccessStatus
     var databag = transformation.primary
+    var message: Option[String] = None
     val metrics = ListBuffer[FunctionMetrics]()
     while (functions.hasNext && status == SuccessStatus) {
       val trFunction = functions.next()
@@ -27,14 +28,15 @@ trait TransformationRunner {
       metrics.+=(functionMetrics.withEndTime(new Date()).build())
       databag = result.dataBag
       status = result.status
+      message = result.executionMessage
     }
-    TransformationResult(databag, metrics)
+    TransformationResult(databag, metrics, status, message)
 
   }
 
   protected def executeFunction(etlFunction: EtlFunction, primary: DataBag, secondary: Databags): FunctionExecutionResult
 }
 
-case class TransformationResult(dataBag: DataBag, functionMetrics: Seq[FunctionMetrics], executionMessage: String = null, status: Status = SuccessStatus)
+case class TransformationResult(dataBag: DataBag, functionMetrics: Seq[FunctionMetrics], status: Status = SuccessStatus, executionMessage: Option[String] = None)
 
-case class FunctionExecutionResult(dataBag: DataBag, executionMessage: String = null, status: Status = SuccessStatus)
+case class FunctionExecutionResult(dataBag: DataBag, status: Status = SuccessStatus, executionMessage: Option[String] = None)

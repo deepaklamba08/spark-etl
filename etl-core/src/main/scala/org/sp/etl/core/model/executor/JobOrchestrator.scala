@@ -10,7 +10,7 @@ import org.sp.etl.core.util.Constants
 
 import scala.collection.JavaConverters._
 
-class JobOrchestrator(etlRepositroty: EtlRepository) {
+class JobOrchestrator(etlRepository: EtlRepository) {
   private val logger = LoggerFactory.getLogger(this.getClass)
 
   def executeJob(jobName: String) = {
@@ -28,10 +28,10 @@ class JobOrchestrator(etlRepositroty: EtlRepository) {
   }
 
   private def lookupJob(jobName: String) = {
-    val etlJob = this.etlRepositroty.lookupJob(jobName)
+    val etlJob = this.etlRepository.lookupJob(jobName)
 
     if (etlJob == null) {
-      throw new EtlExceptions.ObjectNotFoundException(s"could not find job ${jobName} in the repository")
+      throw new EtlExceptions.ObjectNotFoundException(s"could not find job $jobName in the repository")
     } else if (!etlJob.isActive) {
       throw new IllegalStateException(s"job ${jobName} is disabled in the repository")
     } else {
@@ -40,26 +40,19 @@ class JobOrchestrator(etlRepositroty: EtlRepository) {
   }
 
   private def registerSources(job: Job) = {
-    val sources = job.getSteps.asScala.flatMap(_.getSources.asScala).toSet.map(etlRepositroty.lookupEtlSource).filter(p => p != null)
+    val sources = job.getSteps.asScala.flatMap(_.getSources.asScala).toSet.map(etlRepository.lookupEtlSource).filter(p => p != null)
     sources.foreach(EtlSourceRegistry.registerSource)
     sources.map(_.dataSourceName()).map(this.lookupDataSource).foreach(DataSourceRegistry.registerDataSource)
 
-    job.getTargets.asScala.map(etlRepositroty.lookupEtlTarget)
+    job.getTargets.asScala.map(etlRepository.lookupEtlTarget)
       .foreach(target => {
         EtlTargetRegistry.registerTarget(target)
         DataSourceRegistry.registerDataSource(this.lookupDataSource(target.dataSourceName()))
       })
-    /*    val target = etlRepositroty.lookupEtlTarget(job.getTargetName)
-        if (target == null) {
-          throw new ObjectNotFoundException(s"could not found target - ${job.getTargetName}")
-        }
-        EtlTargetRegistry.registerTarget(target)*/
-
-    //DataSourceRegistry.registerDataSource(this.lookupDataSource(target.dataSourceName()))
   }
 
   private def lookupDataSource(dataSourceName: String) = {
-    val ds = etlRepositroty.lookupDataSource(dataSourceName)
+    val ds = etlRepository.lookupDataSource(dataSourceName)
     if (ds == null) {
       throw new ObjectNotFoundException(s"could not found data source - $dataSourceName")
     }
@@ -67,7 +60,7 @@ class JobOrchestrator(etlRepositroty: EtlRepository) {
   }
 
   private def executeJobInternal(job: Job) = {
-    val executor = JobExecutorFactory.createJobExecutor(job.getName, Constants.SPARK_JOB_EXECUTOR, this.etlRepositroty.lookupObject(Constants.EXECUTOR_CONF_NAME))
+    val executor = JobExecutorFactory.createJobExecutor(job.getName, Constants.SPARK_JOB_EXECUTOR, this.etlRepository.lookupObject(job.getConfigValue(Constants.EXECUTOR_CONF_NAME)))
     val jobExecutionResult = executor.executeJob(job)
     jobExecutionResult.status match {
       case SuccessStatus => this.storeResultDataset(job.getTargets.asScala, jobExecutionResult.dataBag)

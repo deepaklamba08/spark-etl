@@ -27,7 +27,7 @@ class EtlArgsBuilder() {
   private val otherParameters = scala.collection.mutable.Map[String, String]()
 
 
-  def withJobgName(_jobName: String): EtlArgsBuilder = {
+  def withJobName(_jobName: String): EtlArgsBuilder = {
     this.jobName = _jobName
     this
   }
@@ -46,7 +46,7 @@ class EtlArgsBuilder() {
 
 object RepositoryProvider {
 
-  def createReposiroty(parameters: Map[String, String]): EtlRepository = {
+  def createRepository(parameters: Map[String, String]): EtlRepository = {
     parameters(Constants.REPOSITORY_TYPE_KEY) match {
       case Constants.REPOSITORY_TYPE_LOCAL_FS => new FsEtlRepository(parameters.asJava)
       case other => throw new EtlExceptions.InvalidConfigurationException(s"repository type not supported - $other")

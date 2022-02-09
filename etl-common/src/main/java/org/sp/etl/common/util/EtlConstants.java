@@ -18,6 +18,8 @@ public class EtlConstants {
     public static final String NAMED_PATH_FIELD = "namedPath";
     public static final String CONFIGURATION_FIELD = "configuration";
     public static final String CONFIGURATION_TYPE_FIELD = "configurationType";
+    public static final String READER_CONFIG = "readerConfig";
+
     public static final String ETL_SOURCE_FILE_FORMAT_FIELD = "format";
     public static final String ETL_SOURCE_LOCATION_NAME_FIELD = "locationName";
 
