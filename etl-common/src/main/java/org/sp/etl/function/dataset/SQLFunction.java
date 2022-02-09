@@ -5,19 +5,19 @@ import org.sp.etl.function.DatasetFunction;
 
 public class SQLFunction extends DatasetFunction {
     private String queryType;
-    private String querySource;
+    private String query;
 
-    public SQLFunction(Id id, String name, String description, boolean isActive, String queryType, String querySource) {
+    public SQLFunction(Id id, String name, String description, boolean isActive, String queryType, String query) {
         super(id, name, description, isActive);
         this.queryType = queryType;
-        this.querySource = querySource;
+        this.query = query;
     }
 
     public String getQueryType() {
         return queryType;
     }
 
-    public String getQuerySource() {
-        return querySource;
+    public String getQuery() {
+        return query;
     }
 }

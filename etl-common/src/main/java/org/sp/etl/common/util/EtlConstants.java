@@ -19,6 +19,7 @@ public class EtlConstants {
     public static final String CONFIGURATION_FIELD = "configuration";
     public static final String CONFIGURATION_TYPE_FIELD = "configurationType";
     public static final String READER_CONFIG = "readerConfig";
+    public static final String QUERY_TYPE_SQL = "sql";
 
     public static final String ETL_SOURCE_FILE_FORMAT_FIELD = "format";
     public static final String ETL_SOURCE_LOCATION_NAME_FIELD = "locationName";
@@ -95,6 +96,6 @@ public class EtlConstants {
     public static final String LEFT_DATASET_COLUMN_NAME_FIELD = "leftDatasetColumn";
     public static final String RIGHT_DATASET_COLUMN_NAME_FIELD = "rightDatasetColumn";
     public static final String QUERY_TYPE_FIELD = "queryType";
-    public static final String QUERY_SOURCE_FIELD = "querySource";
+    public static final String QUERY_FIELD = "query";
 
 }

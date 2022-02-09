@@ -16,6 +16,7 @@ import org.sp.etl.function.column.math.SumColumnFunction
 import org.sp.etl.common.ds.FileSystemDataSource
 import org.sp.etl.common.io.source.impl.FileEtlSource
 import org.sp.etl.common.util.{ConfigurationFactory, EtlConstants}
+import org.sp.etl.function.dataset.{DatasetRegisterAsTableFunction, SQLFunction}
 
 import scala.collection.JavaConverters._
 
@@ -70,6 +71,9 @@ class TestJobExecutor extends FunSuite {
     val castValue = new CastColumnFunction(new StringId("5"), "cast value", "cast value", true, "marks_int", "total_marks_of_student", "int")
     val addColumnValues = new SumColumnFunction(new StringId("6"), "add column values", "add column values", true, "added_values", util.Arrays.asList("marks_int", "constant_value"))
 
+    val registerTable = new DatasetRegisterAsTableFunction(new StringId("7"), "create table", "create table", true, "marks_table")
+    val sqlFunction = new SQLFunction(new StringId("8"), "sql function", "execute sql query", true, EtlConstants.QUERY_TYPE_SQL, "select * from marks_table")
+
     val step = new Step.Builder()
       .withName("aggregate-marks")
       .makeActive()
@@ -84,6 +88,8 @@ class TestJobExecutor extends FunSuite {
       .withEtlFunction(constValue)
       .withEtlFunction(castValue)
       .withEtlFunction(addColumnValues)
+      .withEtlFunction(registerTable)
+      .withEtlFunction(sqlFunction)
       .build()
 
     val etlJob = new Job.Builder()

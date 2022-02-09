@@ -1,6 +1,7 @@
 package org.sp.etl.core.model.executor.sp.function
 
 import org.apache.spark.sql.DataFrame
+import org.sp.etl.common.util.EtlConstants
 import org.sp.etl.core.model.{DataBag, Databags}
 import org.sp.etl.function.dataset._
 import org.sp.etl.function.DatasetFunction
@@ -20,6 +21,7 @@ object DatasetFunctionRunnerFactory {
       case un: DatasetUnionFunction => new DatasetUnionFunctionRunner(un)
       case rd: DatasetRegisterAsTableFunction => new DatasetRegisterAsTableFunctionRunner(rd)
       case un: UnPersistDatasetFunction => new UnPersistDatasetColumnFunctionRunner(un)
+      case sql: SQLFunction => new SQLFunctionRunner(sql)
       case other => throw new UnsupportedOperationException(s"unsupported dataset function - ${other}")
     }
 }
@@ -82,6 +84,11 @@ class DatasetRegisterAsTableFunctionRunner(function: DatasetRegisterAsTableFunct
 }
 class SQLFunctionRunner(function: SQLFunction) extends DatasetFunctionRunner(function) {
   override def run(dataBag: DataBag, databags: Databags): DataBag = {
-    throw new UnsupportedOperationException(s"not implemented yet in - ${this.getClass}")
+    function.getQueryType match {
+      case EtlConstants.QUERY_TYPE_SQL =>
+        DataBag(dataBag.name, dataBag.alias, dataBag.dataset.sparkSession.sql(function.getQuery))
+      case other =>
+        throw new UnsupportedOperationException(s"support for - $other is not implemented yet in - ${this.getClass}")
+    }
   }
 }

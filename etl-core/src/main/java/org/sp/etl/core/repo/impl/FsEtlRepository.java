@@ -305,10 +305,10 @@ public class FsEtlRepository implements EtlRepository {
                         configuration.getStringValue(EtlConstants.LEFT_DATASET_COLUMN_NAME_FIELD),
                         configuration.getStringValue(EtlConstants.RIGHT_DATASET_COLUMN_NAME_FIELD));
             } else if (EtlConstants.ETL_SQL_DATASET_FUNCTION.equals(type)) {
-                Preconditions.validateFields(configuration, EtlConstants.QUERY_TYPE_FIELD, EtlConstants.QUERY_SOURCE_FIELD);
+                Preconditions.validateFields(configuration, EtlConstants.QUERY_TYPE_FIELD, EtlConstants.QUERY_FIELD);
                 return new SQLFunction(id, name, description, isActive,
                         configuration.getStringValue(EtlConstants.QUERY_TYPE_FIELD),
-                        configuration.getStringValue(EtlConstants.QUERY_SOURCE_FIELD));
+                        configuration.getStringValue(EtlConstants.QUERY_FIELD));
             } else {
                 throw new IllegalStateException("etl function type not supported - " + type);
             }
