@@ -112,6 +112,7 @@
         ]
       },
       {
+        "id": "2",
         "name": "step-2",
         "stepIndex": 1,
         "primarySource": "address_detail",
@@ -132,6 +133,7 @@
         ]
       },
       {
+        "id": "3",
         "name": "step-3",
         "stepIndex": 2,
         "primarySource": "users_data_op",

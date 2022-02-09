@@ -167,7 +167,7 @@ public class FsEtlRepository implements EtlRepository {
                     .withOutputSourceAlias(configuration.getStringValue(EtlConstants.ETL_STEP_OP_SOURCE_ALIAS_FIELD))
                     .withPrimarySource(configuration.getStringValue(EtlConstants.ETL_STEP_PRIMARY_SOURCE_FIELD));
 
-
+            configuration.getListValue(EtlConstants.ETL_STEP_SOURCES_FIELD).forEach(builder::withSource);
             configuration.getConfiguration(EtlConstants.ETL_STEP_FUNCTIONS_FIELD).getAsList()
                     .stream().map(ConfigMapper::mapEtlFunction)
                     .forEach(builder::withEtlFunction);
@@ -281,29 +281,34 @@ public class FsEtlRepository implements EtlRepository {
                         configuration.getStringValue(EtlConstants.SOURCE_COLUMN_FIELD),
                         configuration.getStringValue(EtlConstants.TO_TYPE_FIELD));
             } else if (EtlConstants.ETL_INNER_JOIN_DATASET_FUNCTION.equals(type)) {
-                Preconditions.validateFields(configuration, EtlConstants.LEFT_DATASET_NAME, EtlConstants.RIGHT_DATASET_NAME, EtlConstants.LEFT_DATASET_COLUMN_NAME,
-                        EtlConstants.RIGHT_DATASET_COLUMN_NAME);
+                Preconditions.validateFields(configuration, EtlConstants.LEFT_DATASET_NAME_FIELD, EtlConstants.RIGHT_DATASET_NAME, EtlConstants.LEFT_DATASET_COLUMN_NAME_FIELD,
+                        EtlConstants.RIGHT_DATASET_COLUMN_NAME_FIELD);
                 return new InnerJoinDatasetFunction(id, name, description, isActive,
-                        configuration.getStringValue(EtlConstants.LEFT_DATASET_NAME),
+                        configuration.getStringValue(EtlConstants.LEFT_DATASET_NAME_FIELD),
                         configuration.getStringValue(EtlConstants.RIGHT_DATASET_NAME),
-                        configuration.getStringValue(EtlConstants.LEFT_DATASET_COLUMN_NAME),
-                        configuration.getStringValue(EtlConstants.RIGHT_DATASET_COLUMN_NAME));
+                        configuration.getStringValue(EtlConstants.LEFT_DATASET_COLUMN_NAME_FIELD),
+                        configuration.getStringValue(EtlConstants.RIGHT_DATASET_COLUMN_NAME_FIELD));
             } else if (EtlConstants.ETL_LEFT_JOIN_DATASET_FUNCTION.equals(type)) {
-                Preconditions.validateFields(configuration, EtlConstants.LEFT_DATASET_NAME, EtlConstants.RIGHT_DATASET_NAME, EtlConstants.LEFT_DATASET_COLUMN_NAME,
-                        EtlConstants.RIGHT_DATASET_COLUMN_NAME);
+                Preconditions.validateFields(configuration, EtlConstants.LEFT_DATASET_NAME_FIELD, EtlConstants.RIGHT_DATASET_NAME, EtlConstants.LEFT_DATASET_COLUMN_NAME_FIELD,
+                        EtlConstants.RIGHT_DATASET_COLUMN_NAME_FIELD);
                 return new LeftJoinDatasetFunction(id, name, description, isActive,
-                        configuration.getStringValue(EtlConstants.LEFT_DATASET_NAME),
+                        configuration.getStringValue(EtlConstants.LEFT_DATASET_NAME_FIELD),
                         configuration.getStringValue(EtlConstants.RIGHT_DATASET_NAME),
-                        configuration.getStringValue(EtlConstants.LEFT_DATASET_COLUMN_NAME),
-                        configuration.getStringValue(EtlConstants.RIGHT_DATASET_COLUMN_NAME));
+                        configuration.getStringValue(EtlConstants.LEFT_DATASET_COLUMN_NAME_FIELD),
+                        configuration.getStringValue(EtlConstants.RIGHT_DATASET_COLUMN_NAME_FIELD));
             } else if (EtlConstants.ETL_RIGHT_JOIN_DATASET_FUNCTION.equals(type)) {
-                Preconditions.validateFields(configuration, EtlConstants.LEFT_DATASET_NAME, EtlConstants.RIGHT_DATASET_NAME, EtlConstants.LEFT_DATASET_COLUMN_NAME,
-                        EtlConstants.RIGHT_DATASET_COLUMN_NAME);
+                Preconditions.validateFields(configuration, EtlConstants.LEFT_DATASET_NAME_FIELD, EtlConstants.RIGHT_DATASET_NAME, EtlConstants.LEFT_DATASET_COLUMN_NAME_FIELD,
+                        EtlConstants.RIGHT_DATASET_COLUMN_NAME_FIELD);
                 return new RightJoinDatasetFunction(id, name, description, isActive,
-                        configuration.getStringValue(EtlConstants.LEFT_DATASET_NAME),
+                        configuration.getStringValue(EtlConstants.LEFT_DATASET_NAME_FIELD),
                         configuration.getStringValue(EtlConstants.RIGHT_DATASET_NAME),
-                        configuration.getStringValue(EtlConstants.LEFT_DATASET_COLUMN_NAME),
-                        configuration.getStringValue(EtlConstants.RIGHT_DATASET_COLUMN_NAME));
+                        configuration.getStringValue(EtlConstants.LEFT_DATASET_COLUMN_NAME_FIELD),
+                        configuration.getStringValue(EtlConstants.RIGHT_DATASET_COLUMN_NAME_FIELD));
+            } else if (EtlConstants.ETL_SQL_DATASET_FUNCTION.equals(type)) {
+                Preconditions.validateFields(configuration, EtlConstants.QUERY_TYPE_FIELD, EtlConstants.QUERY_SOURCE_FIELD);
+                return new SQLFunction(id, name, description, isActive,
+                        configuration.getStringValue(EtlConstants.QUERY_TYPE_FIELD),
+                        configuration.getStringValue(EtlConstants.QUERY_SOURCE_FIELD));
             } else {
                 throw new IllegalStateException("etl function type not supported - " + type);
             }

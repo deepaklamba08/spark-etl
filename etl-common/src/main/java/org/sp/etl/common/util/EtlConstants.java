@@ -63,6 +63,7 @@ public class EtlConstants {
     public static final String ETL_TO_TIMESTAMP_FUNCTION = "toTimestampFunction";
     public static final String ETL_SUM_COLUMN_FUNCTION = "sumColumnFunction";
     public static final String ETL_CAST_COLUMN_FUNCTION = "castColumnFunction";
+    public static final String ETL_SQL_DATASET_FUNCTION = "sqlFunction";
 
 
     public static final String OLD_NAME_FIELD = "oldName";
@@ -87,9 +88,11 @@ public class EtlConstants {
     public static final String RESULT_COLUMN_NAME_FIELD = "resultColumnName";
     public static final String COLUMNS_FIELD = "columns";
     public static final String TO_TYPE_FIELD = "toType";
-    public static final String LEFT_DATASET_NAME = "leftDatasetName";
+    public static final String LEFT_DATASET_NAME_FIELD = "leftDatasetName";
     public static final String RIGHT_DATASET_NAME = "rightDatasetName";
-    public static final String LEFT_DATASET_COLUMN_NAME = "leftDatasetColumn";
-    public static final String RIGHT_DATASET_COLUMN_NAME = "rightDatasetColumn";
+    public static final String LEFT_DATASET_COLUMN_NAME_FIELD = "leftDatasetColumn";
+    public static final String RIGHT_DATASET_COLUMN_NAME_FIELD = "rightDatasetColumn";
+    public static final String QUERY_TYPE_FIELD = "queryType";
+    public static final String QUERY_SOURCE_FIELD = "querySource";
 
 }

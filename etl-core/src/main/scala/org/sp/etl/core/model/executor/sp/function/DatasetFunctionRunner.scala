@@ -80,3 +80,8 @@ class DatasetRegisterAsTableFunctionRunner(function: DatasetRegisterAsTableFunct
     dataBag
   }
 }
+class SQLFunctionRunner(function: SQLFunction) extends DatasetFunctionRunner(function) {
+  override def run(dataBag: DataBag, databags: Databags): DataBag = {
+    throw new UnsupportedOperationException(s"not implemented yet in - ${this.getClass}")
+  }
+}
