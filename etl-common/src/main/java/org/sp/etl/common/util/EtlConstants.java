@@ -87,5 +87,9 @@ public class EtlConstants {
     public static final String RESULT_COLUMN_NAME_FIELD = "resultColumnName";
     public static final String COLUMNS_FIELD = "columns";
     public static final String TO_TYPE_FIELD = "toType";
+    public static final String LEFT_DATASET_NAME = "leftDatasetName";
+    public static final String RIGHT_DATASET_NAME = "rightDatasetName";
+    public static final String LEFT_DATASET_COLUMN_NAME = "leftDatasetColumn";
+    public static final String RIGHT_DATASET_COLUMN_NAME = "rightDatasetColumn";
 
 }

@@ -12,10 +12,6 @@ public class DataUtils {
         return objectMapper;
     }
 
-    public static ObjectNode createObjectNode() {
-        return objectMapper.createObjectNode();
-    }
-
     public static String makeString(String separator, String... fields) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < fields.length; i++) {
