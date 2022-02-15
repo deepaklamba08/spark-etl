@@ -15,7 +15,6 @@ import java.util.Map;
 public class ConfigurationFactory {
 
     public static Configuration parse(File configFilePath, ConfigurationType configurationType) throws EtlExceptions.InvalidConfigurationException {
-
         if (configurationType == ConfigurationType.JSON) {
             InputStream configStream = null;
             try {
@@ -45,8 +44,15 @@ public class ConfigurationFactory {
         } else {
             throw new EtlExceptions.InvalidConfigurationException("parsing not supported for config type - " + configurationType.name());
         }
-
     }
 
+    public static void save(ConfigurationType configurationType, Configuration configuration, File configFilePath, boolean overwrite) throws EtlExceptions.InvalidConfigurationException {
+        if (configurationType == ConfigurationType.JSON) {
+            JsonConfiguration jsonConfiguration = (JsonConfiguration) configuration;
+
+        } else {
+            throw new EtlExceptions.InvalidConfigurationException("parsing not supported for config type - " + configurationType.name());
+        }
+    }
 }
 

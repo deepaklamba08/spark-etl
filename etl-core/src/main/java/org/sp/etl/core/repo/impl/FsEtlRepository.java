@@ -11,8 +11,8 @@ import org.sp.etl.common.model.*;
 import org.sp.etl.common.model.job.Job;
 import org.sp.etl.common.model.step.Step;
 import org.sp.etl.common.repo.EtlRepository;
+import org.sp.etl.common.repo.RepositoryParameter;
 import org.sp.etl.common.repo.RepositoryType;
-import org.sp.etl.common.util.ConfigurationFactory;
 import org.sp.etl.common.util.EtlConstants;
 import org.sp.etl.common.util.Preconditions;
 import org.sp.etl.function.EtlFunction;
@@ -39,13 +39,14 @@ public class FsEtlRepository implements EtlRepository {
     private final DataStore<DataSource> dataSourceDataStore;
     private final DataStore<EtlTarget> etlTargetDataStore;
 
-    public FsEtlRepository(Map<String, String> parameters) {
-        ConfigurationType configurationType = ConfigurationType.getConfigurationType(parameters.get(EtlConstants.CONFIGURATION_TYPE_FIELD));
-        this.jobDataStore = new DataStore<>(configurationType, this.getPath(EtlConstants.JOB_CONF_FILE_KEY, parameters), ConfigMapper::mapJob, Job::getName);
-        this.jsonDataObjectDataStore = new DataStore<>(configurationType, this.getPath(EtlConstants.OBJECT_CONF_FILE_KEY, parameters), Function.identity(), Identifiable::getName);
-        this.etlSourceDataStore = new DataStore<>(configurationType, this.getPath(EtlConstants.SOURCE_CONF_FILE_KEY, parameters), ConfigMapper::mapEtlSource, Identifiable::getName);
-        this.dataSourceDataStore = new DataStore<>(configurationType, this.getPath(EtlConstants.DB_CONF_FILE_KEY, parameters), ConfigMapper::mapDataSource, Identifiable::getName);
-        this.etlTargetDataStore = new DataStore<>(configurationType, this.getPath(EtlConstants.TARGET_CONF_FILE_KEY, parameters), ConfigMapper::mapEtlTarget, Identifiable::getName);
+    public FsEtlRepository(RepositoryParameter parameters) {
+        ConfigurationType configurationType = parameters.getConfigurationType();
+
+        this.jobDataStore = new DataStore<>(configurationType, this.getPath(parameters.getParameter(EtlConstants.JOB_CONF_FILE_KEY)), ConfigMapper::mapJob, element -> new StringId(element.getName()));
+        this.jsonDataObjectDataStore = new DataStore<>(configurationType, this.getPath(parameters.getParameter(EtlConstants.OBJECT_CONF_FILE_KEY)), Function.identity(), element -> new StringId(element.getName()));
+        this.etlSourceDataStore = new DataStore<>(configurationType, this.getPath(parameters.getParameter(EtlConstants.SOURCE_CONF_FILE_KEY)), ConfigMapper::mapEtlSource, element -> new StringId(element.getName()));
+        this.dataSourceDataStore = new DataStore<>(configurationType, this.getPath(parameters.getParameter(EtlConstants.DB_CONF_FILE_KEY)), ConfigMapper::mapDataSource, element -> new StringId(element.getName()));
+        this.etlTargetDataStore = new DataStore<>(configurationType, this.getPath(parameters.getParameter(EtlConstants.TARGET_CONF_FILE_KEY)), ConfigMapper::mapEtlTarget, element -> new StringId(element.getName()));
     }
 
     @Override
@@ -55,63 +56,34 @@ public class FsEtlRepository implements EtlRepository {
 
     @Override
     public Job lookupJob(String jobName) throws EtlExceptions.InvalidConfigurationException {
-        return this.jobDataStore.lookupElement(jobName);
+        return this.jobDataStore.lookupElement(new StringId(jobName));
     }
 
     @Override
     public EtlSource lookupEtlSource(String sourceName) throws EtlExceptions.InvalidConfigurationException {
-        return this.etlSourceDataStore.lookupElement(sourceName);
+        return this.etlSourceDataStore.lookupElement(new StringId(sourceName));
     }
 
     @Override
     public EtlTarget lookupEtlTarget(String targetName) throws EtlExceptions.InvalidConfigurationException {
-        return this.etlTargetDataStore.lookupElement(targetName);
+        return this.etlTargetDataStore.lookupElement(new StringId(targetName));
     }
 
     @Override
     public DataSource lookupDataSource(String dataSourceName) throws EtlExceptions.InvalidConfigurationException {
-        return this.dataSourceDataStore.lookupElement(dataSourceName);
+        return this.dataSourceDataStore.lookupElement(new StringId(dataSourceName));
     }
 
     @Override
     public Configuration lookupObject(String objectName) throws EtlExceptions.InvalidConfigurationException {
-        return this.jsonDataObjectDataStore.lookupElement(objectName);
+        return this.jsonDataObjectDataStore.lookupElement(new StringId(objectName));
     }
 
-    private File getPath(String pathKey, Map<String, String> parameters) {
-        String path = parameters.get(pathKey);
+    private File getPath(String path) {
         if (path == null || path.isEmpty()) {
-            throw new IllegalStateException("could not find - " + pathKey + " in parameters");
+            throw new IllegalArgumentException("invalid path - " + path);
         }
         return new File(path);
-    }
-
-    private static class DataStore<T> {
-        private final File dataFile;
-        private final ConfigurationType configurationType;
-        private Map<String, T> elements;
-
-        private final Function<T, String> identifier;
-        private final Function<Configuration, T> mapper;
-
-        public DataStore(ConfigurationType configurationType, File dataFile, Function<Configuration, T> mapper, Function<T, String> identifier) {
-            this.configurationType = configurationType;
-            this.dataFile = dataFile;
-            this.mapper = mapper;
-            this.identifier = identifier;
-        }
-
-        public T lookupElement(String key) throws EtlExceptions.InvalidConfigurationException {
-            if (this.elements == null) {
-                this.readDataFile();
-            }
-            return this.elements.get(key);
-        }
-
-        private void readDataFile() throws EtlExceptions.InvalidConfigurationException {
-            Configuration configuration = ConfigurationFactory.parse(this.dataFile, this.configurationType);
-            this.elements = configuration.getAsList().stream().map(mapper).collect(Collectors.toMap(identifier, Function.identity()));
-        }
     }
 
     private static class ConfigMapper {

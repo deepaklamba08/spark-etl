@@ -7,6 +7,7 @@ import org.sp.etl.common.io.tr.EtlTarget;
 import org.sp.etl.common.model.ConfigurationType;
 import org.sp.etl.common.model.job.Job;
 import org.sp.etl.common.repo.EtlRepository;
+import org.sp.etl.common.repo.RepositoryParameter;
 import org.sp.etl.common.util.EtlConstants;
 import org.sp.etl.core.repo.impl.FsEtlRepository;
 import org.testng.Assert;
@@ -29,7 +30,7 @@ public class TestFsEtlRepository {
         parameters.put(EtlConstants.SOURCE_CONF_FILE_KEY, "src/test/resources/etl_repo/etl_sources/sources.json");
         parameters.put(EtlConstants.DB_CONF_FILE_KEY, "src/test/resources/etl_repo/ds/ds.json");
         parameters.put(EtlConstants.TARGET_CONF_FILE_KEY, "src/test/resources/etl_repo/etl_targets/targets.json");
-        this.etlRepository = new FsEtlRepository(parameters);
+        this.etlRepository = new FsEtlRepository(new RepositoryParameter(parameters));
     }
 
     @Test
