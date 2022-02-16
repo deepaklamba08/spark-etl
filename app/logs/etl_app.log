@@ -1,0 +1,44 @@
+2022-02-15 10:39:37 DEBUG org.sp.etl.app.ETLApp$:13 - starting etl app
+2022-02-15 10:39:37 DEBUG org.sp.etl.core.model.executor.JobOrchestrator:17 - executing - JobOrchestrator.executeJob()
+2022-02-15 10:39:37 ERROR org.sp.etl.app.ETLApp$:19 - error occurred while processing data
+org.sp.etl.common.exception.EtlExceptions$ObjectNotFoundException: could not find job abc in the repository
+	at org.sp.etl.core.model.executor.JobOrchestrator.lookupJob(JobOrchestrator.scala:34)
+	at org.sp.etl.core.model.executor.JobOrchestrator.executeJob(JobOrchestrator.scala:18)
+	at org.sp.etl.app.ETLApp$.$anonfun$main$1(ETLApp.scala:17)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:12)
+	at scala.util.Try$.apply(Try.scala:209)
+	at org.sp.etl.app.ETLApp$.main(ETLApp.scala:17)
+	at org.sp.etl.app.ETLApp.main(ETLApp.scala)
+2022-02-15 10:39:37 DEBUG org.sp.etl.app.ETLApp$:21 - exiting etl app
+2022-02-15 10:40:02 DEBUG org.sp.etl.app.ETLApp$:13 - starting etl app
+2022-02-15 10:40:02 DEBUG org.sp.etl.core.model.executor.JobOrchestrator:17 - executing - JobOrchestrator.executeJob()
+2022-02-15 10:40:02 ERROR org.sp.etl.app.ETLApp$:19 - error occurred while processing data
+java.lang.IllegalStateException: job single-dataset-job is disabled in the repository
+	at org.sp.etl.core.model.executor.JobOrchestrator.lookupJob(JobOrchestrator.scala:36)
+	at org.sp.etl.core.model.executor.JobOrchestrator.executeJob(JobOrchestrator.scala:18)
+	at org.sp.etl.app.ETLApp$.$anonfun$main$1(ETLApp.scala:17)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:12)
+	at scala.util.Try$.apply(Try.scala:209)
+	at org.sp.etl.app.ETLApp$.main(ETLApp.scala:17)
+	at org.sp.etl.app.ETLApp.main(ETLApp.scala)
+2022-02-15 10:40:02 DEBUG org.sp.etl.app.ETLApp$:21 - exiting etl app
+2022-02-15 11:32:48 DEBUG org.sp.etl.app.ETLApp$:13 - starting etl app
+2022-02-15 11:32:48 DEBUG org.sp.etl.core.model.executor.JobOrchestrator:17 - executing - JobOrchestrator.executeJob()
+2022-02-15 11:32:49 DEBUG org.sp.etl.core.model.executor.JobOrchestrator:19 - loaded job org.sp.etl.common.model.job.Job@1a482e36 from repository
+2022-02-15 11:32:49 ERROR org.sp.etl.app.ETLApp$:19 - error occurred while processing data
+org.sp.etl.common.exception.EtlExceptions$ObjectNotFoundException: could not found data source - ds1
+	at org.sp.etl.core.model.executor.JobOrchestrator.lookupDataSource(JobOrchestrator.scala:57)
+	at org.sp.etl.core.model.executor.JobOrchestrator.$anonfun$registerSources$6(JobOrchestrator.scala:45)
+	at scala.collection.TraversableLike.$anonfun$map$1(TraversableLike.scala:234)
+	at scala.collection.immutable.Set$Set1.foreach(Set.scala:95)
+	at scala.collection.TraversableLike.map$(TraversableLike.scala:234)
+	at scala.collection.AbstractSet.scala$collection$SetLike$$super$map(Set.scala:47)
+	at scala.collection.AbstractSet.map(Set.scala:47)
+	at org.sp.etl.core.model.executor.JobOrchestrator.registerSources(JobOrchestrator.scala:45)
+	at org.sp.etl.core.model.executor.JobOrchestrator.executeJob(JobOrchestrator.scala:20)
+	at org.sp.etl.app.ETLApp$.$anonfun$main$1(ETLApp.scala:17)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:12)
+	at scala.util.Try$.apply(Try.scala:209)
+	at org.sp.etl.app.ETLApp$.main(ETLApp.scala:17)
+	at org.sp.etl.app.ETLApp.main(ETLApp.scala)
+2022-02-15 11:32:49 DEBUG org.sp.etl.app.ETLApp$:21 - exiting etl app

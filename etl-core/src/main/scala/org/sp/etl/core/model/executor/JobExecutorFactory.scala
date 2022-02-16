@@ -6,7 +6,7 @@ import org.sp.etl.core.util.Constants
 
 object JobExecutorFactory {
 
-  def createJobExecutor(jobName: String, executorType: String, executorConfig: Configuration) = {
+  def createJobExecutor(jobName: String, executorType: String, executorConfig: Configuration): JobExecutor = {
     executorType match {
       case Constants.SPARK_JOB_EXECUTOR => new SparkJobExecutor(jobName, executorConfig)
       case other => throw new IllegalStateException(s"no such job executor - $other")

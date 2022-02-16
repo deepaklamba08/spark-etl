@@ -13,15 +13,18 @@ object ETLApp {
     logger.debug("starting etl app")
     val etlArgs = this.parseArgs(args)
 
-    val etlRepo = RepositoryProvider.createRepository(etlArgs.selectRepositoryParameters)
-    Try(new JobOrchestrator(etlRepo).executeJob(etlArgs.jobName)) match {
-      case Success(_) =>
+    val etlRepo = ObjectProvider.createRepository(etlArgs.selectRepositoryParameters)
+    Try(new JobOrchestrator(etlRepo, null).executeJob(etlArgs.jobName)) match {
+      case Success(_) => logger.debug("completed execution...")
       case Failure(cause) => logger.error("error occurred while processing data", cause)
     }
     logger.debug("exiting etl app")
   }
 
   private def parseArgs(args: Array[String]) = {
+    if (args.length % 2 != 0) {
+      throw new IllegalArgumentException(s"arguments should be in key value pairs, no. of arguments must be even")
+    }
     args.sliding(2, 2).foldLeft(new EtlArgsBuilder())((builder, pair) => {
       pair.toList match {
         case Constants.JOB_NAME :: value :: Nil => builder.withJobName(value)
@@ -30,5 +33,6 @@ object ETLApp {
       }
     }).build
   }
+
 
 }

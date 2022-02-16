@@ -4,7 +4,7 @@ import org.sp.etl.common.exception.EtlExceptions
 import org.sp.etl.common.repo.EtlRepository
 import org.sp.etl.core.repo.impl.FsEtlRepository
 import org.sp.etl.core.util.Constants
-
+import org.sp.etl.common.repo.RepositoryParameter
 import scala.collection.JavaConverters._
 import scala.language.dynamics
 
@@ -43,12 +43,10 @@ class EtlArgsBuilder() {
 
 }
 
-
-object RepositoryProvider {
-
+object ObjectProvider {
   def createRepository(parameters: Map[String, String]): EtlRepository = {
     parameters(Constants.REPOSITORY_TYPE_KEY) match {
-      case Constants.REPOSITORY_TYPE_LOCAL_FS => new FsEtlRepository(parameters.asJava)
+      case Constants.REPOSITORY_TYPE_LOCAL_FS => new FsEtlRepository(new RepositoryParameter(parameters.asJava))
       case other => throw new EtlExceptions.InvalidConfigurationException(s"repository type not supported - $other")
     }
   }

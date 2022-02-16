@@ -254,9 +254,11 @@ public class JsonConfiguration implements Serializable, Configuration {
             return (T) new JsonConfiguration(value);
         } else if (Integer.class.equals(type)) {
             return (T) new Integer(value.asInt());
+        } else if (Boolean.class.equals(type)) {
+            return (T) new Boolean(value.asBoolean());
+        } else {
+            throw new IllegalStateException("not implemented yet for type - " + type);
         }
-
-        return null;
     }
 
     private void checkAndAdd(String fieldName, Object value) {
