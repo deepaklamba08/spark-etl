@@ -29,14 +29,14 @@ public class DataStore<T> {
         this.identifier = identifier;
     }
 
-    public T lookupElement(Id key) throws EtlExceptions.InvalidConfigurationException {
+    public T lookupElement(Id key) throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException {
         if (this.shouldRefresh || this.elements == null) {
             this.elements = this.readDataFile();
         }
         return this.elements.get(key);
     }
 
-    private Map<Id, T> readDataFile() throws EtlExceptions.InvalidConfigurationException {
+    private Map<Id, T> readDataFile() throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException {
         Configuration configuration = ConfigurationFactory.parse(this.dataFile, this.configurationType);
         return configuration.getAsList().stream().map(mapper).collect(Collectors.toMap(identifier, Function.identity()));
     }
@@ -46,7 +46,7 @@ public class DataStore<T> {
         //ConfigurationFactory.save(this.configurationType, null, this.dataFile, true);
     }
 
-    public void saveElement(T element) throws EtlExceptions.InvalidConfigurationException {
+    public void saveElement(T element) throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException {
         synchronized (lock) {
             Map<Id, T> existingElements = new HashMap<>(this.readDataFile());
             T existingElement = existingElements.get(this.identifier.apply(element));
@@ -59,7 +59,7 @@ public class DataStore<T> {
         }
     }
 
-    public void updateElement(T element) throws EtlExceptions.InvalidConfigurationException {
+    public void updateElement(T element) throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException {
         synchronized (lock) {
             Map<Id, T> existingElements = new HashMap<>(this.readDataFile());
             T existingElement = existingElements.get(this.identifier.apply(element));

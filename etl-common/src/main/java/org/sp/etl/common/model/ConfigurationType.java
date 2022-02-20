@@ -10,9 +10,9 @@ public enum ConfigurationType {
     }
 
     public static ConfigurationType getConfigurationType(String typeName) {
-        for (ConfigurationType repositoryType : ConfigurationType.values()) {
-            if (repositoryType.typeName.equals(typeName)) {
-                return repositoryType;
+        for (ConfigurationType configurationType : ConfigurationType.values()) {
+            if (configurationType.typeName.equals(typeName)) {
+                return configurationType;
             }
         }
         throw new IllegalArgumentException("invalid configuration type - " + typeName);

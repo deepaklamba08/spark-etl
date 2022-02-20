@@ -34,28 +34,28 @@ public class TestFsEtlRepository {
     }
 
     @Test
-    public void lookupDatasource() throws EtlExceptions.InvalidConfigurationException {
+    public void lookupDatasource() throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException {
         DataSource dataSource = this.etlRepository.lookupDataSource("ds1");
         Assert.assertNotNull(dataSource);
         Assert.assertEquals(dataSource.getName(), "file-data-source-1");
     }
 
     @Test
-    public void lookupEtlSource() throws EtlExceptions.InvalidConfigurationException {
+    public void lookupEtlSource() throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException {
         EtlSource source = this.etlRepository.lookupEtlSource("users_data");
         Assert.assertNotNull(source);
         Assert.assertEquals(source.getName(), "users_data");
     }
 
     @Test
-    public void lookupEtlTarget() throws EtlExceptions.InvalidConfigurationException {
+    public void lookupEtlTarget() throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException {
         EtlTarget target = this.etlRepository.lookupEtlTarget("target-1");
         Assert.assertNotNull(target);
         Assert.assertEquals(target.getName(), "target-1");
     }
 
     @Test
-    public void lookupJob() throws EtlExceptions.InvalidConfigurationException {
+    public void lookupJob() throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException {
         Job job = this.etlRepository.lookupJob("single-dataset-job");
         Assert.assertNotNull(job);
         Assert.assertEquals(job.getName(), "single-dataset-job");

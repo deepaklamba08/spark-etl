@@ -52,6 +52,21 @@ public class JsonConfiguration implements Serializable, Configuration {
     }
 
     @Override
+    public Date getDateValue(String fieldName) {
+        long value = this.getLongValue(fieldName);
+        return new Date(value);
+    }
+
+    @Override
+    public Date getDateValue(String fieldName, Date defaultValue) {
+        if(this.hasField(fieldName)){
+            return this.getDateValue(fieldName);
+        }else{
+            return defaultValue;
+        }
+    }
+
+    @Override
     public String getStringValue(String fieldName, String defaultValue) {
         String value = this.checkAndGet(fieldName, String.class, this.dataNode);
         return value != null ? value : defaultValue;
@@ -93,6 +108,11 @@ public class JsonConfiguration implements Serializable, Configuration {
     @Override
     public int getIntValue(String fieldName) {
         return this.checkAndGet(fieldName, Integer.class, this.dataNode);
+    }
+
+    @Override
+    public long getLongValue(String fieldName) {
+        return this.checkAndGet(fieldName, Long.class, this.dataNode);
     }
 
 
@@ -158,6 +178,51 @@ public class JsonConfiguration implements Serializable, Configuration {
     @Override
     public boolean isNull() {
         return this.dataNode == null || this.dataNode.isNull();
+    }
+
+    @Override
+    public void merge(Configuration other) {
+        if (!(other instanceof JsonConfiguration)) {
+            throw new IllegalArgumentException("configuration is not of type - " + JsonConfiguration.class);
+        }
+        JsonConfiguration otherConfig = (JsonConfiguration) other;
+        if (this.isArray() && otherConfig.isArray()) {
+            ArrayNode currentNode = this.dataNode.deepCopy();
+            ArrayNode otherNode = (ArrayNode) otherConfig.dataNode;
+            otherNode.forEach(element -> currentNode.add(element));
+            this.dataNode = currentNode;
+        } else if (this.isObject() && otherConfig.isObject()) {
+            ObjectNode currentNode = this.dataNode.deepCopy();
+            ObjectNode otherNode = (ObjectNode) otherConfig.dataNode;
+            otherNode.fieldNames().forEachRemaining(field -> {
+                currentNode.put(field, otherNode.get(field));
+            });
+            this.dataNode = currentNode;
+        } else {
+            throw new IllegalStateException("configurations have different structure");
+        }
+
+    }
+
+    /*@Override
+    public void remove(Configuration other) {
+        if (!(other instanceof JsonConfiguration)) {
+            throw new IllegalArgumentException("configuration is not of type - " + JsonConfiguration.class);
+        }
+        JsonConfiguration otherConfig = (JsonConfiguration) other;
+        if (this.isArray()) {
+            ArrayNode currentNode = this.dataNode.deepCopy();
+        }
+
+    }*/
+
+    @Override
+    public void toArray() {
+        if (this.isObject()) {
+            ArrayNode node = DataUtils.getObjectMapper().createArrayNode();
+            node.add(this.dataNode);
+            this.dataNode = node;
+        }
     }
 
     @Override
@@ -254,6 +319,8 @@ public class JsonConfiguration implements Serializable, Configuration {
             return (T) new JsonConfiguration(value);
         } else if (Integer.class.equals(type)) {
             return (T) new Integer(value.asInt());
+        }  else if (Long.class.equals(type)) {
+            return (T) new Long(value.asLong());
         } else if (Boolean.class.equals(type)) {
             return (T) new Boolean(value.asBoolean());
         } else {
@@ -292,7 +359,7 @@ public class JsonConfiguration implements Serializable, Configuration {
         return object;
     }
 
-    private JsonNode getDataNode() {
+    public JsonNode getDataNode() {
         return this.dataNode;
     }
 

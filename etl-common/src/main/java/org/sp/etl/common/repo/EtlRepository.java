@@ -12,13 +12,13 @@ public interface EtlRepository {
 
     public RepositoryType getType();
 
-    public Job lookupJob(String jobName) throws EtlExceptions.InvalidConfigurationException;
+    public Job lookupJob(String jobName) throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException;
 
-    public EtlSource lookupEtlSource(String sourceName) throws EtlExceptions.InvalidConfigurationException;
+    public EtlSource lookupEtlSource(String sourceName) throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException;
 
-    public EtlTarget lookupEtlTarget(String targetName) throws EtlExceptions.InvalidConfigurationException;
+    public EtlTarget lookupEtlTarget(String targetName) throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException;
 
-    public DataSource lookupDataSource(String dataSourceName) throws EtlExceptions.InvalidConfigurationException;
+    public DataSource lookupDataSource(String dataSourceName) throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException;
 
-    public Configuration lookupObject(String objectName) throws EtlExceptions.InvalidConfigurationException;
+    public Configuration lookupObject(String objectName) throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException;
 }

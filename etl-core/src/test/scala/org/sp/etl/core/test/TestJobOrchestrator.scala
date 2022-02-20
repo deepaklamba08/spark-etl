@@ -21,18 +21,18 @@ class TestJobOrchestrator extends FunSuite {
   test("run a job with single dataset from repository") {
     val repository = new FsEtlRepository(new RepositoryParameter(parameters.asJava))
 
-    new JobOrchestrator(repository).executeJob("single-dataset-job")
+    new JobOrchestrator(repository,null).executeJob("single-dataset-job")
   }
 
   test("run a job with multiple dataset from repository") {
     val repository = new FsEtlRepository(new RepositoryParameter(parameters.asJava))
 
-    new JobOrchestrator(repository).executeJob("multiple-dataset-job")
+    new JobOrchestrator(repository,null).executeJob("multiple-dataset-job")
   }
   test("run a job with multiple steps from repository") {
     val repository = new FsEtlRepository(new RepositoryParameter(parameters.asJava))
 
-    new JobOrchestrator(repository).executeJob("multiple-steps-job")
+    new JobOrchestrator(repository,null).executeJob("multiple-steps-job")
   }
 
 }

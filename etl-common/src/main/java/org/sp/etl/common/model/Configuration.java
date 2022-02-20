@@ -1,9 +1,11 @@
 package org.sp.etl.common.model;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public interface Configuration extends Identifiable {
     void importFrom(Configuration dataObject);
@@ -11,6 +13,10 @@ public interface Configuration extends Identifiable {
     boolean hasField(String fieldName);
 
     String getStringValue(String fieldName);
+
+    Date getDateValue(String fieldName);
+
+    Date getDateValue(String fieldName, Date defaultValue);
 
     String getStringValue(String fieldName, String defaultValue);
 
@@ -23,6 +29,8 @@ public interface Configuration extends Identifiable {
     List<String> getListValue(String fieldName, List<String> defaultValue);
 
     int getIntValue(String fieldName);
+
+    long getLongValue(String fieldName);
 
     Configuration getAttribute(String fieldName);
 
@@ -45,6 +53,12 @@ public interface Configuration extends Identifiable {
     boolean isObject(String fieldName);
 
     boolean isNull();
+
+    public void merge(Configuration other);
+
+    //public void remove(Configuration other);
+
+    public void toArray();
 
     List<Configuration> getAsList();
 

@@ -55,27 +55,27 @@ public class FsEtlRepository implements EtlRepository {
     }
 
     @Override
-    public Job lookupJob(String jobName) throws EtlExceptions.InvalidConfigurationException {
+    public Job lookupJob(String jobName) throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException {
         return this.jobDataStore.lookupElement(new StringId(jobName));
     }
 
     @Override
-    public EtlSource lookupEtlSource(String sourceName) throws EtlExceptions.InvalidConfigurationException {
+    public EtlSource lookupEtlSource(String sourceName) throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException {
         return this.etlSourceDataStore.lookupElement(new StringId(sourceName));
     }
 
     @Override
-    public EtlTarget lookupEtlTarget(String targetName) throws EtlExceptions.InvalidConfigurationException {
+    public EtlTarget lookupEtlTarget(String targetName) throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException {
         return this.etlTargetDataStore.lookupElement(new StringId(targetName));
     }
 
     @Override
-    public DataSource lookupDataSource(String dataSourceName) throws EtlExceptions.InvalidConfigurationException {
+    public DataSource lookupDataSource(String dataSourceName) throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException {
         return this.dataSourceDataStore.lookupElement(new StringId(dataSourceName));
     }
 
     @Override
-    public Configuration lookupObject(String objectName) throws EtlExceptions.InvalidConfigurationException {
+    public Configuration lookupObject(String objectName) throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException {
         return this.jsonDataObjectDataStore.lookupElement(new StringId(objectName));
     }
 

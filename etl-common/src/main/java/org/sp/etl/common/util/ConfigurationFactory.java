@@ -14,20 +14,20 @@ import java.util.Map;
 
 public class ConfigurationFactory {
 
-    public static Configuration parse(File configFilePath, ConfigurationType configurationType) throws EtlExceptions.InvalidConfigurationException {
+    public static Configuration parse(File configFilePath, ConfigurationType configurationType) throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException {
         if (configurationType == ConfigurationType.JSON) {
             InputStream configStream = null;
             try {
                 configStream = FileIO.loadFile(configFilePath);
                 return new JsonConfiguration(DataUtils.getObjectMapper().readTree(configStream));
             } catch (IOException e) {
-                throw new EtlExceptions.InvalidConfigurationException("error occurred while parsing json config", e);
+                throw new EtlExceptions.SystemFailureException("error occurred while parsing json config", e);
             } finally {
                 if (configStream != null) {
                     try {
                         configStream.close();
                     } catch (IOException e) {
-                        throw new EtlExceptions.InvalidConfigurationException("error occurred while closing config file", e);
+                        throw new EtlExceptions.SystemFailureException("error occurred while closing config file", e);
                     }
                 }
             }
@@ -46,12 +46,23 @@ public class ConfigurationFactory {
         }
     }
 
-    public static void save(ConfigurationType configurationType, Configuration configuration, File configFilePath, boolean overwrite) throws EtlExceptions.InvalidConfigurationException {
+    public static void save(ConfigurationType configurationType, Configuration configuration, File configFilePath,
+                            boolean overwrite) throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException {
         if (configurationType == ConfigurationType.JSON) {
             JsonConfiguration jsonConfiguration = (JsonConfiguration) configuration;
-
+            JsonConfiguration confToWrite = new JsonConfiguration(jsonConfiguration.getDataNode());
+            if (overwrite) {
+                Configuration existingConfiguration = parse(configFilePath, configurationType);
+                configFilePath.delete();
+                confToWrite.merge(existingConfiguration);
+            }
+            try {
+                DataUtils.getObjectMapper().writeValue(configFilePath, jsonConfiguration.getDataNode());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
-            throw new EtlExceptions.InvalidConfigurationException("parsing not supported for config type - " + configurationType.name());
+            throw new EtlExceptions.InvalidConfigurationException("save not supported for config type - " + configurationType.name());
         }
     }
 }

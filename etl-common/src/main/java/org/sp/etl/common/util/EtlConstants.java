@@ -98,6 +98,6 @@ public class EtlConstants {
     public static final String QUERY_TYPE_FIELD = "queryType";
     public static final String QUERY_FIELD = "query";
 
-    public static final String EXECUTION_STATUS_FILE_NAME = "status";
+    public static final String EXECUTION_STATUS_FILE_NAME = "status.json";
 
 }
