@@ -10,6 +10,7 @@ import org.sp.etl.common.model.JsonConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 public class ConfigurationFactory {
@@ -46,18 +47,28 @@ public class ConfigurationFactory {
         }
     }
 
+    public static Configuration fromList(List<Object> contents, ConfigurationType configurationType) throws EtlExceptions.InvalidConfigurationException {
+        if (configurationType == ConfigurationType.JSON) {
+            JsonNode node = DataUtils.getObjectMapper().convertValue(contents, new TypeReference<JsonNode>() {
+            });
+            return new JsonConfiguration(node);
+        } else {
+            throw new EtlExceptions.InvalidConfigurationException("parsing not supported for config type - " + configurationType.name());
+        }
+    }
+
     public static void save(ConfigurationType configurationType, Configuration configuration, File configFilePath,
                             boolean overwrite) throws EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException {
         if (configurationType == ConfigurationType.JSON) {
             JsonConfiguration jsonConfiguration = (JsonConfiguration) configuration;
             JsonConfiguration confToWrite = new JsonConfiguration(jsonConfiguration.getDataNode());
-            if (overwrite) {
+            if (!overwrite) {
                 Configuration existingConfiguration = parse(configFilePath, configurationType);
                 configFilePath.delete();
                 confToWrite.merge(existingConfiguration);
             }
             try {
-                DataUtils.getObjectMapper().writeValue(configFilePath, jsonConfiguration.getDataNode());
+                DataUtils.getObjectMapper().writerWithDefaultPrettyPrinter().writeValue(configFilePath, jsonConfiguration.getDataNode());
             } catch (IOException e) {
                 e.printStackTrace();
             }

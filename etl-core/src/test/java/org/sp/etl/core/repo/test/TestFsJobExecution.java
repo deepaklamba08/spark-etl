@@ -13,16 +13,22 @@ import java.util.Date;
 
 public class TestFsJobExecution {
     private FsJobExecution jobExecution;
+    private Id id;
 
     @BeforeSuite
-    public void initTest() throws IOException {
+    public void initTest() throws IOException, EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException {
         this.jobExecution = new FsJobExecution("/home/sheru/work/dev/spark-etl/etl-core/target");
     }
 
     @Test
     public void saveJobExecution() throws EtlExceptions.SystemFailureException {
-        Id id = this.jobExecution.startJobExecution(new JobExecutionDetail(
+        id = this.jobExecution.startJobExecution(new JobExecutionDetail(
                 "test-job", JobExecutionStatus.Running, new Date(), "started"
         ));
+    }
+
+    @Test
+    public void updateJobExecution() throws EtlExceptions.SystemFailureException, EtlExceptions.ObjectNotFoundException {
+        this.jobExecution.updateJobExecution(id, JobExecutionStatus.Completed, "completed");
     }
 }

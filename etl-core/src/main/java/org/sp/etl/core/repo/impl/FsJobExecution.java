@@ -24,7 +24,7 @@ public class FsJobExecution implements IJobExecution {
     private File statusFile;
     private Object lock = new Object();
 
-    public FsJobExecution(String baseDir) throws IOException {
+    public FsJobExecution(String baseDir) throws IOException, EtlExceptions.InvalidConfigurationException, EtlExceptions.SystemFailureException {
         File baseFile = new File(baseDir);
         if (!baseFile.exists()) {
             baseFile.mkdirs();
@@ -32,7 +32,11 @@ public class FsJobExecution implements IJobExecution {
         this.statusFile = new File(baseFile, EtlConstants.EXECUTION_STATUS_FILE_NAME);
         if (!this.statusFile.exists()) {
             this.statusFile.createNewFile();
+            ConfigurationFactory.save(ConfigurationType.JSON, ConfigurationFactory.fromList(Collections.emptyList(), ConfigurationType.JSON),
+                    this.statusFile, true);
         }
+
+
     }
 
     @Override
@@ -67,8 +71,13 @@ public class FsJobExecution implements IJobExecution {
             return null;
         }
         try {
-            return ConfigurationFactory.parse(this.statusFile, ConfigurationType.JSON)
-                    .getAsList().stream().map(this::mapJobExecutionDetail).collect(Collectors.toMap(e -> e.getId(), Function.identity()));
+            Configuration config = ConfigurationFactory.parse(this.statusFile, ConfigurationType.JSON);
+            if (config.isArray()) {
+                return config
+                        .getAsList().stream().map(this::mapJobExecutionDetail).collect(Collectors.toMap(e -> e.getId(), Function.identity()));
+            } else {
+                return null;
+            }
         } catch (EtlExceptions.InvalidConfigurationException e) {
             return null;
 
@@ -89,12 +98,14 @@ public class FsJobExecution implements IJobExecution {
         Configuration head = configs.get(0);
         head.toArray();
         for (int i = 1; i < configs.size(); i++) {
-            head.merge(configs.get(i));
+            Configuration config = configs.get(i);
+            config.toArray();
+            head.merge(config);
         }
 
         synchronized (lock) {
             try {
-                ConfigurationFactory.save(ConfigurationType.JSON, head, this.statusFile, true);
+                ConfigurationFactory.save(ConfigurationType.JSON, head, this.statusFile, false);
             } catch (EtlExceptions.InvalidConfigurationException e) {
                 e.printStackTrace();
             }
@@ -114,7 +125,7 @@ public class FsJobExecution implements IJobExecution {
 
     private Configuration mapConfiguration(JobExecutionDetail detail) {
         Map<String, Object> detailMap = new HashMap<>(6);
-        detailMap.put("id", detail.getId());
+        detailMap.put("id", detail.getId().getStringValue());
         detailMap.put("jobName", detail.getJobName());
         detailMap.put("status", detail.getStatus().getTypeName());
         detailMap.put("startTime", detail.getStartTime().getTime());
